@@ -11,15 +11,18 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 
     @Query(
         "SELECT u FROM Usuario u" +
-        " LEFT JOIN Classificacao c" +
+        " LEFT JOIN u.classificacao c ON c.id = u.classificacao.id" +
         " WHERE u.nomeCompleto LIKE %?1%" +
         " OR u.nomeSocial LIKE %?1%" +
         " OR u.matricula LIKE %?1%" +
         " OR c.nome LIKE %?1%" + 
         " OR u.cpf LIKE %?1%" +
         " OR u.unidade LIKE %?1%"
-    )
-    
+    )  
     List<Usuario> findByAll(String termoBusca);
+
+    Usuario findByCpf(String cpf);
+
+    Usuario findByMatricula(String matricula);
 
 }

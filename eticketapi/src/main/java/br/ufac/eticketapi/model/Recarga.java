@@ -21,7 +21,7 @@ public class Recarga implements Serializable{
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Usuario usuario;
 
     @Column(nullable = false)
