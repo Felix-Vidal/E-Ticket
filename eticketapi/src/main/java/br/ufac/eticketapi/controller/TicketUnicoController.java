@@ -13,57 +13,51 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.ufac.eticketapi.model.Recarga;
-import br.ufac.eticketapi.service.RecargaService;
+import br.ufac.eticketapi.model.TicketUnico;
+import br.ufac.eticketapi.service.TicketUnicoService;
 
 @RestController
-@RequestMapping("/recarga")
-public class RecargaController implements IController<Recarga>{
+@RequestMapping("/ticketunico")
+public class TicketUnicoController implements IController<TicketUnico>{
 
-    private RecargaService servico;
+    private TicketUnicoService servico;
 
-    public RecargaController(RecargaService servico){
+    public TicketUnicoController(TicketUnicoService servico) {
         this.servico = servico;
     }
 
     @Override
-    @GetMapping("/config/")
-    public ResponseEntity<List<Recarga>> get() {
-        List<Recarga> registros = servico.get();
+    @GetMapping("/")
+    public ResponseEntity<List<TicketUnico>> get() {
+        List<TicketUnico> registros = servico.get();
         return new ResponseEntity<>(registros, HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<Recarga> get(@PathVariable("id") Long id) {
-        Recarga registro = servico.get(id);
-        return new ResponseEntity<>(registro, HttpStatus.OK);
-    }
-
-    @GetMapping("/usuario/{id}")
-    public ResponseEntity<List<Recarga>> getUsuario(@PathVariable("id") Long id) {
-        List<Recarga> registro = servico.getUsuarioId(id);
+    public ResponseEntity<TicketUnico> get(@PathVariable("id") Long id) {
+        TicketUnico registro = servico.get(id);
         return new ResponseEntity<>(registro, HttpStatus.OK);
     }
 
     @Override
-    @GetMapping("/config/busca/{termoBusca}")
-    public ResponseEntity<List<Recarga>> get(@PathVariable("termoBusca") String termoBusca) {
+    @GetMapping("/busca/{termoBusca}")
+    public ResponseEntity<List<TicketUnico>> get(@PathVariable("termoBusca") String termoBusca) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'get'");
     }
 
     @Override
     @PostMapping("/")
-    public ResponseEntity<Recarga> insert(@RequestBody Recarga objeto) {
-        Recarga registro = servico.save(objeto);
+    public ResponseEntity<TicketUnico> insert(@RequestBody TicketUnico objeto) {
+        TicketUnico registro = servico.save(objeto);
         return new ResponseEntity<>(registro, HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping("/")
-    public ResponseEntity<Recarga> update(@RequestBody Recarga objeto) {
-        Recarga registro = servico.save(objeto);
+    public ResponseEntity<TicketUnico> update(@RequestBody TicketUnico objeto) {
+        TicketUnico registro = servico.save(objeto);
         return new ResponseEntity<>(registro, HttpStatus.OK);
     }
 

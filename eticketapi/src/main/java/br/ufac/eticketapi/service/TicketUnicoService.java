@@ -4,40 +4,36 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import br.ufac.eticketapi.model.Recarga;
-import br.ufac.eticketapi.repository.RecargaRepository;
+import br.ufac.eticketapi.model.TicketUnico;
+import br.ufac.eticketapi.repository.TicketUnicoRepository;
 
 @Service
-public class RecargaService implements IService<Recarga>{
+public class TicketUnicoService implements IService<TicketUnico>{
 
-    private final RecargaRepository repo;
+    private TicketUnicoRepository repo;
 
-    public RecargaService(RecargaRepository repo){
+    public TicketUnicoService(TicketUnicoRepository repo) {
         this.repo = repo;
     }
 
     @Override
-    public List<Recarga> get() {
+    public List<TicketUnico> get() {
         return repo.findAll();
     }
 
     @Override
-    public Recarga get(Long id) {
+    public TicketUnico get(Long id) {
         return repo.findById(id).orElse(null);
     }
 
-    public List<Recarga> getUsuarioId(Long id) {
-        return repo.findByUsuarioId(id);
-    }    
-
     @Override
-    public List<Recarga> get(String termoBusca) {
+    public List<TicketUnico> get(String termoBusca) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'get'");
     }
 
     @Override
-    public Recarga save(Recarga objeto) {
+    public TicketUnico save(TicketUnico objeto) {
         return repo.save(objeto);
     }
 
@@ -45,7 +41,5 @@ public class RecargaService implements IService<Recarga>{
     public void delete(Long id) {
         repo.deleteById(id);
     }
-
-    
 
 }
