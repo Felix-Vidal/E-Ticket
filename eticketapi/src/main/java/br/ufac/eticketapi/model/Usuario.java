@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Usuario implements Serializable{
@@ -20,7 +21,7 @@ public class Usuario implements Serializable{
     private Long id;
 
     @Column(nullable = false)
-    private String nome;
+    private String nomeCompleto;
 
     @Column(nullable = false)
     private String nomeSocial;
@@ -28,7 +29,7 @@ public class Usuario implements Serializable{
     @Column(nullable = false)
     private String matricula;
 
-    @Column(nullable = false)
+    @ManyToOne
     private Classificacao classificacao;
 
     @Column(nullable = false)
@@ -61,12 +62,12 @@ public class Usuario implements Serializable{
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeCompleto() {
+        return nomeCompleto;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeCompleto(String nomeCompleto) {
+        this.nomeCompleto = nomeCompleto;
     }
 
     public String getNomeSocial() {
@@ -133,7 +134,7 @@ public class Usuario implements Serializable{
         this.credito = credito;
     }
 
-    public Boolean getGratuidade() {
+    public boolean isGratuidade() {
         return gratuidade;
     }
 

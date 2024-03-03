@@ -27,4 +27,44 @@ public class Classificacao implements Serializable{
 
     @Column(nullable = false)
     private Double valorJanta;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Double getValorCafe() {
+        return valorCafe;
+    }
+
+    public void setValorCafe(Double valorCafe) {
+        this.valorCafe = valorCafe;
+    }
+
+    public Double getValorAlmoco() {
+        return valorAlmoco;
+    }
+
+    public void setValorAlmoco(Double valorAlmoco) {
+        this.valorAlmoco = valorAlmoco;
+    }
+
+    public Double getValorJanta() {
+        return valorJanta;
+    }
+
+    public void setValorJanta(Double valorJanta) {
+        this.valorJanta = valorJanta;
+    }
 }
