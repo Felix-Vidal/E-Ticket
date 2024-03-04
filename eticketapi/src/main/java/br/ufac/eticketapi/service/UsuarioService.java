@@ -46,7 +46,7 @@ public class UsuarioService implements IService<Usuario>{
     }
 
     public Usuario getByMatricula(String matricula) {
-        return repo.findByCpf(matricula);
+        return repo.findByMatricula(matricula);
     }
 
 }
