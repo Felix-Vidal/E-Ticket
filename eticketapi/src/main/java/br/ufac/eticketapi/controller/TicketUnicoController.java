@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.ufac.eticketapi.model.EMetodoPagamento;
 import br.ufac.eticketapi.model.TicketUnico;
 import br.ufac.eticketapi.service.TicketUnicoService;
 
@@ -45,6 +46,12 @@ public class TicketUnicoController implements IController<TicketUnico>{
     public ResponseEntity<List<TicketUnico>> get(@PathVariable("termoBusca") String termoBusca) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'get'");
+    }
+
+    @GetMapping("/pagamento/{metodoPagamento}")
+    public ResponseEntity<List<TicketUnico>> getMetodoPagamento(@PathVariable("termoBusca") EMetodoPagamento metodoPagamento){
+        List<TicketUnico> registros = servico.getMetodoPagamento(metodoPagamento);
+        return new ResponseEntity<>(registros, HttpStatus.OK);
     }
 
     @Override

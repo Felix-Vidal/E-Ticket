@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.ufac.eticketapi.model.EMetodoPagamento;
 import br.ufac.eticketapi.model.TicketUnico;
 import br.ufac.eticketapi.repository.TicketUnicoRepository;
 
@@ -30,6 +31,10 @@ public class TicketUnicoService implements IService<TicketUnico>{
     public List<TicketUnico> get(String termoBusca) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'get'");
+    }
+
+    public List<TicketUnico> getMetodoPagamento(EMetodoPagamento metodoPagamento) {
+        return repo.findByMetodoPagamento(metodoPagamento);
     }
 
     @Override
