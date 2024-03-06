@@ -26,13 +26,13 @@ public class Usuario implements Serializable{
     @Column(nullable = false)
     private String nomeSocial;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String matricula;
 
     @ManyToOne
     private Classificacao classificacao;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String cpf;
 
     @Column(nullable = false)
