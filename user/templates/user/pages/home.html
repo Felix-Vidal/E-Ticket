@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-{% include "user/partials/head.html" %}
-<body>
-    <header>
-        <h1>Pagina Home de usuario {{"Test"}}</h1>
-    </header>
-    <main>
+{% extends "global/base_user.html" %}
 
-    </main>
-    {% include "user/partials/footer.html" %}
+{% block title %}Home |{% endblock title %}
 
+{% block content %}
 
-</body>
-</html>
+{% endblock content %}
