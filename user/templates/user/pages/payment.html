@@ -2,13 +2,14 @@
 
 {% block title %}Pagamento |{% endblock title %}
 {% block content %}
-<div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <p class="card-text">Cartão</p>
-  </div>
 
-</div>
+  {% include 'user/partials/header.html' %}
+  <div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <img src="..." class="card-img-top" alt="...">
+    <div class="card-body">
+      <p class="card-text">Cartão</p>
+    </div>
+  </div>
 
   {% include 'user/partials/modal-payments.html' %}
 {% endblock content %}

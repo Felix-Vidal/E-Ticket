@@ -1,4 +1,6 @@
-
+body{
+    background-color: red;
+}
 form div{
     display: grid;
     gap: 0.5em;
@@ -107,4 +109,8 @@ h5{
 }
 .btn-close{
     background-color: #ffffff;
+}
+
+.teste {
+    background-color: #0E4DA4;
 }
