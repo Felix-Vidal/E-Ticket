@@ -1,18 +1,14 @@
+{% extends "global/base_user.html" %}
 
-<body>
-  <div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <p class="card-text">Cartão</p>
-        </div>
-      
-    </div>
-    <!-- Button trigger modal -->
-    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Launch demo modal
-    </button> -->
+{% block title %}Pagamento |{% endblock title %}
+{% block content %}
+<div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <p class="card-text">Cartão</p>
+  </div>
 
-    <!-- Modal -->
-   {% include 'user/partials/modal-payments.html' %}
-  
-</body>
+</div>
+
+  {% include 'user/partials/modal-payments.html' %}
+{% endblock content %}
