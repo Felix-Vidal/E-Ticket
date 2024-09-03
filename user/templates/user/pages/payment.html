@@ -1,15 +1,34 @@
 {% extends "global/base_user.html" %}
 
-{% block title %}Pagamento |{% endblock title %}
+{% block title %}Pagamento|{% endblock title %}
 {% block content %}
-
-  {% include 'user/partials/header.html' %}
-  <div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    <img src="..." class="card-img-top" alt="...">
-    <div class="card-body">
-      <p class="card-text">Cartão</p>
+<h1 id="title">Formas de Pagamento</h1>
+<div id="login" class="container-fluid">
+ 
+  <div id="my-box">
+    <div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#modal-card">
+      <i id="car" class="fa-regular fa-credit-card"></i>
+      <div class="card-body">
+        <p class="card-text">Cartão</p>
+      </div>
+    </div>
+    <div id="card-pix" class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#modal-pix">
+      <i id="car1" class="fa-brands fa-pix"></i>
+      <div class="card-body">
+        <p class="card-text">Pix</p>
+      </div>
     </div>
   </div>
 
-  {% include 'user/partials/modal-payments.html' %}
+</div>
+    
+    
+
+
+{% include 'user/partials/modal-payments.html' %}
+{% include 'user/partials/modal-pix.html' %}
 {% endblock content %}
+
+
+
+

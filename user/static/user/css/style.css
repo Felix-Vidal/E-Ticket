@@ -1,104 +1,27 @@
-body{
-    background-color: red;
-}
-form div{
-    display: grid;
-    gap: 0.5em;
-    margin-bottom: 0.5em;
-    align-items: center;
-  
-  }
-  .container-fluid {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 2%;
-  }
-  
-  #my-box {
-  
-    width: 35%;
-    border: none;
-    padding: 5%;
-    background-color:  rgb(142, 178, 250);
-    border-radius: 70px;
-    margin-top: 40%;
-    margin-bottom: 3%;
-  }
-  
-  
-  /*Formulario*/
-  
-  .form input {
+ 
+.modal-dialog input {
       border-radius: 10px;
       box-sizing: border-box;
+      border-color: #0C4CA4;
   
-  }
-  .form label{
+
+  
+}
+
+.modal-dialog label{
       height: 0.8em;
       margin-top: 5%;
-  }
-  
-  
-  #title{
-    color: #000000;
-    font-weight: bold;
-    margin-bottom:1px;
-    font-size: 45px;
-    margin: 0 auto;
-    text-align: center;
-    /* position: ; */
-  }
-  
-  
-  #logar{
-    background-color: #0C4CA4;
-    border-radius: 10px;
-    margin-top: 5%;
-  
-  }
-  #logar button{
-      color: #ffffff;
-  
-  
-  }
-  
-  .mandatory{
-    color: red;
-  }
-  
-.container-fluid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 2%;
-
-
 }
-#box {
-
-    width: 50%;
-    border: none;
-    padding: 5%;
-    border-radius: 70px;
-    margin-top: 40%;
-    margin-bottom: 3%;
-    background-color: #F5FAFF;
-  }
+  
 .mandatory{
     color: red;
-}
-
-#teste input{
-    border-radius: 150px;
-    border-color: #0C4CA4;
-
 }
 #exampleModalLabel{
     color: #F5FAFF;
 }
-h5{
+h2{
     color: #0C4CA4;
+    padding: 15px;
 }
 #salvar{
     background-color: #35A40E;
@@ -111,6 +34,59 @@ h5{
     background-color: #ffffff;
 }
 
-.teste {
-    background-color: #0E4DA4;
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2%;
+
+
+}
+#my-box{
+
+ 
+  padding: 5%;
+  border-radius: 70px;
+  background-color: #F5FAFF;
+
+}
+#car,p{
+  font-size: 3rem;
+  text-align: center;
+  color: #ffffff;
+  margin-top: 15px;
+
+}
+.card-text{
+  margin-top: -5px;
+}
+.card{
+  border-radius:50px;
+}
+#card-pix #car1, p{
+  font-size: 3rem;
+  text-align: center;
+  color: #ffffff;
+  margin-top: 15px;
+  
+}
+#card-pix{
+  margin-top: 50px;
+}
+.card{
+  background-color: #0C4CA4;
+}
+#title{
+ text-align: center;
+ margin-bottom: 30px;
+ margin-top:50px ;
+ font-style:oblique;
+}
+
+
+/*Modal pix*/
+.modal-body i{
+  font-size: 20rem;
+  text-align: center;
+
 }
