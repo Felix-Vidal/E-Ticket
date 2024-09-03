@@ -1,20 +1,18 @@
  
 .modal-dialog input {
-      border-radius: 10px;
-      box-sizing: border-box;
-      border-color: #0C4CA4;
-  
-
-  
+  border-radius: 10px;
+  box-sizing: border-box;
+  border-color: #0C4CA4;
+   
 }
 
 .modal-dialog label{
-      height: 0.8em;
-      margin-top: 5%;
+  height: 0.8em;
+  margin-top: 5%;
 }
   
 .mandatory{
-    color: red;
+  color: red;
 }
 #exampleModalLabel{
     color: #F5FAFF;
@@ -40,15 +38,12 @@ h2{
   align-items: center;
   height: 2%;
 
-
 }
-#my-box{
-
- 
+#my-box{ 
   padding: 5%;
   border-radius: 70px;
   background-color: #F5FAFF;
-
+  border: 1px solid #0C4CA4;
 }
 #car,p{
   font-size: 3rem;
@@ -73,20 +68,28 @@ h2{
 #card-pix{
   margin-top: 50px;
 }
-.card{
+.card, .card-pix{
   background-color: #0C4CA4;
 }
 #title{
  text-align: center;
  margin-bottom: 30px;
  margin-top:50px ;
- font-style:oblique;
+ font-weight:bolder
 }
 
 
 /*Modal pix*/
-.modal-body i{
-  font-size: 20rem;
-  text-align: center;
+#img{
+ text-align: center;
 
+}
+#pix-cod input{
+  text-align: center;
+}
+h5{
+  color: #ffffff;
+}
+#button-copy{
+  margin-bottom: 5px;
 }

@@ -2,19 +2,22 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalPixLabel">Modal Pix</h5>
+          <h5 class="modal-title" id="modalPixLabel">Pix</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          Conteúdo do modal Pix
+        <div id="img" class="modal-body">
+            <img src="../../../static/user/img/QRlogo.png" alt="" height="300px">
         </div>
-        <div id="pix-cod" class="col-md-8">
-            <label class="form-label"></label>
-            <input class="form-control" >
+      
+        <div id="pix-cod" class="modal-body d-flex justify-content-center">
+            <input class="form-control col-md-6" type="text" placeholder="0136a8d6a8d7b1e4c8e41e58b2f8c2">
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Copiar</button>
+
+        <div id="button-copy" class="d-flex justify-content-center">
+            <button type="button" class="btn btn-primary btn-lg">Copiar</button>
         </div>
+        
+        <div class="modal-footer"></div>
       </div>
     </div>
   </div>
