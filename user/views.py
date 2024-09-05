@@ -9,6 +9,15 @@ def home(request):
 def pagamento(request):
     return render(request,'user/pages/payment.html')
 
+def menu(request):
+    return render(request, 'user/pages/menu.html')
+
+def profile(request):
+    return render(request, 'user/pages/profile.html')
+
+def login(request):
+    return render(request, 'user/pages/login.html')
+
 
 
 

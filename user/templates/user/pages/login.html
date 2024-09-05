@@ -1,0 +1,25 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}Cardápio |{% endblock title %}
+
+{% block content %}
+<body class='login'>
+    <div class="login-container">
+        <div class="login-box">
+            <img src='../../../static/user/img/logoRU.png' alt="Logo" class="login-logo">
+            <form>
+                <div class="input-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" name="cpf" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-button">Logar</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+{% endblock content %}
