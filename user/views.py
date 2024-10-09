@@ -18,6 +18,9 @@ def profile(request):
 def login(request):
     return render(request, 'user/pages/login.html')
 
+def history(request):
+    return render(request, 'user/pages/history.html')
+
 
 
 
