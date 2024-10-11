@@ -1,0 +1,26 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'manager/partials/sideBar.html' %}
+
+<div class="container-fluid d-flex justify-content-center align-items-start" style="margin-top: 5%;">
+    <div class="col-6 col-md-5 col-lg-6"> 
+        <h2 class="text-center">Validar QRCode:</h2>
+        <div class="card hover-card" style="height: 300px;width:450px;margin-left:180px; background-color:#AEC6CF; border:none" data-bs-toggle="modal" data-bs-target="#modal-card">
+            
+        </div>
+        <div class="mb-3">
+            <label style="font-size:20px" class="form-label">Entrar com codigo:</label>
+            <input style="border: 2px solid #007bff" type="email" class="form-control"aria-describedby="emailHelp" style="max-width: 100%;">
+
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button style="font-size:20px;background-color:#0E4DA4" class="btn btn-primary me-md-2" type="button">Avançar
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock content %}

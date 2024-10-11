@@ -1,0 +1,35 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'manager/partials/sideBar.html' %}
+
+<div class="container-fluid d-flex  justify-content-center align-items-center" style="margin-top: 5%;">
+    <div class="card hover-card mb-3" style="flex: 1 1 25rem; max-width: 25rem; border-radius: 50px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin-left:10%" data-bs-toggle="modal" data-bs-target="#modal-card">
+        <div class="d-flex justify-content-center">
+            
+            <i style="font-size: 80px; margin-top: 20px;" class="fa-solid fa-qrcode"></i>
+        </div>
+        <div class="card-body text-center" >
+            <p class="card-text" style="margin-top: -5px; font-size: 30px;">Validar Ticket</p>
+        </div>
+    </div>
+    <div class="card hover-card mb-3" style="flex: 1 1 25rem; max-width: 25rem; border-radius: 50px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff ;margin-left:1%" data-bs-toggle="modal" data-bs-target="#modal-pix">
+        
+        <div class="d-flex justify-content-center">
+            <i style="font-size: 80px; margin-top: 20px;" class="fa-solid fa-ticket"></i>
+        </div>
+        <div class="card-body text-center">
+            <p class="card-text" style="margin-top: -5px; font-size: 30px;">Comprar de Ticket</p>
+        </div>
+    </div>
+    <div class="card hover-card mb-3" style="flex: 1 1 25rem; max-width: 25rem; border-radius: 50px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin-left:1%" data-bs-toggle="modal" data-bs-target="#modal-pix">
+        <div class="d-flex justify-content-center">
+            <i style="font-size: 80px; margin-top: 20px;" class="fa-solid fa-bowl-food"></i>
+        </div>
+        <div class="card-body text-center">
+            <p class="card-text" style="margin-top: -5px; font-size: 30px;">Cardápio</p>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

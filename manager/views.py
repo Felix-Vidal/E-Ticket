@@ -4,3 +4,9 @@ from django.http import HttpResponse
 
 def home(request):
     return render(request, 'manager/pages/home.html')
+
+def dashboard (request):
+    return render(request, 'manager/pages/dashboard.html')
+
+def validar (request):
+    return render(request, 'manager/pages/validar.html')

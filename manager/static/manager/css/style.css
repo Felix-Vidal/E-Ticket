@@ -1,0 +1,73 @@
+
+.distintivo img {
+    width: 90%;
+    margin-top: 0.5em;
+    margin-bottom: -5em;
+ 
+}
+
+.l-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; /* Largura padrão da sidebar */
+    height: 100%;
+    background-color: #0C4CA4;
+    transition: width 0.3s ease; /* Transição suave ao mudar o tamanho */
+    z-index: var(--z-fixed);
+    overflow-y: auto; /* Permite rolagem quando necessário */
+}
+.nav_list :hover{
+    color: #f4b812;
+}
+.nav_list a{
+    text-decoration: none;
+}
+
+.nav_link {
+    display: flex;
+    align-items: center;
+    padding: .5rem 0 .5rem 2rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    transition: .3s;
+    margin-top: 15%;
+    margin-left: 10;
+}
+
+.nav_name {
+    padding-left: .5rem;
+    max-width: 12.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#nav-bar {
+    border-radius: 0 2.8125em 2.8125em 0;
+}
+
+/* Media query para telas menores (ex.: dispositivos móveis) */
+@media (max-width: 768px) {
+    /* Reduzindo a largura da sidebar */
+    .l-navbar {
+        width: 90px; /* Sidebar será reduzida para 60px em telas menores */
+    }
+
+    /* Centralizando ícones no menu */
+    .nav_link {
+        padding: .5rem 0; /* Remove o espaçamento lateral */
+        justify-content: center; /* Centraliza os ícones */
+        font-size: 30px;
+    }
+
+    /* Esconde o texto dos itens do menu */
+    .nav_name {
+        display: none; /* Esconde o texto ao lado dos ícones */
+    }
+
+    /* Ajusta o logo para se adequar à nova largura */
+    .distintivo img {
+        width: 85px; /* Reduz o tamanho da imagem do logo */
+        margin: 1em auto; /* Centraliza o logo */
+        margin-top: 80px;
+    }
+}
