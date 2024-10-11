@@ -1,35 +1,51 @@
 {% extends "global/base_manager.html" %}
+{% include 'manager/pages/validar.html' %}
 
 {% block content %}
 {% include 'manager/partials/sideBar.html' %}
+ 
 
-<div class="container-fluid d-flex  justify-content-center align-items-center" style="margin-top: 5%;">
-    <div class="card hover-card mb-3" style="flex: 1 1 25rem; max-width: 25rem; border-radius: 50px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin-left:10%" data-bs-toggle="modal" data-bs-target="#modal-card">
-        <div class="d-flex justify-content-center">
-            
-            <i style="font-size: 80px; margin-top: 20px;" class="fa-solid fa-qrcode"></i>
-        </div>
-        <div class="card-body text-center" >
-            <p class="card-text" style="margin-top: -5px; font-size: 30px;">Validar Ticket</p>
-        </div>
-    </div>
-    <div class="card hover-card mb-3" style="flex: 1 1 25rem; max-width: 25rem; border-radius: 50px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff ;margin-left:1%" data-bs-toggle="modal" data-bs-target="#modal-pix">
+<div class="content" style="margin-left: 10%; transition: margin-left 0.s ease;">
+    <div class="container-fluid d-flex justify-content-center align-items-center flex-wrap" style="margin-top: 5%;">
+        <a href="{% url 'validar' %}" style="text-decoration: none;">
+            <div class="card mb-3" style="width: 290px; height: 200px; border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin: 10px;">
+                <div class="d-flex justify-content-center align-items-center" style="height: 50%; margin-top: 15px;">
+                    <i style="font-size: 100px;" class="fa-solid fa-qrcode"></i>
+                </div>
+                <div class="card-body text-center" style="height: 50%;">
+                    <p class="card-text" style="font-size: 24px;">Validar Ticket</p>
+                </div>
+            </div>
+        </a>
         
-        <div class="d-flex justify-content-center">
-            <i style="font-size: 80px; margin-top: 20px;" class="fa-solid fa-ticket"></i>
-        </div>
-        <div class="card-body text-center">
-            <p class="card-text" style="margin-top: -5px; font-size: 30px;">Comprar de Ticket</p>
-        </div>
-    </div>
-    <div class="card hover-card mb-3" style="flex: 1 1 25rem; max-width: 25rem; border-radius: 50px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin-left:1%" data-bs-toggle="modal" data-bs-target="#modal-pix">
-        <div class="d-flex justify-content-center">
-            <i style="font-size: 80px; margin-top: 20px;" class="fa-solid fa-bowl-food"></i>
-        </div>
-        <div class="card-body text-center">
-            <p class="card-text" style="margin-top: -5px; font-size: 30px;">Cardápio</p>
-        </div>
+        
+        
+    
+        <!-- Card 2 -->
+        <button type="button" style="background: none; border: none;"> 
+            <div class="card  mb-3" style="width: 290px; height: 200px; border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin: 10px;">
+                <div class="d-flex justify-content-center align-items-center" style="height: 50%; margin-top: 15px;">
+                    <i style="font-size: 100px;" class="fa-solid fa-ticket"></i>
+                </div>
+                <div class="card-body text-center" style="height: 50%;">
+                    <p class="card-text" style="font-size: 24px;">Comprar de Ticket</p>
+                </div>
+            </div>
+        </button>
+    
+        <!-- Card 3 -->
+        <button type="button" style="background: none; border: none;"> 
+            <div class="card mb-3" style="width: 290px; height: 200px; border-radius: 20px; background-color: #0C4CA4; border: 6px solid #0C4CA4; color: #ffffff; margin: 10px;" >
+                <div class="d-flex justify-content-center align-items-center" style="height: 50%; margin-top: 15px;">
+                    <i style="font-size: 100px;" class="fa-solid fa-bowl-food"></i>
+                </div>
+                <div class="card-body text-center" style="height: 50%;">
+                    <p class="card-text" style="font-size: 24px;">Cardápio</p>
+                </div>
+            </div>
+        </button>
     </div>
 </div>
+
 
 {% endblock content %}

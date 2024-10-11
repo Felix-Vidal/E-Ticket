@@ -1,0 +1,43 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'manager/partials/sideBar.html' %}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; position: relative; z-index: 1; margin-left: 15%;"> 
+    <div class="row justify-content-center" style="width: 100%;"> 
+        <div class="col-10 col-md-4 d-flex flex-column align-items-start mx-3 mb-3"> 
+            <label class="form-label">Refeição:</label>
+            <input class="form-control mb-3" value="Almoço" aria-label="refeicao" style="max-width: 95%;" disabled readonly>
+            
+            <label class="form-label">CPF:</label>
+            <input class="form-control mb-3" value="000.000.000.00-00" aria-label="cpf" style="max-width: 95%;" disabled readonly>
+        </div>
+        
+        <div class="col-10 col-md-4 d-flex flex-column align-items-start mx-3 mb-3">
+            <label class="form-label">Campus:</label>
+            <input class="form-control mb-3" value="Campus Rio Branco" aria-label="campus" style="max-width: 95%;" disabled readonly>
+            
+            <label class="form-label">Unidade:</label>
+            <input class="form-control mb-3" value="Bacharel em Sistemas de Informação" aria-label="unidade" style="max-width: 95%;" disabled readonly>
+        </div>
+
+      
+        <div class="col-10 col-md-8 d-flex flex-column align-items-start" style="margin-left:-2%"> 
+            <label class="form-label">Papéis:</label>
+            <input class="form-control mb-3" value="Aluno graduação e servidor público" aria-label="papeis" style="width: 101%;" disabled readonly>
+            
+           
+            <div class="d-flex justify-content-between w-100 mt-3"> 
+                <a href="{% url 'validar' %}" class="btn btn-secondary" style="font-size: 20px; width: 120px;">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar 
+                </a>
+                
+                <button style="font-size: 20px; background-color: #0E4DA4; width: 120px;" class="btn btn-primary" type="button">
+                    Avançar <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

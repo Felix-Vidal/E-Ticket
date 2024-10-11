@@ -10,3 +10,5 @@ def dashboard (request):
 
 def validar (request):
     return render(request, 'manager/pages/validar.html')
+def validarQR (request):
+    return render(request, 'manager/pages/validarQR.html')

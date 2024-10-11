@@ -22,12 +22,14 @@
 }
 .nav_list a{
     text-decoration: none;
+    font-size: 20px;
 }
+
 
 .nav_link {
     display: flex;
     align-items: center;
-    padding: .5rem 0 .5rem 2rem;
+    padding: .5rem 0 .5rem 3rem;
     color: #fff;
     margin-bottom: 1.5rem;
     transition: .3s;
