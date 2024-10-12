@@ -16,15 +16,15 @@ PAYMENT_METHODS = [
 
 class Classification(models.Model):
     name = models.CharField(max_length=255)
-    breakfast_value = models.DecimalField(max_digits=10, decimal_places=2)
-    lunch_value = models.DecimalField(max_digits=10, decimal_places=2)
-    dinner_value = models.DecimalField(max_digits=10, decimal_places=2)
+    breakfast_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    lunch_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    dinner_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.name
     
 class PersonalData(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE) 
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
     social_name = models.CharField(max_length=255, blank=True, null=True)
     registration_number = models.BigIntegerField(unique=True)
@@ -34,7 +34,7 @@ class PersonalData(models.Model):
     unit = models.CharField(max_length=255)
     credit = models.DecimalField(max_digits=10, decimal_places=2)
     gratuitous = models.BooleanField(default=False)
-    
+    active = models.BooleanField(default=True)  # Define um valor padrão para 'active'
 
     def __str__(self):
         return self.full_name
@@ -68,9 +68,12 @@ class DailyMenu(models.Model):
     
     meal_type = models.CharField(max_length=10, choices=MEAL_TYPES)
     menu = models.TextField()
-    date = models.DateField()
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()   
+    date = models.DateField()  
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['meal_type', 'date'], name='unique_meal_per_day')
+        ]
 
     def __str__(self):
         return f"{self.meal_type} Menu on {self.date}"
