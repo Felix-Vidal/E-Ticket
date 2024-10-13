@@ -2,18 +2,22 @@
     <h1 class="main-title">Cardápio</h1>
 
     <div class="meal-section">
-        {% for menu in menus %}
-            <h2 class="meal-title">
-                {% if menu.meal_type == "BREAKFAST" %}
-                    Café Da Manhã
-                {% elif menu.meal_type == "LUNCH" %}
-                    Almoço
-                {% else %}
-                    Janta
-                {% endif %}
-            </h2>
-            <input type="text" class="meal-description" value="{{ menu.menu }}" placeholder="{{ menu.menu }}" disabled>
-        {% endfor %}
+        <h2 class="meal-title">Café Da Manhã</h2>
+        <input type="text" class="meal-description" 
+               value="{% if breakfast_menu %}{{ breakfast_menu.menu }}{% else %}Indisponível{% endif %}" 
+               placeholder="{% if breakfast_menu %}{{ breakfast_menu.menu }}{% else %}Indisponível{% endif %}" 
+               disabled>
+    
+        <h2 class="meal-title">Almoço</h2>
+        <input type="text" class="meal-description" 
+               value="{% if lunch_menu %}{{ lunch_menu.menu }}{% else %}Indisponível{% endif %}" 
+               placeholder="{% if lunch_menu %}{{ lunch_menu.menu }}{% else %}Indisponível{% endif %}" 
+               disabled>
+    
+        <h2 class="meal-title">Janta</h2>
+        <input type="text" class="meal-description" 
+               value="{% if dinner_menu %}{{ dinner_menu.menu }}{% else %}Indisponível{% endif %}" 
+               placeholder="{% if dinner_menu %}{{ dinner_menu.menu }}{% else %}Indisponível{% endif %}" 
+               disabled>
     </div>
-
 </div>

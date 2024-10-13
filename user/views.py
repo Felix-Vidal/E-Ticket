@@ -26,13 +26,20 @@ def pagamento(request):
 @login_required
 def menu(request):
     today = datetime.date.today()  # Obtém a data de hoje
-    daily_menus = DailyMenu.objects.filter(date=today)  # Filtra os menus pela data de hoje
-    print(daily_menus)
+    
+    # Filtra um item para cada tipo de refeição no menu do dia
+    breakfast_menu = DailyMenu.objects.filter(date=today, meal_type="BREAKFAST").first()
+    lunch_menu = DailyMenu.objects.filter(date=today, meal_type="LUNCH").first()
+    dinner_menu = DailyMenu.objects.filter(date=today, meal_type="DINNER").first()
+    
+    # Adiciona os menus ao contexto
     context = {
-        'menus': daily_menus,
+        'breakfast_menu': breakfast_menu,
+        'lunch_menu': lunch_menu,
+        'dinner_menu': dinner_menu,
     }
+    
     return render(request, 'user/pages/menu.html', context)
-
 @login_required
 def profile(request):
     # Obtém o objeto PersonalData relacionado ao usuário logado
