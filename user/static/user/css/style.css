@@ -45,7 +45,7 @@ h2{
   background-color: #F5FAFF;
   border: 1px solid #0C4CA4;
 }
-#car,p{
+#car, .text-car {
   font-size: 3rem;
   text-align: center;
   color: #ffffff;
@@ -58,7 +58,7 @@ h2{
 .card{
   border-radius:50px;
 }
-#card-pix #car1, p{
+#card-pix #car1{
   font-size: 3rem;
   text-align: center;
   color: #ffffff;
