@@ -10,6 +10,9 @@ import requests
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password, make_password
+from io import BytesIO
+import base64
+import qrcode
 
 from .models import DailyMenu
 import datetime
@@ -17,7 +20,26 @@ import datetime
 # Create your views here.
 @login_required
 def home(request):
-    return render(request, 'user/pages/home.html')
+    # Obtém os dados pessoais do usuário logado
+    personal_data = PersonalData.objects.get(user=request.user)
+
+    # Gera o QR Code a partir do número de matrícula
+    qr_data = personal_data.registration_number
+    qr_img = qrcode.make(qr_data)
+
+    # Salva a imagem em um buffer
+    buffer = BytesIO()
+    qr_img.save(buffer, format='PNG')
+    buffer.seek(0)
+    qr_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    # Passa os dados para o template
+    context = {
+        'credit': personal_data.credit,
+        'registration_number': personal_data.registration_number,
+        'qr_image': qr_image,
+    }
+    return render(request, 'user/pages/home.html', context)
 
 @login_required
 def pagamento(request):
@@ -58,7 +80,7 @@ def profile(request):
 
 # Defina a URL da API externa
 UFAC_API_URL = "https://sistemas.ufac.br/api/csi/usuarios-ru/"
-BEARER_TOKEN = "-"
+BEARER_TOKEN = ""
 def login(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')
