@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from .models import PersonalData, Classification
 from django.contrib.auth.decorators import login_required
 import requests
+from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password, make_password
 
@@ -32,12 +33,25 @@ def menu(request):
     }
     return render(request, 'user/pages/menu.html', context)
 
+@login_required
 def profile(request):
-    return render(request, 'user/pages/profile.html')
+    # Obtém o objeto PersonalData relacionado ao usuário logado
+    personal_data = PersonalData.objects.get(user=request.user)
+
+    # Passa os dados do usuário e suas classificações para o template
+    context = {
+        'user_full_name': personal_data.full_name,
+        'user_cpf': personal_data.cpf,
+        'user_matricula': personal_data.registration_number,
+        'user_unit': personal_data.unit,
+        'user_classifications': personal_data.classifications.all(),
+    }
+    
+    return render(request, 'user/pages/profile.html', context)
 
 # Defina a URL da API externa
 UFAC_API_URL = "https://sistemas.ufac.br/api/csi/usuarios-ru/"
-BEARER_TOKEN = "escondendo codigo"
+BEARER_TOKEN = "-"
 def login(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')
