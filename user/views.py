@@ -7,8 +7,12 @@ from django.http import JsonResponse
 from .models import PersonalData, Classification
 from django.contrib.auth.decorators import login_required
 import requests
+from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import check_password, make_password
+from io import BytesIO
+import base64
+import qrcode
 
 from .models import DailyMenu
 import datetime
@@ -16,7 +20,26 @@ import datetime
 # Create your views here.
 @login_required
 def home(request):
-    return render(request, 'user/pages/home.html')
+    # Obtém os dados pessoais do usuário logado
+    personal_data = PersonalData.objects.get(user=request.user)
+
+    # Gera o QR Code a partir do número de matrícula
+    qr_data = personal_data.registration_number
+    qr_img = qrcode.make(qr_data)
+
+    # Salva a imagem em um buffer
+    buffer = BytesIO()
+    qr_img.save(buffer, format='PNG')
+    buffer.seek(0)
+    qr_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    # Passa os dados para o template
+    context = {
+        'credit': personal_data.credit,
+        'registration_number': personal_data.registration_number,
+        'qr_image': qr_image,
+    }
+    return render(request, 'user/pages/home.html', context)
 
 @login_required
 def pagamento(request):
@@ -25,19 +48,39 @@ def pagamento(request):
 @login_required
 def menu(request):
     today = datetime.date.today()  # Obtém a data de hoje
-    daily_menus = DailyMenu.objects.filter(date=today)  # Filtra os menus pela data de hoje
-    print(daily_menus)
+    
+    # Filtra um item para cada tipo de refeição no menu do dia
+    breakfast_menu = DailyMenu.objects.filter(date=today, meal_type="BREAKFAST").first()
+    lunch_menu = DailyMenu.objects.filter(date=today, meal_type="LUNCH").first()
+    dinner_menu = DailyMenu.objects.filter(date=today, meal_type="DINNER").first()
+    
+    # Adiciona os menus ao contexto
     context = {
-        'menus': daily_menus,
+        'breakfast_menu': breakfast_menu,
+        'lunch_menu': lunch_menu,
+        'dinner_menu': dinner_menu,
     }
+    
     return render(request, 'user/pages/menu.html', context)
-
+@login_required
 def profile(request):
-    return render(request, 'user/pages/profile.html')
+    # Obtém o objeto PersonalData relacionado ao usuário logado
+    personal_data = PersonalData.objects.get(user=request.user)
+
+    # Passa os dados do usuário e suas classificações para o template
+    context = {
+        'user_full_name': personal_data.full_name,
+        'user_cpf': personal_data.cpf,
+        'user_matricula': personal_data.registration_number,
+        'user_unit': personal_data.unit,
+        'user_classifications': personal_data.classifications.all(),
+    }
+    
+    return render(request, 'user/pages/profile.html', context)
 
 # Defina a URL da API externa
 UFAC_API_URL = "https://sistemas.ufac.br/api/csi/usuarios-ru/"
-BEARER_TOKEN = "escondendo codigo"
+BEARER_TOKEN = ""
 def login(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')

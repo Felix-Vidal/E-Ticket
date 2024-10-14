@@ -1,6 +1,7 @@
 {% extends "global/base_user.html" %}
 
 {% block title %}Perfil |{% endblock title %}
+
 {% block content %}
 {% include 'user/partials/header.html' %}
 
@@ -8,15 +9,15 @@
     <div class="user-info">
         <img src='../../../static/user/img/profile.png' alt="Foto do Usuário" class="user-photo">
         <div class="user-details">
-            <h1 class="user-name">Jorge</h1>
-            <p class="user-matricula">Matrícula: 12345678901</p>
+            <h1 class="user-name">{{ user_full_name }}</h1>
+            <p class="user-matricula">Matrícula: {{ user_matricula }}</p>
         </div>
     </div>
     
     <div class="user-fields">
         <div class="field">
             <label>CPF:</label>
-            <p>000.000.000-00</p>
+            <p>{{ user_cpf }}</p>
         </div>
         <div class="field">
             <label>Campo:</label>
@@ -24,8 +25,31 @@
         </div>
         <div class="field">
             <label>Unidade:</label>
-            <p>Bacharelado em Sistemas de Informação</p>
+            <p>{{ user_unit }}</p>
         </div>
+    </div>
+
+    <!-- Tabela para exibir as classificações -->
+    <div class="user-classifications">
+        <h2>Classificações do Usuário</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome da Classificação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for classification in user_classifications %}
+                <tr>
+                    <td>{{ classification.name }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td>Nenhuma classificação encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 
