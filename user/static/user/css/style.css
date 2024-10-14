@@ -202,13 +202,13 @@ body.login {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 85vh;
+  width: 80vh;
 }
 
 .login-box {
   background-color: #fff;
-  border-radius: 60em;
-  width: 100%;
+  border-radius: 100em;
+  width: 120%;
   padding: 5em 7em;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -216,10 +216,12 @@ body.login {
 }
 
 .login-logo {
-  width: 100px;
-  height: 100px;
+  width: 250px;
+  height: 250px;
   object-fit: contain;
-  margin-bottom: 20px;
+  margin-top: -55px;
+  margin-bottom: -55px;
+
 }
 
 .input-group {
