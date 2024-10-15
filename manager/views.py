@@ -41,3 +41,6 @@ def validarQR(request, codigo):  # Recebe o código como parâmetro
 
 def ticketUnico (request):
     return render(request, 'manager/pages/ticketUnico.html')
+
+def relatorio (request):
+    return render(request, 'manager/pages/relatorio.html')
