@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
@@ -5,15 +6,22 @@ from user.models import PersonalData, MEAL_TYPES
 from datetime import datetime
 # Create your views here.
 
+def is_superuser(user):
+    return user.is_superuser
+
+@user_passes_test(is_superuser)
 def home(request):
     return render(request, 'manager/pages/home.html')
 
+@user_passes_test(is_superuser)
 def dashboard (request):
     return render(request, 'manager/pages/dashboard.html')
 
+@user_passes_test(is_superuser)
 def validar (request):
     return render(request, 'manager/pages/validar.html')
 
+@user_passes_test(is_superuser)
 def validarQR(request, codigo):  # Recebe o código como parâmetro
     if codigo:
         # Obtém os dados do usuário usando a matrícula
@@ -40,6 +48,7 @@ def validarQR(request, codigo):  # Recebe o código como parâmetro
         return render(request, 'manager/pages/validarQR.html', context)
     return render(request, 'manager/pages/validarQR.html')
 
+@user_passes_test(is_superuser)
 def validar_usuario(request):
     if request.method == 'POST':
         matricula = request.POST.get('user_matricula')
@@ -87,11 +96,14 @@ def validar_usuario(request):
 
     return redirect('validar')
 
+@user_passes_test(is_superuser)
 def ticketUnico (request):
     return render(request, 'manager/pages/ticketUnico.html')
 
+@user_passes_test(is_superuser)
 def relatorio (request):
     return render(request, 'manager/pages/relatorio.html')
 
+@user_passes_test(is_superuser)
 def cardapio (request):
     return render(request, 'manager/pages/cardapio.html')
