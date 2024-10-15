@@ -3,8 +3,7 @@ from django.http import HttpResponse
 
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from .models import PersonalData, Classification
+from .models import PersonalData, Classification, DailyMenu
 from django.contrib.auth.decorators import login_required
 import requests
 from django.shortcuts import render
@@ -13,8 +12,6 @@ from django.contrib.auth.hashers import check_password, make_password
 from io import BytesIO
 import base64
 import qrcode
-
-from .models import DailyMenu
 import datetime
 
 # Create your views here.
@@ -80,7 +77,7 @@ def profile(request):
 
 # Defina a URL da API externa
 UFAC_API_URL = "https://sistemas.ufac.br/api/csi/usuarios-ru/"
-BEARER_TOKEN = ""
+BEARER_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzZWNyZXQiOiJROVlweEFMTndsRzJWbXlibTJWak4wY2dEcFhLRTMiLCJ0b2tlbiI6ImxFa2tBQTlhbTVianFwWTlzMWpLQzJOeXU1SWh5b01LTVBOS1huajFkRTNFRUNUcDQ1dmYzSmNOQ0pzQiIsInVzZXJuYW1lIjoiYWx1bm9zLXNpLWFwcC1ydSIsInBhc3N3b3JkIjoiUTlZcHhBTE53bEcyVm15Ym0yVmpOMGNnRHBYS0UzIiwiaWR1c2VyIjoiNSJ9.qZXjStlIV6g7BOiMSYg53oP4waIqkDnc63Ku10zpT3k"
 def login(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')
