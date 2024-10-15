@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib import messages
 
 from django.contrib.auth import login as auth_login
 from django.shortcuts import render, redirect
@@ -13,6 +14,7 @@ from io import BytesIO
 import base64
 import qrcode
 import datetime
+from decimal import Decimal
 
 # Create your views here.
 @login_required
@@ -37,6 +39,23 @@ def home(request):
         'qr_image': qr_image,
     }
     return render(request, 'user/pages/home.html', context)
+
+@login_required
+def aumentar_credito(request):
+    if request.method == 'POST':
+        valor = request.POST.get('valor')
+        if valor:
+            try:
+                valor_decimal = Decimal(valor)
+                personal_data = PersonalData.objects.get(user=request.user)
+                personal_data.credit += valor_decimal
+                personal_data.save()
+                messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
+                return redirect('home')  # Redireciona para a página inicial
+            except (PersonalData.DoesNotExist, Decimal.InvalidOperation):
+                messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  # Mensagem de erro
+                return redirect('home')  # Volta para a mesma página
+    return redirect('home')
 
 @login_required
 def pagamento(request):
@@ -160,6 +179,10 @@ def login(request):
 @login_required
 def history(request):
     return render(request, 'user/pages/history.html')
+
+@login_required
+def manage(request):
+    return render(request, 'manager/pages/dashboard.html')
 
 
 
