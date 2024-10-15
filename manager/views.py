@@ -89,3 +89,9 @@ def validar_usuario(request):
 
 def ticketUnico (request):
     return render(request, 'manager/pages/ticketUnico.html')
+
+def relatorio (request):
+    return render(request, 'manager/pages/relatorio.html')
+
+def cardapio (request):
+    return render(request, 'manager/pages/cardapio.html')
