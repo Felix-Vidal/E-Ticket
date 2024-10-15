@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from user.models import PersonalData, MEAL_TYPES
-from models import Cardapio
+from .models import Cardapio
 from datetime import datetime
 # Create your views here.
 

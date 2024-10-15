@@ -1,6 +1,5 @@
 from django.urls import path
-from manager.views import home,dashboard,validar,validarQR, validar_usuario,ticketUnico,relatorio, cardapio
-from manager.views import home,dashboard,validar,validarQR,vender,vendaUnico,usuarioCompra,relatorio, cardapio
+from manager.views import home,dashboard,validar,validarQR, validar_usuario,ticketUnico,relatorio, cardapio, vender, vendaUnico, usuarioCompra
 
 urlpatterns = [
     path('', home), # home
