@@ -5,27 +5,25 @@
 
 <div class="container-fluid d-flex justify-content-center align-items-start mt-5">
     <div class="col-6 col-md-6 col-lg-6 mx-auto" style="margin-left: 5%; margin-top: 5%;">
-       
         <h1 class="text-center mb-4">Validar QRCode:</h1>
-    
-        <div class="mx-auto" style="height: 300px; width: 100%; max-width: 350px; background-color: #AEC6CF; border: none;"></div>
-    
+
+        <!-- Elemento onde a câmera vai exibir a imagem -->
+        <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
+        
+        <!-- Input manual -->
         <div class="mb-3 mt-3 text-center"> 
             <label style="font-size: 20px;" class="form-label">Entrar com código:</label>
-            <input id="codigo" style="border: 2px solid #007bff; max-width: 300px;" type="email" class="form-control mx-auto" placeholder="Digite o código"> 
+            <input id="codigo" style="border: 2px solid #007bff; max-width: 300px;" type="text" class="form-control mx-auto" placeholder="Digite o código">
         </div>
 
+        <!-- Botões -->
         <div class="d-flex justify-content-center mb-2"> 
-            <a href="{% url 'dashboard' %}" class="btn btn-secondary" style="font-size: 20px; width: 120px; margin-right: 8%;">
-                <i class="fa-solid fa-arrow-left"></i> Voltar 
-            </a>
-            
-            <a href="{% url 'validarQR' %}" class="btn btn-primary" style="font-size: 20px; background-color: #0E4DA4; width: 120px;">
-                 Avançar <i class="fa-solid fa-arrow-right"></i>
-            </a>
-            
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary" style="font-size: 20px; width: 120px; margin-right: 8%;">Voltar</a>
+            <button id="btn-avancar" class="btn btn-primary" style="font-size: 20px; background-color: #0E4DA4; width: 120px;">Avançar</button>
         </div>
     </div>
 </div>
+
+
 
 {% endblock content %}

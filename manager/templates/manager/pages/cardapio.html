@@ -1,0 +1,65 @@
+{% extends 'global/base_manager.html' %}
+
+{% block content %}
+{% include 'manager/partials/sideBar.html' %}
+
+<div class="container-cardapio">
+    <h2>Cardápio:</h2>
+    <p>Dia 15/10/2024</p>
+    
+    <div class="section-refeicoes">
+        <label for="cafe1">Café Da Manhã:</label>
+        <textarea id="cafe1" rows="4" cols="50"></textarea>
+        <div class="horarios">
+            <select>
+                <option>Horario de inicio</option>
+                <option>06:00</option>
+                <option>07:00</option>
+            </select>
+            <select>
+                <option>Horario de final</option>
+                <option>08:00</option>
+                <option>09:00</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section-refeicoes">
+        <label for="cafe2">Almoço:</label>
+        <textarea id="cafe2" rows="4" cols="50"></textarea>
+        <div class="horarios">
+            <select>
+                <option>Horario de inicio</option>
+                <option>11:00</option>
+                <option>12:00</option>
+            </select>
+            <select>
+                <option>Horario de final</option>
+                <option>13:30</option>
+                <option>14:00</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section-refeicoes">
+        <label for="cafe3">Jantar:</label>
+        <textarea id="cafe3" rows="4" cols="50"></textarea>
+        <div class="horarios">
+            <select>
+                <option>Horario de inicio</option>
+                <option>17:30</option>
+                <option>18:00</option>
+            </select>
+            <select>
+                <option>Horario de final</option>
+                <option>19:00</option>
+                <option>19:30</option>
+            </select>
+        </div>
+    </div>
+<div class="continuar">
+    <button class="btn-continuar">Continuar</button>
+</div>
+</div>
+
+{% endblock %}
