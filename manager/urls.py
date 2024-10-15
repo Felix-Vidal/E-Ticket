@@ -5,8 +5,8 @@ urlpatterns = [
     path('', home), # home
     path('dashboard/', dashboard, name='dashboard'),
     path('validar/', validar, name='validar'),
-    path('validarQR/', validarQR, name='validarQR'),
-     path('ticketUnico/', ticketUnico, name='ticketUnico'),    
+    path('validarQR/<int:codigo>/', validarQR, name='validarQR'),
+     path('ticketUnico/', ticketUnico, name='ticketUnico'),
     
 
 ]
