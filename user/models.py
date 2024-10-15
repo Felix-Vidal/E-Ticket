@@ -19,6 +19,7 @@ class Classification(models.Model):
     breakfast_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     lunch_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     dinner_value = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    priority = models.IntegerField(default=0)  # Adiciona prioridade (menor valor significa maior prioridade)
 
     def __str__(self):
         return self.name

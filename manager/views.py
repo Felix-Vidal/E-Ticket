@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
 from user.models import PersonalData, MEAL_TYPES
 from datetime import datetime
 # Create your views here.
@@ -38,6 +39,53 @@ def validarQR(request, codigo):  # Recebe o código como parâmetro
         }
         return render(request, 'manager/pages/validarQR.html', context)
     return render(request, 'manager/pages/validarQR.html')
+
+def validar_usuario(request):
+    if request.method == 'POST':
+        matricula = request.POST.get('user_matricula')
+        meal_type = request.POST.get('meal_type')
+
+        try:
+            # Busca o usuário pela matrícula
+            personal_data = PersonalData.objects.get(registration_number=matricula)
+
+            # Se o usuário for gratuito, não deduz crédito
+            if personal_data.gratuitous:
+                messages.success(request, 'Usuário gratuito, refeição validada sem desconto de crédito.')
+                return redirect('validar')  # Redireciona para /manage/validar/
+
+            # Busca a classificação com a maior prioridade (menor valor de 'priority')
+            classification = personal_data.classifications.order_by('priority').first()
+
+            if not classification:
+                messages.error(request, 'Nenhuma classificação encontrada para o usuário.')
+                return redirect('validar')
+
+            # Calcula o valor da refeição com base no tipo de refeição
+            if meal_type == 'Breakfast':
+                total_discount = classification.breakfast_value
+            elif meal_type == 'Lunch':
+                total_discount = classification.lunch_value
+            elif meal_type == 'Dinner':
+                total_discount = classification.dinner_value
+            else:
+                messages.error(request, 'Tipo de refeição inválido.')
+                return redirect('validar')
+
+            # Verifica se o usuário tem crédito suficiente
+            if personal_data.credit >= total_discount:
+                # Deduz o valor da refeição do crédito do usuário
+                personal_data.credit -= total_discount
+                personal_data.save()
+
+                messages.success(request, 'Refeição validada com sucesso!')
+            else:
+                messages.error(request, 'Crédito insuficiente para validar a refeição.')
+
+        except PersonalData.DoesNotExist:
+            messages.error(request, 'Usuário não encontrado.')
+
+    return redirect('validar')
 
 def ticketUnico (request):
     return render(request, 'manager/pages/ticketUnico.html')

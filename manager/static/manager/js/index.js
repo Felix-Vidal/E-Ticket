@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const qrCodeSuccessCallback = (decodedText, decodedResult) => {
         // Preencher o campo de código com o QRCode decodificado
         document.getElementById('codigo').value = decodedText;
+        
         window.location.href = "../validarQR/" + encodeURIComponent(decodedText) + "/";
         html5QrCode.stop(); // Para a câmera após leitura
     };
@@ -15,25 +16,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
-// Enviar para a view do Django ao clicar no botão "Avançar"
-document.getElementById('btn-avancar').addEventListener('click', function () {
-    const codigo = document.getElementById('codigo').value;
-
-    fetch("{% url 'validarQR' %}", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'  // Importante para segurança no Django
-        },
-        body: JSON.stringify({ codigo: codigo })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("QR Code validado e créditos deduzidos!");
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => console.error('Erro:', error));
-});
