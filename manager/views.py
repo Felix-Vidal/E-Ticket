@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from user.models import PersonalData, MEAL_TYPES
+from models import Cardapio
 from datetime import datetime
 # Create your views here.
 
@@ -107,3 +108,33 @@ def relatorio (request):
 @user_passes_test(is_superuser)
 def cardapio (request):
     return render(request, 'manager/pages/cardapio.html')
+
+def vender (request):
+    return render(request, 'manager/pages/vender.html')
+
+def vendaUnico (request):
+    return render(request, 'manager/pages/vendaUnico.html')
+
+def usuarioCompra (request):
+    return render(request, 'manager/pages/UsuarioCompra.html')
+
+    return render(request, 'manager/pages/cardapio.html')
+
+def cadastro_cardapio(request):
+    cardapio = Cardapio()
+    cardapio.cafe = request.POST.get('cafe')
+    cardapio.cafe_inicio = request.POST.get('hora-inicio-cafe')
+    cardapio.cafe_inicio = request.POST.get('hora-final-cafe')
+    cardapio.almoco = request.POST.get('almoco')
+    cardapio.almoco_inicio = request.POST.get('hora-inicio-almoco')
+    cardapio.almoco_inicio = request.POST.get('hora-final-almoco')
+    cardapio.jantar = request.POST.get('cafe')
+    cardapio.jantar_inicio = request.POST.get('hora-inicio-jantar')
+    cardapio.jantar_inicio = request.POST.get('hora-final-jantar')
+    cardapio.save()
+    
+    mostrar_cardapio = {
+        "cardapio": Cardapio.objects.all()
+    }
+    
+    return render(request, 'user/menu.html', mostrar_cardapio)

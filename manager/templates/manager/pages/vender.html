@@ -3,11 +3,13 @@
 {% block content %}
 {% include 'manager/partials/sideBar.html' %}
 
-<div class="content d-flex justify-content-center" style=" margin-top: 5%;">
+<div id="top" class="content d-flex justify-content-center" style=" margin-top: 5%;">
     <div class="container-fluid">
         <div class="row justify-content-center" style="margin-top: 2rem;">
-            <div class="col-12 col-md-6 col-lg-4">  <!-- Define responsividade -->
-                <a href="{% url 'ticketUnico' %}" style="text-decoration: none;">
+            
+            <div class="col-12 col-md-6 col-lg-4"> 
+                <h1  id="titulo" style="margin-bottom:55px; text-align:center">Vender Ticket</h1>
+                <a href="{% url 'vendaUnico' %}" style="text-decoration: none;">
                     <div class="card mb-4" style="border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff;">
                         <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                             <i style="font-size: 100px;" class="fa-solid fa-qrcode"></i>
@@ -17,7 +19,7 @@
                         </div>
                     </div>
                 </a>
-                <div  id="teste" class="col-12 col-md-5"  style=" margin-top: 15%;">  <!-- Ajuste a largura da coluna -->
+                <div  id="teste" class="col-12 col-md-5"  style=" margin-top: 15%;">
                     <label id="form1" style="font-size: 20px;" class="form-label">Pesquisar Usuario:</label>
                     <input id="codigo" style="border: 2px solid #007bff; width: 240%;" type="text" class="form-control" placeholder="Digite o código">
                 </div> 
@@ -28,7 +30,7 @@
                         </a>
                     </div>
                     <div>
-                        <a class="btn btn-primary" style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
+                        <a class="btn btn-primary" href="{% url 'usuarioCompra' %}"  style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
                             <i class="fa-solid fa-search"></i> Pesquisar
                         </a>
                     </div>

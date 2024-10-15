@@ -1,0 +1,57 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'manager/partials/sideBar.html' %}
+<div id="geral" class="content d-flex justify-content-center">
+    <div id="row-main" class="row justify-content-center" style="margin-top: 8%;"> 
+       <div class="col-8col-md-6 col-lg-6">
+         <h1 id="titulo-compra">Gerar Ticket Único</h1>
+       </div>
+       
+       <div id="conteudo" class="col-12 col-md-10 d-flex flex-column flex-md-row align-items-start">
+            <img id="user-compra-perfil" src="/static/manager/img/perfil.jpg" class="img-thumbnail rounded-circle img-fluid mb-3">
+
+            <div id="user-conteudo" class="col-md-6 d-flex flex-column align-items-start">  
+                <div class="d-flex flex-column flex-md-row col-12 align-items-center mx-3 mb-3">
+                    <div id="user-nome" class="col-12 col-md-7 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
+                        <label class="form-label mb-0 me-2 text-nowrap">Nome</label>
+                        <input class="form-control" value="Maria Eduarda Campos Santos" aria-label="nome" disabled readonly>
+                    </div>
+                
+                    <div id="saldo-atual" class="col-12 col-md-6 d-flex flex-column align-items-start">
+                        <label class="form-label mb-0">Saldo atual R$:</label>
+                        <input id="saldo-atual-input" class="form-control" value="20,00" aria-label="matricula" disabled readonly>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column flex-md-row col-12 align-items-center mx-3 mb-3">
+                    <div id="valor-main" class="col-12 col-md-7 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
+                        <label id="valor-label"for="valor" class="form-label">Valor:</label>
+                        <input type="text" id="valor-pagar" class="form-control" aria-describedby="passwordHelpBlock">
+                        <div id="valor" class="form-text"></div>
+                    </div>
+                
+                    <div id="pagamento" class="col-12 col-md-6 d-flex flex-column align-items-start">
+                        <label id="pagamento-label"  for="select-pagamento" class="form-label">Forma de pagamento:</label>
+                        <select id="select-pagamento" class="form-select w-100" aria-label="Default select example">
+                            <option selected>Pix</option>
+                            <option value="1">Dinheiro</option>
+                            <option value="2">Cartão</option>
+                        </select>
+                    </div>
+                    
+                </div>
+                <div d="v-venda"class="d-flex justify-content-center col-12 col-md-7 mt-3 mx-auto">
+                    <div id="confirmar-vendas" class="col-12 col-md-6 d-flex flex-column align-items-start">
+                        <a class="btn btn-success btn-sm btn-md w-100">
+                            <i class="fa-solid fa-check"></i> Confirmar
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
