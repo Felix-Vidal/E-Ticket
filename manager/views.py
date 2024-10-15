@@ -95,3 +95,12 @@ def relatorio (request):
 
 def cardapio (request):
     return render(request, 'manager/pages/cardapio.html')
+
+def vender (request):
+    return render(request, 'manager/pages/vender.html')
+
+def vendaUnico (request):
+    return render(request, 'manager/pages/vendaUnico.html')
+
+def usuarioCompra (request):
+    return render(request, 'manager/pages/UsuarioCompra.html')
