@@ -47,29 +47,170 @@
     border-radius: 0 2.8125em 2.8125em 0;
 }
 
-/* Media query para telas menores (ex.: dispositivos móveis) */
-@media (max-width: 768px) {
-    /* Reduzindo a largura da sidebar */
-    .l-navbar {
-        width: 90px; /* Sidebar será reduzida para 60px em telas menores */
+
+
+/*tela de vendaUnico*/
+#form-venda{
+    margin-top:4%;
+
+
+}
+#input-email, #select-unico,#select-pagamento, #cafee,#jantar-label,#almoco-label,#refeicao-label{
+    border: 2px solid #007bff;
+
+}
+#titulo-gera{
+    margin-bottom: 40px;
+}
+#select-unico,#select-pagamento{
+    background-color: #e4f2f7;
+}
+#cafe-manha, #jantas,#almoco,#refeicoes{
+    margin-top: 40px;
+}
+#confirma{
+    background: #35A40E;
+    border-radius: 15px;
+    font-size: 20px;
+}
+#volta{
+    font-size: 20px;
+    width: 150px;
+    border-radius: 15px;
+}
+/* tela de usuarioCompra */
+#user-compra{
+    width: 200px; 
+    height: 150px; 
+    border-color: ; 
+    margin-left: 75px
+
+}
+
+#saldo-atual input{
+  
+    background-color:#0C4CA4;
+    color: #fff;
+    width: 100%;
+}
+#user-compra-nome{
+    width: 100%;
+}
+#row-main{
+    margin-left: -20%;
+
+}
+#user-compra-perfil{
+    width: 160px;
+    height: 180px;
+    margin-top:-2% ;
+}
+#valor-pagar{
+    border: 2px solid #007bff;
+ 
+}
+#valor-main{
+    margin-top: 5px;
+   
+}
+#titulo-compra{
+    margin-bottom: 55px;
+    text-align: center;
+}
+#geral{
+    margin-left: 40%;
+    margin-top: 50px;
+}
+#pagamento-label, #valor-label{
+    line-height: 1;
+}
+
+#confirmar-vendas a{
+    background-color: #35A40E;
+    border-radius: 15px;
+}
+#volta-venda a{
+    border-radius: 15px;
+}
+
+
+
+
+@media (max-width: 420px) {
+    #top{
+        width: 80%; 
+    
+    }
+    #form-venda{
+        width: 250px;
+        margin-left: 20%;
+    
+    }
+    #volta{
+        width: 80px;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    #confirma{
+        width: 90px;
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    #geral{
+        width: 80%;
+    }
+    #user-conteudo{
+    
+  
+        margin-top: 20px;
+    }
+    #titulo-compra{
+        margin-left:5%;
+        margin-top:35px;
+    }
+    #user-compra-perfil{
+        margin-left: 15px;
+        width: 300px;
+        height:250px ;
+    }
+    #pagamento-label{
+        line-height: 1;
     }
 
-    /* Centralizando ícones no menu */
+   
+}
+
+
+
+
+
+@media (max-width: 768px) {
+  
+    .l-navbar {
+        width: 90px; 
+    }
+
+   
     .nav_link {
-        padding: .5rem 0; /* Remove o espaçamento lateral */
-        justify-content: center; /* Centraliza os ícones */
+        padding: .5rem 0; 
+        justify-content: center; 
         font-size: 30px;
     }
 
-    /* Esconde o texto dos itens do menu */
+   
     .nav_name {
-        display: none; /* Esconde o texto ao lado dos ícones */
+        display: none; 
     }
 
-    /* Ajusta o logo para se adequar à nova largura */
+    
     .distintivo img {
-        width: 85px; /* Reduz o tamanho da imagem do logo */
-        margin: 1em auto; /* Centraliza o logo */
+        width: 85px; 
+        margin: 1em auto; 
         margin-top: 80px;
     }
+    #confirmar-vendas a{
+       margin-left: 10px;
+    }
 }
+
+

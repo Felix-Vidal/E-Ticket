@@ -14,5 +14,11 @@ def validar (request):
 def validarQR (request):
     return render(request, 'manager/pages/validarQR.html')
 
-def ticketUnico (request):
-    return render(request, 'manager/pages/ticketUnico.html')
+def vender (request):
+    return render(request, 'manager/pages/vender.html')
+
+def vendaUnico (request):
+    return render(request, 'manager/pages/vendaUnico.html')
+
+def usuarioCompra (request):
+    return render(request, 'manager/pages/usuarioCompra.html')
