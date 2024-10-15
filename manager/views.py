@@ -47,3 +47,9 @@ def vendaUnico (request):
 
 def usuarioCompra (request):
     return render(request, 'manager/pages/usuarioCompra.html')
+
+def relatorio (request):
+    return render(request, 'manager/pages/relatorio.html')
+
+def cardapio (request):
+    return render(request, 'manager/pages/cardapio.html')
