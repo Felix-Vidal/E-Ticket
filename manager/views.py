@@ -44,3 +44,6 @@ def ticketUnico (request):
 
 def relatorio (request):
     return render(request, 'manager/pages/relatorio.html')
+
+def cardapio (request):
+    return render(request, 'manager/pages/cardapio.html')

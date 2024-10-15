@@ -1,5 +1,5 @@
 from django.urls import path
-from manager.views import home,dashboard,validar,validarQR,ticketUnico,relatorio
+from manager.views import home,dashboard,validar,validarQR,ticketUnico,relatorio, cardapio
 
 urlpatterns = [
     path('', home), # home
@@ -8,6 +8,7 @@ urlpatterns = [
     path('validarQR/<int:codigo>/', validarQR, name='validarQR'),
     path('ticketUnico/', ticketUnico, name='ticketUnico'),
     path('relatorio/', relatorio, name='relatorio'),
+    path('cardapio/', cardapio, name='cardapio'),
     
 
 ]
