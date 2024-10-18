@@ -33,7 +33,7 @@
                     <span class="nav_name">Sobre</span>
                 </a>
 
-                <form action="{% url 'logout' %}" class="nav_link" id="logout" method="post" style="display: inline;">
+                <form action="{% url 'logout' %}" class="nav_link" id="logout" method="post">
                     {% csrf_token %}
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <button class="nav_name" type="submit"><span class="nav_name"> Sair </span></button>
