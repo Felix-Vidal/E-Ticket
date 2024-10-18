@@ -134,7 +134,8 @@ def login(request):
                     return render(request, 'user/pages/login.html', {'error_message': 'Usuário não encontrado na API externa.'})
 
                 # Acessa o primeiro registro da lista "response"
-                user_data = external_data['response'][0]
+                for user_data in external_data['response']:
+                    if user_data.get('SITUACAO') == 'Ativo': break
 
                 # Extrai os dados do usuário
                 matricula = user_data.get('MATRICULA')
