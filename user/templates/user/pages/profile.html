@@ -39,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for classification in user_classifications %}
+                {% comment %} {% for classification in user_classifications %}
                 <tr>
                     <td>{{ classification.name }}</td>
                 </tr>
@@ -47,7 +47,7 @@
                 <tr>
                     <td>Nenhuma classificação encontrada.</td>
                 </tr>
-                {% endfor %}
+                {% endfor %} {% endcomment %}
             </tbody>
         </table>
     </div>

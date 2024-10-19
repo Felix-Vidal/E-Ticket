@@ -25,7 +25,6 @@
     font-size: 20px;
 }
 
-
 .nav_link {
     display: flex;
     align-items: center;
@@ -299,7 +298,6 @@
 
 /* relatório */
 .container-relatorio {
-    margin-left: 10em; 
     width: calc(100% - 10em); 
     padding: 20px;
     background-color: #f0f4ff;

@@ -2,7 +2,7 @@
 
 {% block content %}
 {% include 'manager/partials/sideBar.html' %}
-
+<div class="container">
 <form {% url 'menu' %} method="post">
     {% csrf_token %}
 <div class="container-cardapio">
@@ -28,4 +28,5 @@
 </div>
 </div>
 </form>
+</div>
 {% endblock %}
