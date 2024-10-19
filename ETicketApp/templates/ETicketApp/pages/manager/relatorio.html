@@ -1,0 +1,141 @@
+{% extends 'global/base_manager.html' %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+<div class="container-relatorio">
+
+    <div class="container-relatorio">
+        <div class="section-validacao">
+            <h2>Relatório:</h2>
+            <div class="form-group">
+                <label for="dataInicio">Data Início:</label>
+                <input type="date" id="dataInicio" name="dataInicio">
+            </div>
+            <div class="form-group">
+                <label for="dataFim">Data final:</label>
+                <input type="date" id="dataFim" name="dataFim">
+            </div>
+            <button class="btn-buscar">Buscar</button>
+        </div>
+
+  <div class="section-refeicoes">
+    <h2>Refeições:</h2>
+    <div class="btn-gerar-relatorio">
+        <button class="btn-relatorio">Gerar Relatório</button>
+    </div>
+    
+    <p>Usuários do RU</p>
+    <div class="cards-refeicoes">
+      <div class="card">
+        <h3>Bolsista</h3>
+        <p>150</p>
+      </div>
+      <div class="card">
+        <h3>Graduação</h3>
+        <p>1455</p>
+      </div>
+      <div class="card">
+        <h3>Comunidade Externa</h3>
+        <p>15</p>
+      </div>
+      <div class="card">
+        <h3>Pós-Graduação</h3>
+        <p>331</p>
+      </div>
+      <div class="card">
+        <h3>Ticket Especial</h3>
+        <p>101</p>
+      </div>
+      <div class="card">
+        <h3>Servidor</h3>
+        <p>213</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-refeicoes">
+    <p>Fluxo do RU</p>
+    <div class="cards-refeicoes">
+      <div class="card">
+        <h3>Café da manhã</h3>
+        <p>255</p>
+      </div>
+      <div class="card">
+        <h3>Almoço</h3>
+        <p>1000</p>
+      </div>
+      <div class="card">
+        <h3>Jantar</h3>
+        <p>845</p>
+      </div>
+      <div class="card">
+        <h3>Total de visita</h3>
+        <p>2100</p>
+      </div>
+    </div>
+</div>
+
+  <div class="section-compra">
+    <h2>Compra:</h2>
+    <div class="btn-gerar-relatorio">
+        <button class="btn-relatorio">Gerar Relatório</button>
+    </div>
+    <p>Usuários que compraram</p>
+    <div class="cards-compra">
+      <div class="card">
+        <h3>Bolsista</h3>
+        <p>150</p>
+      </div>
+      <div class="card">
+        <h3>Graduação</h3>
+        <p>1455</p>
+      </div>
+      <div class="card">
+        <h3>Comunidade Externa</h3>
+        <p>15</p>
+      </div>
+      <div class="card">
+        <h3>Pós-Graduação</h3>
+        <p>331</p>
+      </div>
+      <div class="card">
+        <h3>Ticket Especial</h3>
+        <p>30</p>
+      </div>
+      <div class="card">
+        <h3>Servidor</h3>
+        <p>56</p>
+      </div>
+      <div class="card">
+        <h3>Total de Vendas</h3>
+        <p>2120</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-refeicoes">
+    <p>Tickets Únicos Vendidos</p>
+    <div class="cards-refeicoes">
+      <div class="card">
+        <h3>Café da manhã</h3>
+        <p>15</p>
+      </div>
+      <div class="card">
+        <h3>Almoço</h3>
+        <p>10</p>
+      </div>
+      <div class="card">
+        <h3>Jantar</h3>
+        <p>5</p>
+      </div>
+      <div class="card">
+        <h3>Total de tickets únicos vendidos</h3>
+        <p>30</p>
+      </div>
+    </div>
+</div>
+  
+
+</div>
+</div>
+{% endblock %}

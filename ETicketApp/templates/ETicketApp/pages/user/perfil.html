@@ -1,0 +1,56 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}Perfil |{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/user/header.html' %}
+
+<div class="profile-container">
+    <div class="user-info">
+        <img src='../../../static/ETicketApp/img/profile.png' alt="Foto do Usuário" class="user-photo">
+        <div class="user-details">
+            <h1 class="user-name">{{ nome_completo }}</h1>
+            <p class="user-matricula">Matrícula: {{ matricula }}</p>
+        </div>
+    </div>
+    
+    <div class="user-fields">
+        <div class="field">
+            <label>CPF:</label>
+            <p>{{ cpf }}</p>
+        </div>
+        <div class="field">
+            <label>Campo:</label>
+            <p>Universidade Federal do Acre</p>
+        </div>
+        <div class="field">
+            <label>Unidade:</label>
+            <p>{{ unidade }}</p>
+        </div>
+    </div>
+
+    <!-- Tabela para exibir as classificações -->
+    <div class="user-classifications">
+        <h2>Classificações do Usuário</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome da Classificação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for classificacao in classificacoes %}
+                <tr>
+                    <td>{{ classificacao.nome }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td>Nenhuma classificação encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

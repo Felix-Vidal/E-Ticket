@@ -1,0 +1,71 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+
+<div id="top" class="content d-flex justify-content-center" style=" margin-top: 5%;">
+    <div class="container-fluid">
+        <div class="row justify-content-center" style="margin-top: 2rem;">
+            
+            <div class="col-12 col-md-6 col-lg-4"> 
+                <h1  id="titulo" style="margin-bottom:55px; text-align:center">Vender Ticket</h1>
+                <a href="{% url 'vendaUnico' %}" style="text-decoration: none;">
+                    <div class="card mb-4" style="border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff;">
+                        <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
+                            <i style="font-size: 100px;" class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text" style="font-size: 24px;">Gerar Ticket Único</p>
+                        </div>
+                    </div>
+                </a>
+                <div  id="teste" class="col-12 col-md-5"  style=" margin-top: 15%;">
+                    <label id="form1" style="font-size: 20px;" class="form-label">Pesquisar Usuario:</label>
+                    <input id="codigo" style="border: 2px solid #007bff; width: 240%;" type="text" class="form-control" placeholder="Digite o código">
+                </div> 
+                <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px;">
+                    <div>
+                        <a href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 150px;">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn btn-primary" href="{% url 'usuarioCompra' %}"  style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
+                            <i class="fa-solid fa-search"></i> Pesquisar
+                        </a>
+                    </div>
+                </div>
+                
+   
+                
+            </div>
+            
+        </div>
+        
+        
+    </div>
+</div>
+
+
+<style>
+    @media (max-width: 912px) {
+        .content {
+            width: 80%; /* Garante que o conteúdo ocupe toda a largura disponível */
+            margin-left:100px;
+        }
+    
+        .sidebar {
+            width: 60px; /* Ajuste a largura do sidebar para que fique mais estreito em telas pequenas */
+        }
+        .card{
+            width:90%;
+        }
+        #teste{
+            width:37%;
+        }
+
+        
+    }
+    </style>
+
+{% endblock content %}

@@ -1,0 +1,44 @@
+<div class="l-navbar" id="nav-bar">
+    <nav class="nav">
+        <div>
+            <div id="banner" class="d-flex align-items-center">
+                <div class="distintivo d-flex align-items-center">
+                    <img src="/static/manager/img/e-ticket.png" class="img-fluid me-2">
+                </div>
+            </div>
+            <div class="nav_list">
+                <a href="{% url 'manage' %}" id="home" class="nav_link" routerLinkActive="active">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="nav_name">Inicio</span>
+                </a>
+
+                <a href="{% url 'relatorio' %}" id="laws" class="nav_link" routerLinkActive="active">
+                    <i class="fa-regular fa-folder"></i>
+                    <span class="nav_name">Relatório</span>
+                </a>
+
+                <a id="users" class="nav_link" routerLinkActive="active">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="nav_name">Usuários</span>
+                </a>
+
+                <a id="perfil" class="nav_link" routerLinkActive="active">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="nav_name">Perfil</span>
+                </a>
+
+
+                <a id="sobre" class="nav_link" routerLinkActive="active">
+                    <i class="fa-solid fa-info"></i>
+                    <span class="nav_name">Sobre</span>
+                </a>
+
+                <form action="{% url 'logout' %}" class="nav_link" id="logout" method="post">
+                    {% csrf_token %}
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <button class="nav_name" type="submit"><span class="nav_name"> Sair </span></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>

@@ -1,0 +1,44 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}Pagamento|{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/user/header.html' %}
+<h1 id="title">Formas de Pagamento</h1>
+<div id="login" class="container-fluid">
+ 
+  <div id="my-box">
+    <form method="POST" action="{% url 'aumentar-credito' %}">
+      {% csrf_token %}
+      <div class="mb-3">
+          <label for="valorInput" class="form-label">Valor</label>
+          <input type="text" class="form-control" id="valorInput" name="valor" placeholder="Digite o valor" required>
+      </div>
+  </form>
+
+    <div class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#modal-card">
+      <i id="car" class="fa-regular fa-credit-card"></i>
+      <div class="card-body">
+        <p class="card-text text-car">Cartão</p>
+      </div>
+    </div>
+    <div id="card-pix" class="card" style="width: 18rem;" data-bs-toggle="modal" data-bs-target="#modal-pix">
+      <i id="car1" class="fa-brands fa-pix"></i>
+      <div class="card-body">
+        <p class="card-text text-car">Pix</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+    
+    
+
+
+{% include 'ETicketApp/partials/user/modal-pagamento.html' %}
+{% include 'ETicketApp/partials/user/modal-pix.html' %}
+{% endblock content %}
+
+
+
+

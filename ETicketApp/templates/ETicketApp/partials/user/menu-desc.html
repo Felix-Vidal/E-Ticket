@@ -1,0 +1,23 @@
+<div class="container">
+    <h1 class="main-title">Cardápio</h1>
+
+    <div class="meal-section">
+        <h2 class="meal-title">Café Da Manhã</h2>
+        <input type="text" class="meal-description" 
+               value="{% if cafe %}{{ cafe.menu }}{% else %}Indisponível{% endif %}" 
+               placeholder="{% if cafe %}{{ cafe.menu }}{% else %}Indisponível{% endif %}" 
+               disabled>
+    
+        <h2 class="meal-title">Almoço</h2>
+        <input type="text" class="meal-description" 
+               value="{% if almoco %}{{ almoco.menu }}{% else %}Indisponível{% endif %}" 
+               placeholder="{% if almoco %}{{ almoco.menu }}{% else %}Indisponível{% endif %}" 
+               disabled>
+    
+        <h2 class="meal-title">Janta</h2>
+        <input type="text" class="meal-description" 
+               value="{% if jantar %}{{ jantar.menu }}{% else %}Indisponível{% endif %}" 
+               placeholder="{% if jantar %}{{ jantar.menu }}{% else %}Indisponível{% endif %}" 
+               disabled>
+    </div>
+</div>

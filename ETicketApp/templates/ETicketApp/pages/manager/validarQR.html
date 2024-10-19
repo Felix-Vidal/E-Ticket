@@ -1,0 +1,83 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+
+<div class="row container" style="margin-left: 20%; padding-right: 15%;">  
+    <div class="row justify-content-center" style="margin-top: 8%;"> 
+        <div class="col-12 col-md-10 d-flex flex-column flex-md-row align-items-start">
+            <img src="../../../../ETicketApp/static/ETicketApp/img/profile.png" class="img-thumbnail rounded-circle img-fluid mb-3" 
+            style="width: 150px; height: 150px; border-color: #0C4CA4; margin-left: 75px">
+    
+            <div class="col-md-6 d-flex flex-column align-items-start">  
+                <div class="col-12 d-flex flex-column align-items-start mx-3 mb-3">
+                    <label class="form-label mb-0 me-2 text-nowrap">Nome:</label>
+                    <input id="nome-aluno" class="form-control" value="{{ nome_completo }}" aria-label="nome" style="width: 100%;" disabled readonly>
+                </div>
+            
+                <div class="d-flex flex-column flex-md-row col-12 align-items-center mx-3 mb-3">
+                    <div class="col-12 col-md-6 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
+                        <label class="form-label mb-0 me-2 text-nowrap">Saldo R$:</label>
+                        <input class="form-control" value="{{ credito }}" aria-label="saldo" style="width: 100%;" disabled readonly>
+                    </div>
+                
+                    <div class="col-12 col-md-6 d-flex flex-column align-items-start">
+                        <label class="form-label mb-0">Matrícula:</label>
+                        <input class="form-control" value="{{ matricula }}" aria-label="matricula" style="width: 100%;" disabled readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container"> 
+        <div class="row justify-content-center"> 
+            <div class="col-12 col-md-8 d-flex flex-column align-items-center"> 
+                <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
+                    <div class="col-12 col-md-6 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
+                        <label class="form-label">Refeição:</label>
+                        <input class="form-control mb-3" value="{% if tipo_refeicao == "Almoço" %} Almoço {% elif tipo_refeicao == "Jantar" %} Jantar {% else %}Café Da Manha{% endif %}" aria-label="refeicao" style="max-width: 95%;" disabled readonly>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex flex-column align-items-start">
+                        <label class="form-label">CPF:</label>
+                        <input class="form-control mb-3" value="{{ cpf }}" aria-label="cpf" style="max-width: 95%;" disabled readonly>
+                    </div>
+                </div>
+                
+                <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
+                    <div class="col-12 col-md-6 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
+                        <label class="form-label">Campus:</label>
+                        <input class="form-control mb-3" value="{{"Universidade Federal do Acre"}}" aria-label="campus" style="max-width: 95%;" disabled readonly>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex flex-column align-items-start">
+                        <label class="form-label">Unidade:</label>
+                        <input class="form-control mb-3" value="{{ unidade }}" aria-label="unidade" style="max-width: 95%;" disabled readonly>
+                    </div>
+                </div>
+    
+                <div class="col-10 col-md-12 d-flex flex-column align-items-start mx-3 mb-3">
+                    <div class="col-md-12 col-12 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
+                        <label class="form-label">Papéis:</label>
+                        <input class="form-control mb-3" value="{{ classificacoes }}" aria-label="papeis" style="width: 100%;" disabled readonly>
+                    </div>
+                    
+                    <form method="POST" action="{% url 'validar_usuario' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="matricula" value="{{ matricula }}">
+                        <input type="hidden" name="tipo_refeicao" value="{{ tipo_refeicao }}">
+                        
+                        <div class="d-flex flex-column flex-md-row justify-content-between w-100 mt-3">
+                            <a href="{% url 'validar' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 120px;">
+                                <i class="fa-solid fa-arrow-left"></i> Voltar 
+                            </a>
+                            
+                            <button style="font-size: 20px; background-color: #35A40E; width: 120px;" class="btn btn-success" type="submit">Validar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock content %}
