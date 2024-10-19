@@ -118,7 +118,6 @@ def vendaUnico (request):
 def usuarioCompra (request):
     return render(request, 'manager/pages/UsuarioCompra.html')
 
-    return render(request, 'manager/pages/cardapio.html')
 def usuarios (request):
     return render(request, 'manager/pages/usuarios.html')
 
@@ -126,21 +125,13 @@ def add_user (request):
     return render(request, 'manager/pages/add_user.html')
 
 def cadastro_cardapio(request):
-    cardapio = Cardapio()
-    cardapio.cafe = request.POST.get('cafe')
-    cardapio.cafe_inicio = request.POST.get('hora-inicio-cafe')
-    cardapio.cafe_inicio = request.POST.get('hora-final-cafe')
-    cardapio.almoco = request.POST.get('almoco')
-    cardapio.almoco_inicio = request.POST.get('hora-inicio-almoco')
-    cardapio.almoco_inicio = request.POST.get('hora-final-almoco')
-    cardapio.jantar = request.POST.get('cafe')
-    cardapio.jantar_inicio = request.POST.get('hora-inicio-jantar')
-    cardapio.jantar_inicio = request.POST.get('hora-final-jantar')
-    cardapio.save()
-    
-    mostrar_cardapio = {
-        "cardapio": Cardapio.objects.all()
-    }
-    
-    return render(request, 'user/menu.html', mostrar_cardapio)
+    if request.method == 'POST':
+        cardapio = Cardapio(
+            cafe=request.POST.get('cafe'),
+            almoco=request.POST.get('almoco'),
+            jantar=request.POST.get('jantar')
+        )
+        cardapio.save()
+        # return redirect('mostrar_cardapio')  # Redireciona para a página de exibição do cardápio
+    return render(request, 'manage/home.html')
 
