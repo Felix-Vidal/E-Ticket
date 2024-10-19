@@ -10,10 +10,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 250px; /* Largura padrão da sidebar */
-    height: 100vh;
+    width: 250px; 
+    height: 150vh;
     background-color: #0C4CA4;
-    transition: width 0.3s ease; /* Transição suave ao mudar o tamanho */
+    transition: width 0.3s ease; 
     z-index: var(--z-fixed);
  
 }
@@ -51,8 +51,6 @@
 #nav-bar {
     border-radius: 0 2.8125em 2.8125em 0;
 }
-
-
 
 /*tela de vendaUnico*/
 #form-venda{
@@ -120,7 +118,6 @@
 #titulo-compra{
     margin-bottom: 55px;
     text-align: center;
-    margin-left: 150px;
 }
 #geral{
     margin-left: 30%;
@@ -147,10 +144,14 @@
 
 
 
-@media (max-width: 1280px) {
+@media (max-width: 450em) {
     #top{
         width: 80%; 
+       
     
+    }
+    #conteudo{
+        margin-left: 5%;
     }
     #form-venda{
         width: 250px;
@@ -178,8 +179,8 @@
         margin-top: 20px;
     }
     #titulo-compra{
-        margin-left:5%;
         margin-top:35px;
+        margin-left: 15px;
     }
     #user-compra-perfil{
         margin-left: 15px;
@@ -188,6 +189,7 @@
     }
     #pagamento-label{
         line-height: 1;
+        font-size: 18px;
     }
 
    
@@ -250,6 +252,11 @@
         margin-left: 5%;
     
     }
+ 
+    #tabela-user{
+        border: none
+        
+    }
 
 
 
@@ -262,7 +269,7 @@
 @media (max-width: 1024px) {
   
     .l-navbar {
-        width: 100px; 
+        width: 80px; 
     }
 
    
@@ -374,6 +381,7 @@
         display: block;
         margin-bottom: 1em;
     }
+
 }
 
 /* cardapio */
@@ -426,3 +434,38 @@ textarea {
         width: calc(100% - 90px);
     }
 }
+/*usuarios*/
+.search-container {
+    position: relative;
+    width: 100%;
+   margin-right: 15px;
+}
+
+.search-container input {
+    padding-left: 30px; 
+}
+
+.search-container i {
+    position: absolute;
+    left: 10px; 
+    top: 50%;
+    transform: translateY(-50%); 
+    color: #0C4CA4;
+   
+  
+}
+.search-container input{
+    border-color: #007bff;
+}
+#selecao{
+    background-color: #e4f2f7;
+}
+#tabela-user{
+    margin-top: 50px;
+
+
+}
+#usuarios-lista{
+    margin-bottom: 25px;
+}
+

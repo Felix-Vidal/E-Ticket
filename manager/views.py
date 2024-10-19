@@ -119,6 +119,11 @@ def usuarioCompra (request):
     return render(request, 'manager/pages/UsuarioCompra.html')
 
     return render(request, 'manager/pages/cardapio.html')
+def usuarios (request):
+    return render(request, 'manager/pages/usuarios.html')
+
+def add_user (request):
+    return render(request, 'manager/pages/add_user.html')
 
 def cadastro_cardapio(request):
     cardapio = Cardapio()
@@ -138,3 +143,4 @@ def cadastro_cardapio(request):
     }
     
     return render(request, 'user/menu.html', mostrar_cardapio)
+
