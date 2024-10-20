@@ -1,10 +1,11 @@
 {% extends 'global/base_manager.html' %}
 
 {% block content %}
-{% include 'ETicketApp/partials/manager/sideBar.html' %}
-<div class="container-relatorio">
-
-    <div class="container-relatorio">
+<div class="container-principal">
+  <div class="sidebar">
+      {% include 'ETicketApp/partials/manager/sideBar.html' %}
+  </div>
+  <div class="container-relatorio">
         <div class="section-validacao">
             <h2>Relatório:</h2>
             <div class="form-group">
@@ -138,4 +139,6 @@
 
 </div>
 </div>
+</div>
+
 {% endblock %}
