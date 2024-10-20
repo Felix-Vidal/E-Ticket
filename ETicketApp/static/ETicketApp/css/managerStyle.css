@@ -1,8 +1,7 @@
 
 .distintivo img {
     width: 200px;
-    margin-top: 0.5em;
-    margin-bottom: -5em;
+    margin-top: 2em;
  
 }
 
@@ -16,7 +15,17 @@
     transition: width 0.3s ease; 
     z-index: var(--z-fixed);
  
+
 }
+
+banner{
+ display: block;
+}
+#nav_list {
+    margin-top: 20px;
+}
+
+
 .nav_list :hover{
     color: #f4b812;
 }
