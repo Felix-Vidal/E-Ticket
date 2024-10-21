@@ -152,11 +152,10 @@ banner{
 
 
 
-
 @media (max-width: 450em) {
     #top{
         width: 80%; 
-       
+        margin-left:20% ;
     
     }
     #conteudo{

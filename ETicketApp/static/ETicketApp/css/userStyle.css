@@ -43,6 +43,12 @@ h2{
   border-radius: 70px;
   background-color: #F5FAFF;
   border: 1px solid #0C4CA4;
+  width: 65%;
+  height: 10%;
+ 
+}
+#btn-pagamento{
+  display: flex;
 }
 #car, .text-car {
   font-size: 3rem;

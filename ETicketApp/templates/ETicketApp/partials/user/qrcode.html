@@ -19,12 +19,4 @@
             <p class="mt-3">{{ matricula }}</p>
         </div>
     </div>
-    <form method="POST" action="{% url 'aumentar-credito' %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="valorInput" class="form-label">Valor</label>
-            <input type="text" class="form-control" id="valorInput" name="valor" placeholder="Digite o valor" required>
-        </div>
-        <button class="btn" style="background-color: #0E4DA4; color: white;" type="submit">Comprar</button>
-    </form>
 </div>
