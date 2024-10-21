@@ -295,7 +295,11 @@ def vendaUnico (request):
 def usuarioCompra (request):
     return render(request, 'ETicketApp/pages/manager/UsuarioCompra.html')
 
-    return render(request, 'ETicketApp/pages/manager/cardapio.html')
+def usuarios (request):
+    return render(request, 'ETicketApp/pages/manager/usuarios.html')
+
+def add_usuario (request):
+    return render(request, 'ETicketApp/pages/manager/add_user.html')
 
 def cadastro_cardapio(request):
     cardapio = Cardapio()

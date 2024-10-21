@@ -22,6 +22,8 @@ urlpatterns = [
     path('manage/ticketUnico/', ticketUnico, name='ticketUnico'),
     path('manage/vender/', vender, name='vender'),    
     path('manage/vendaUnico/', vendaUnico, name='vendaUnico'),  
-    path('manage/usuarioCompra/', usuarioCompra, name='usuarioCompra') 
+    path('manage/usuarioCompra/', usuarioCompra, name='usuarioCompra'),
+    path('manage/usuarios/', usuarios, name='usuarios'),
+    path('manage/add_usuario/', add_usuario, name='adicionarUsuario') 
     
 ]
