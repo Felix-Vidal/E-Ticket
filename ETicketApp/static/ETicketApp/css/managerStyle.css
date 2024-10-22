@@ -464,6 +464,13 @@ banner{
     background-color: #f0f4ff;
     border-radius: 10px;
 }
+
+input.data {
+    height: 4em;
+    width: 4em;
+    border-radius: 5px;
+}
+
 h2 {
     font-size: 1.5em;
     color: #333;
@@ -500,6 +507,7 @@ textarea {
     display: flex;
     justify-content: flex-end; 
 }
+
 @media (max-width: 768px) {
     .container-cardapio {
         margin-left: 90px;
@@ -552,10 +560,6 @@ textarea {
         margin-bottom: 10px;
         width: 100%;
     }
-
-    
-
-    
 }
 
 @media (max-width: 576px) {

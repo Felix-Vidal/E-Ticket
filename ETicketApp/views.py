@@ -287,6 +287,9 @@ def relatorio (request):
 def cardapio (request):
     return render(request, 'ETicketApp/pages/manager/cardapio.html')
 
+def cardapioExterno (request):
+    return render(request, 'ETicketApp/pages/manager/cardapioExterno.html')
+
 def vender (request):
     return render(request, 'ETicketApp/pages/manager/vender.html')
 

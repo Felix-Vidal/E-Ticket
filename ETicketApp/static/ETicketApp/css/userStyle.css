@@ -78,6 +78,15 @@ h2{
   padding: 5%;
 }
 
+.maior {
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.maior:hover{
+  transform: scale(1.1);
+}
+
 .text-car {
   font-size: 1.4rem;
   text-align: center;
