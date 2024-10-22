@@ -199,10 +199,11 @@ def validar (request):
     return render(request, 'ETicketApp/pages/manager/validar.html')
 
 @user_passes_test(is_superuser)
-def validarQR(request, codigo):  # Recebe o código como parâmetro
-    if codigo:
+def validarQR(request):  # Recebe o código como parâmetro
+    if request.method == 'POST':
+        matricula = request.POST.get('matricula')
         # Obtém os dados do usuário usando a matrícula
-        dados_pessoais = DadoPessoal.objects.get(matricula=codigo)
+        dados_pessoais = DadoPessoal.objects.get(matricula=matricula)
         classificacoes = " / ".join(dados_pessoais.classificacoes.values_list('nome', flat=True))  # Junta as classificações
         current_hour = datetime.now().hour
         if 6 <= current_hour < 10:

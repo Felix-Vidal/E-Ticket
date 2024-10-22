@@ -14,7 +14,7 @@ urlpatterns = [
     
     path('manage/', dashboard, name='manage'), # home
     path('manage/validar/', validar, name='validar'),
-    path('manage/validarQR/<int:codigo>/', validarQR, name='validarQR'),
+    path('manage/validarQR/', validarQR, name='validarQR'),
     path('manage/validar_usuario/', validar_usuario, name='validar_usuario'),
     path('manage/ticketUnico/', ticketUnico, name='ticketUnico'),
     path('manage/relatorio/', relatorio, name='relatorio'),
