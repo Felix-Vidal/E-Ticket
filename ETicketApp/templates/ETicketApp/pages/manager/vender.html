@@ -23,7 +23,7 @@
                     <label id="form1" style="font-size: 20px;" class="form-label">Pesquisar Usuario:</label>
                     <input id="codigo" style="border: 2px solid #007bff; width: 240%;" type="text" class="form-control" placeholder="Digite o código">
                 </div> 
-                <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px;">
+                <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;" >
                     <div>
                         <a href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 150px;">
                             <i class="fa-solid fa-arrow-left"></i> Voltar
@@ -50,7 +50,7 @@
 <style>
     @media (max-width: 912px) {
         .content {
-            width: 80%; /* Garante que o conteúdo ocupe toda a largura disponível */
+            width: 100%; /* Garante que o conteúdo ocupe toda a largura disponível */
             margin-left:100px;
         }
     
@@ -59,11 +59,15 @@
         }
         .card{
             width:90%;
+            align-items: center
         }
         #teste{
-            width:37%;
+            width:40%;
         }
 
+        .btn{
+            width:250px
+        }
         
     }
     </style>

@@ -61,10 +61,15 @@ banner{
 }
 
 /*tela de vendaUnico*/
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 #form-venda{
     margin-top:4%;
-
-
 }
 #input-email, #select-unico,#select-pagamento, #cafee,#jantar-label,#almoco-label,#refeicao-label{
     border: 2px solid #007bff;
@@ -89,6 +94,7 @@ banner{
     width: 150px;
     border-radius: 15px;
 }
+
 /* tela de usuarioCompra */
 #user-compra{
     width: 200px; 
@@ -504,7 +510,7 @@ textarea {
 .search-container {
     position: relative;
     width: 100%;
-   margin-right: 15px;
+    margin-right: 15px;
 }
 
 .search-container input {
@@ -517,21 +523,56 @@ textarea {
     top: 50%;
     transform: translateY(-50%); 
     color: #0C4CA4;
-   
-  
 }
-.search-container input{
+
+.search-container input {
     border-color: #007bff;
 }
-#selecao{
+
+#selecao {
     background-color: #e4f2f7;
 }
-#tabela-user{
+
+#tabela-user {
     margin-top: 50px;
-
-
 }
-#usuarios-lista{
+
+#usuarios-lista {
     margin-bottom: 25px;
 }
 
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    #tabela-user .table td {
+        text-align: center;
+        border-top: none;
+    }
+
+    #tabela-user .table td a {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    
+
+    
+}
+
+@media (max-width: 576px) {
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+    #tabela-user {
+        margin-top: 20px;
+    }
+
+    #usuarios-lista {
+        font-size: 24px;
+    }
+
+    .table-hover th, .table-hover td {
+        font-size: 14px;
+    }
+}
+ 

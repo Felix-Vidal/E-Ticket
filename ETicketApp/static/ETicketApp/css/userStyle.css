@@ -31,6 +31,11 @@ h2{
     background-color: #ffffff;
 }
 
+#title{
+  text-align: center;
+  margin: 1em;
+}
+
 .container-fluid {
   display: flex;
   justify-content: center;
@@ -38,49 +43,64 @@ h2{
   height: 2%;
 
 }
-#my-box{ 
+#my-box {
   padding: 5%;
   border-radius: 70px;
   background-color: #F5FAFF;
   border: 1px solid #0C4CA4;
-  width: 65%;
-  height: 10%;
- 
+  width: 75%;
+  height: 15%;
 }
-#btn-pagamento{
-  display: flex;
-}
-#car, .text-car {
-  font-size: 3rem;
-  text-align: center;
-  color: #ffffff;
-  margin-top: 15px;
 
-}
-.card-text{
-  margin-top: -5px;
-}
-.card{
-  border-radius:50px;
-}
-#card-pix #car1{
+#car, #car1 {
   font-size: 3rem;
+  color: #ffffff;
+  width: auto; /* Remove o width fixo para deixar o conteúdo fluido */
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column; /* Alinha o conteúdo em coluna (ícone acima e texto abaixo) */
+  justify-content: center; /* Centraliza o conteúdo verticalmente */
+  align-items: center;     /* Centraliza o conteúdo horizontalmente */
+  text-align: center;
+  height: 100%;
+}
+
+.card {
+  width: 15em;
+  border-radius: 50px;
+  background-color: #0C4CA4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10em;
+  padding: 5%;
+}
+
+.text-car {
+  font-size: 1.4rem;
   text-align: center;
   color: #ffffff;
-  margin-top: 15px;
-  
 }
-#card-pix{
-  margin-top: 50px;
-}
-.card, .card-pix{
-  background-color: #0C4CA4;
-}
-#title{
- text-align: center;
- margin-bottom: 30px;
- margin-top:50px ;
- font-weight:bolder
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  #my-box {
+    padding: 10%;
+    width: 90%;
+  }
+
+  .btn-pagamento {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-custom {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 300px;
+  }
 }
 
 
