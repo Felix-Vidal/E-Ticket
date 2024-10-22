@@ -36,7 +36,8 @@
                 <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
                     <div class="col-12 col-md-6 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
                         <label class="form-label">Refeição:</label>
-                        <input class="form-control mb-3" value="{% if tipo_refeicao == "Almoço" %} Almoço {% elif tipo_refeicao == "Jantar" %} Jantar {% else %}Café Da Manha{% endif %}" aria-label="refeicao" style="max-width: 95%;" disabled readonly>
+                        <input class="form-control mb-3" value="{{ tipo_refeicao }}" aria-label="refeicao" style="max-width: 95%;" disabled readonly>
+                        
                     </div>
                     <div class="col-12 col-md-6 d-flex flex-column align-items-start">
                         <label class="form-label">CPF:</label>

@@ -67,17 +67,6 @@ h2{
   height: 100%;
 }
 
-.card {
-  width: 15em;
-  border-radius: 50px;
-  background-color: #0C4CA4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 10em;
-  padding: 5%;
-}
-
 .maior {
   transition: transform 0.3s ease-in-out;
   cursor: pointer;
