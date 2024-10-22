@@ -7,7 +7,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
 
 
-from .models import DadoPessoal, Classificacao, Cardapio, TIPOS_DE_REFEICAO
+from .models import *
 import requests
 from django.contrib.auth.hashers import check_password, make_password
 from datetime import datetime, date
@@ -199,7 +199,7 @@ def validar (request):
     return render(request, 'ETicketApp/pages/manager/validar.html')
 
 @user_passes_test(is_superuser)
-def validarQR(request):  # Recebe o código como parâmetro
+def validarUsuario(request):  # Recebe o código como parâmetro
     if request.method == 'POST':
         matricula = request.POST.get('matricula')
         # Obtém os dados do usuário usando a matrícula
@@ -207,12 +207,12 @@ def validarQR(request):  # Recebe o código como parâmetro
         classificacoes = " / ".join(dados_pessoais.classificacoes.values_list('nome', flat=True))  # Junta as classificações
         current_hour = datetime.now().hour
         if 6 <= current_hour < 10:
-            meal_type = 'CAFE_DA_MANHA'
+            meal_type = 1
         elif 10 <= current_hour < 17:
-            meal_type = 'ALMOCO'
+            meal_type = 2
         else:
-            meal_type = 'JANTAR'
-        nome_refeicao = dict(TIPOS_DE_REFEICAO).get(meal_type)
+            meal_type = 3
+        nome_refeicao = TipoRefeicaoEnum.get_name_by_value(meal_type)
         context = {
             'nome_completo': dados_pessoais.nome_completo,
             'cpf': dados_pessoais.cpf,
@@ -222,14 +222,15 @@ def validarQR(request):  # Recebe o código como parâmetro
             'classificacoes': classificacoes,
             'tipo_refeicao': nome_refeicao,
         }
-        return render(request, 'ETicketApp/pages/manager/validarQR.html', context)
-    return render(request, 'ETicketApp/pages/manager/validarQR.html')
+        return render(request, 'ETicketApp/pages/manager/validarUsuario.html', context)
+    return render(request, 'ETicketApp/pages/manager/validarUsuario.html')
 
 @user_passes_test(is_superuser)
 def validar_usuario(request):
     if request.method == 'POST':
         matricula = request.POST.get('matricula')
         tipo_refeicao = request.POST.get('tipo_refeicao')
+        
 
         try:
             # Busca o usuário pela matrícula
@@ -238,9 +239,20 @@ def validar_usuario(request):
             # Se o usuário for gratuito, não deduz crédito
             if dados_pessoais.gratuito:
                 messages.success(request, 'Usuário gratuito, refeição validada sem desconto de crédito.')
+
+                # Registra a refeição gratuita
+                Refeicao.objects.create(
+                    usuario=dados_pessoais.usuario,
+                    valor=0.00,
+                    gratuito=True,
+                    data=datetime.now().date(),
+                    hora=datetime.now().time(),
+                    menu=None  # Ou substitua isso com o cardápio adequado
+                )
+
                 return redirect('validar')  # Redireciona para /manage/validar/
 
-            # Busca a classificação com a maior prioridade (menor valor de 'priority')
+            # Busca a classificação com a maior prioridade (menor valor de 'prioridade')
             classificacao = dados_pessoais.classificacoes.order_by('prioridade').first()
 
             if not classificacao:
@@ -248,13 +260,12 @@ def validar_usuario(request):
                 return redirect('validar')
 
             # Calcula o valor da refeição com base no tipo de refeição
-
-            if tipo_refeicao == 'Café da Manhã':
+            if tipo_refeicao == 'CAFE_DA_MANHA':
                 valor = classificacao.valor_cafe_manha
-            elif tipo_refeicao == 'Almoço':
+            elif tipo_refeicao == 'ALMOCO':
                 valor = classificacao.valor_almoco
-            elif tipo_refeicao == 'Jantar':
-                valor= classificacao.valor_jantar
+            elif tipo_refeicao == 'JANTAR':
+                valor = classificacao.valor_jantar
             else:
                 messages.error(request, 'Tipo de refeição inválido.')
                 return redirect('validar')
@@ -263,8 +274,18 @@ def validar_usuario(request):
             if dados_pessoais.credito >= valor:
                 # Deduz o valor da refeição do crédito do usuário
                 dados_pessoais.credito -= valor
-                print(dados_pessoais.credito)
                 dados_pessoais.save()
+
+                # Registra a refeição
+                Refeicao.objects.create(
+                    usuario=dados_pessoais.usuario,
+                    valor=valor,
+                    gratuito=False,
+                    data=datetime.now().date(),
+                    hora=datetime.now().time(),
+                    menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first()
+                )
+                print(Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first())
 
                 messages.success(request, 'Refeição validada com sucesso!')
             else:

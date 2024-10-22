@@ -32,13 +32,13 @@
         <!-- Elemento onde a câmera vai exibir a imagem -->
         <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
             
-        <form id="codigo-form" method="POST" action="{% url 'validarQR' %}">
+        <form id="codigo-form" method="POST" action="{% url 'validarUsuario' %}">
             {% csrf_token %}
             
             <!-- Input manual -->
             <div class="mb-3 mt-3 text-center"> 
                 <label style="font-size: 20px;" class="form-label">Entrar com código:</label>
-                <input id="matricula" name="matricula" style="border: 2px solid #007bff; max-width: 300px;" type="text" class="form-control mx-auto" placeholder="Digite o código" required>
+                <input id="matricula" name="matricula" type="number" style="border: 2px solid #007bff; max-width: 300px;" type="text" class="form-control mx-auto" placeholder="Digite o código" required>
             </div>
         
             <!-- Botões -->

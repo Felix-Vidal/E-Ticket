@@ -27,16 +27,9 @@
                     <span class="nav_name">Perfil</span>
                 </a>
 
-
-                <a id="sobre" class="nav_link" routerLinkActive="active">
-                    <i class="fa-solid fa-info"></i>
-                    <span class="nav_name">Sobre</span>
-                </a>
-
                 <form action="{% url 'logout' %}" class="nav_link" id="logout" method="post">
                     {% csrf_token %}
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <button class="nav_name" type="submit"><span class="nav_name"> Sair </span></button>
+                    <button class="nav_name" type="submit"><span class="nav_name"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair </span></button>
                 </form>
             </div>
         </div>

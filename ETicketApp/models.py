@@ -1,18 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-
-TIPOS_DE_REFEICAO = [
-    ('CAFE_DA_MANHA', 'Café da Manhã'),
-    ('ALMOCO', 'Almoço'),
-    ('JANTAR', 'Jantar'),
-]
-
-METODOS_DE_PAGAMENTO = [
-    ('PIX', 'Pix'),
-    ('DEBITO', 'Cartão de Débito'),
-    ('DINHEIRO', 'Dinheiro'),
-]
+from .enums import TipoRefeicaoEnum, MetodoPagamentoEnum
 
 class Classificacao(models.Model):
     nome = models.CharField(max_length=255)
@@ -44,7 +32,7 @@ class Credito(models.Model):
     
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     valor = models.DecimalField(max_digits=10, decimal_places=2)  
-    metodo_pagamento = models.CharField(max_length=15, choices=METODOS_DE_PAGAMENTO, blank=True, null=True)
+    metodo_pagamento = models.CharField(max_length=15, choices=MetodoPagamentoEnum.choices(), blank=True, null=True)
     transacao = models.BooleanField(default=True)
     data = models.DateField(auto_now_add=True)
     hora = models.TimeField(auto_now_add=True)
@@ -55,10 +43,10 @@ class Credito(models.Model):
 class TicketUnico(models.Model):
     
     valor = models.DecimalField(max_digits=10, decimal_places=2)
-    metodo_pagamento = models.CharField(max_length=15, choices=METODOS_DE_PAGAMENTO)  
+    metodo_pagamento = models.CharField(max_length=15, choices=MetodoPagamentoEnum.choices())  
     data_compra = models.DateField(auto_now_add=True)
     hora_compra = models.TimeField(auto_now_add=True)
-    tipo_refeicao = models.CharField(max_length=15, choices=TIPOS_DE_REFEICAO)
+    tipo_refeicao = models.CharField(max_length=15, choices=TipoRefeicaoEnum.choices())
     classificacao = models.ForeignKey(Classificacao, on_delete=models.CASCADE)
     valido = models.BooleanField(default=True)
 
@@ -67,7 +55,7 @@ class TicketUnico(models.Model):
     
 class Cardapio(models.Model):
     
-    tipo_refeicao = models.CharField(max_length=15, choices=TIPOS_DE_REFEICAO)
+    tipo_refeicao = models.CharField(max_length=15, choices=TipoRefeicaoEnum.choices())
     menu = models.TextField()
     data = models.DateField()  
     

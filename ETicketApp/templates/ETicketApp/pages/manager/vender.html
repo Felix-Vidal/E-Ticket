@@ -23,19 +23,22 @@
                     <label id="form1" style="font-size: 20px;" class="form-label">Pesquisar Usuario:</label>
                     <input id="codigo" style="border: 2px solid #007bff; width: 240%;" type="text" class="form-control" placeholder="Digite o código">
                 </div> 
-                <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px;">
-                    <div>
-                        <a href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 150px;">
-                            <i class="fa-solid fa-arrow-left"></i> Voltar
-                        </a>
+                <form id="codigo-form" method="POST" action="{% url 'usuarioCompra' %}">
+                    {% csrf_token %}
+                    <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px;">
+                        <div>
+                            <a href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 150px;">
+                                <i class="fa-solid fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary"  style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
+                                <i class="fa-solid fa-search"></i> Pesquisar
+                            </button>
+                        </div>
+                        
                     </div>
-                    <div>
-                        <a class="btn btn-primary" href="{% url 'usuarioCompra' %}"  style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
-                            <i class="fa-solid fa-search"></i> Pesquisar
-                        </a>
-                    </div>
-                </div>
-                
+                </form>
    
                 
             </div>
