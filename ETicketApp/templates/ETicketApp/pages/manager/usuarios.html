@@ -3,8 +3,8 @@
 {% block content %}
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 
-<div class="container" style="margin-left: 5%;">  
-    <div class="row justify-content-center" style="margin-top: 8%; margin-left: 5%;"> 
+<div id="container-maior" class="container">  
+    <div id="container-menor" class="row justify-content-center"> 
         <div id="Conteudo-total"> 
             <div class="row justify-content-center"> 
                 
@@ -64,12 +64,11 @@
 
                     <div class="col-10 col-md-12 d-flex flex-column align-items-start mx-3 mb-3">
                         <div class="d-flex flex-column flex-md-row justify-content-between w-100 mt-3 btns">
-                            <a href="{% url 'relatorio' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 120px;">
+                            <a id="texto-volta" href="{% url 'relatorio' %}" class="btn btn-secondary mb-2 mb-md-0">
                                 <i class="fa-solid fa-arrow-left"></i> Voltar 
                             </a>
                             
-                            <a href="{% url 'adicionarUsuario' %}" class="btn btn-success" style=
-                            "font-size: 20px; background-color: #35A40E; width: 120px;"  type="submit">Adicionar
+                            <a id="texto-add" href="{% url 'adicionarUsuario' %}" class="btn btn-success"  type="submit">Adicionar
                             </a>
                         </div>
                     </div>

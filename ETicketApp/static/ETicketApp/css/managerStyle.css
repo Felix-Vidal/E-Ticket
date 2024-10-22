@@ -60,16 +60,55 @@ banner{
     border-radius: 0 2.8125em 2.8125em 0;
 }
 
+/*Validar Usuário*/
+
+#container-chefe{
+    margin-left: 10%; 
+ 
+}
+#container-filho{
+    margin-top: 8%;
+}
+#img-interno{
+    width: 150px; 
+    height: 150px; 
+    border-color: #0C4CA4; 
+    margin-left: 75px
+}
+#nome-aluno{
+    width: 100%
+}
+#input-saldo,#input-matricula{
+    width: 100%;
+}
+#input-refeicao,#input-cpf,#input-campus,#input-unidade{
+    max-width: 95%;
+}
+#input-papel{
+    width: 100%;
+}
+#volta-validaQr{
+    font-size: 20px; 
+    width: 120px;
+}
+#valida-qr{
+    font-size: 20px; 
+    background-color: #35A40E; width: 120px;
+}
+
+
+
 /*tela de vendaUnico*/
-.container {
-    display: flex;
+#venda-unico {
+
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+
 }
 
 #form-venda{
     margin-top:4%;
+
 }
 #input-email, #select-unico,#select-pagamento, #cafee,#jantar-label,#almoco-label,#refeicao-label{
     border: 2px solid #007bff;
@@ -77,6 +116,7 @@ banner{
 }
 #titulo-gera{
     margin-bottom: 40px;
+    text-align: center;
 }
 #select-unico,#select-pagamento{
     background-color: #e4f2f7;
@@ -155,33 +195,89 @@ banner{
 #volta{
     margin-left: 50px;
 }
+.maior-venda{
+    margin-top: 2rem;
+}
+#titulo-vender{
+    margin-bottom:55px; 
+    text-align:center
+}
+#cardVenda{
+    text-decoration: none;
+}
+#card-gerar{
+    border-radius: 20px;
+    background-color: #0C4CA4; 
+    border: 2px solid #0C4CA4; 
+    color: #ffffff;
+}
 
-
-
+#card-icone {
+    margin-top: 15px;
+}
+#icone-qr {
+    font-size: 100px;
+}
+#texto-venda{
+    font-size: 24px;
+}
+#pesquisa-user{
+    margin-top: 15%; 
+}
+#form1{
+    font-size: 20px;
+}
+#codigo{
+    border: 2px solid #007bff;
+    width: 240%;
+}
+#botoes{
+    margin-top: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+}
+#volta-geral{
+    font-size: 20px; 
+    width: 150px;
+}
+#botao-pesquisa{
+    font-size: 20px; 
+    background-color: #0E4DA4; 
+    width: 150px;
+}
+#top{
+    margin-top: 5%; 
+}
 @media (max-width: 450em) {
     #top{
         width: 80%; 
         margin-left:20% ;
     
     }
+    #pesquisa-user {
+        width: 42%;
+    }
+
     #conteudo{
         margin-left: 5%;
     }
     #form-venda{
-        width: 250px;
-        margin-left: 20%;
+        width: 65%;
+        margin-left: 15%;
     
     }
     #volta{
         width: 120px;
         font-size: 15px;
         margin-bottom: 10px;
+        margin-left: -1px;
     }
     #confirma{
         width: 120px;
         font-size: 15px;
         margin-bottom: 10px;
-        margin-left: 50px;
     }
     #geral{
         width: 50%;
@@ -515,6 +611,23 @@ textarea {
     }
 }
 /*usuarios*/
+#container-maior{
+    margin-left: 5%
+}
+#container-menor{
+    margin-top: 10%; 
+    margin-left: 5%;
+
+}
+#texto-volta{
+    font-size: 20px;
+    width: 120px;
+}
+#texto-add{
+    font-size: 20px; 
+    background-color: #35A40E; 
+    width: 120px;
+}
 .search-container {
     position: relative;
     width: 100%;
