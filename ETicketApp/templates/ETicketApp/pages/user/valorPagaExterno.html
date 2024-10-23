@@ -2,7 +2,7 @@
 {% block content %}
 {% include 'ETicketApp/partials/user/header.html' %}
 
-<h1 id="title">Recarregar</h1>
+<h1 id="title">Quantidade de Refições</h1>
 
 <div id="decoracao" class="container d-flex ">  
     <div class="col-md-12 col-12">
@@ -10,7 +10,7 @@
             <form method="POST" action="{% url 'aumentar-credito' %}">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label id="valor" for="valorInput" class="form-label">Valor R$:</label>
+                    {% comment %} <label id="valor" for="valorInput" class="form-label">Quantidade de refeições:</label> {% endcomment %}
                     <select class="form-control" id="valorInput" name="valor" required>
                         <option>1 Refeição</option>
                         <option>2 Refeições</option>

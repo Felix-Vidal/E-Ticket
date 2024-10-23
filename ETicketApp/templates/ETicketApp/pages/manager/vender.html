@@ -9,8 +9,8 @@
         <div class="row justify-content-center" style="margin-top: 2rem;">
             
             <div class="col-12 col-md-6 col-lg-4"> 
-                <h1  id="titulo" style="margin-bottom:55px; text-align:center">Vender Ticket</h1>
-                <a href="{% url 'vendaUnico' %}" style="text-decoration: none;">
+                <h1  id="titulo-vender">Vender Ticket</h1>
+                <a id="cardVenda" href="{% url 'vendaUnico' %}">
                     <div class="card mb-4" style="border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff;">
                         <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                             <i style="font-size: 100px;" class="fa-solid fa-qrcode"></i>
@@ -54,30 +54,5 @@
     </div>
 </div>
 
-
-<style>
-    @media (max-width: 912px) {
-        .content {
-            width: 100%; /* Garante que o conteúdo ocupe toda a largura disponível */
-            margin-left:100px;
-        }
-    
-        .sidebar {
-            width: 60px; /* Ajuste a largura do sidebar para que fique mais estreito em telas pequenas */
-        }
-        .card{
-            width:90%;
-            align-items: center
-        }
-        #teste{
-            width:40%;
-        }
-
-        .btn{
-            width:250px
-        }
-        
-    }
-    </style>
 
 {% endblock content %}

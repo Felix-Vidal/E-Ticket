@@ -172,6 +172,7 @@ banner{
 #titulo-compra{
     margin-bottom: 55px;
     text-align: center;
+    margin-top: 15%;
 }
 #geral{
     margin-left: 30%;
@@ -211,6 +212,7 @@ banner{
     border: 2px solid #0C4CA4; 
     color: #ffffff;
 }
+
 
 #card-icone {
     margin-top: 15px;
@@ -262,6 +264,8 @@ banner{
 
     #conteudo{
         margin-left: 5%;
+        
+       
     }
     #form-venda{
         width: 65%;
@@ -289,12 +293,12 @@ banner{
         margin-top: 20px;
     }
     #titulo-compra{
-        margin-top:35px;
-        margin-left: 15px;
+        margin-left:47%;
+        margin-top: 25%;
     }
     #user-compra-perfil{
         margin-left: 15px;
-        width: 300px;
+        width: 250px;
         height:250px ;
     }
     #pagamento-label{
