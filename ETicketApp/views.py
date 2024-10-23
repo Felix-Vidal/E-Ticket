@@ -412,7 +412,33 @@ def gerenciar_usuario(request):
 
         return redirect('usuarios')  # Redireciona após a operação
 
+def editar_usuario(request, id):
+    usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
+    
+    if request.method == 'POST':
+        novo_grupo_id = request.POST.get('papel')  # Obtém o ID do novo grupo do form
+        grupo = get_object_or_404(Group, id=novo_grupo_id)  # Busca o grupo pelo ID
+        
+        # Remove o usuário de todos os grupos atuais
+        usuario.groups.clear()
+        
+        # Adiciona o usuário ao novo grupo
+        usuario.groups.add(grupo)
+        
+        messages.success(request, 'Grupo do usuário atualizado com sucesso!')
+        return redirect('usuarios')  # Redireciona para a página de lista de usuários
+    
+    grupos = Group.objects.all()  # Busca todos os grupos disponíveis
+    return render(request, 'ETicketApp/pages/manager/add_user.html', {'usuario': usuario, 'grupos': grupos})
 
+def excluir_usuario(request, id):
+    usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
+    
+    # Remove o usuário de todos os grupos
+    usuario.groups.clear()
+    
+    messages.success(request, 'Usuário removido de todos os grupos!')
+    return redirect('usuarios')  # Redireciona para a lista de usuários
 
 def cadastrar_cardapio(request):
     if request.method == 'POST':

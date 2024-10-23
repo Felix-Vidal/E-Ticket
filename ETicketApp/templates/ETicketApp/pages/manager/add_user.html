@@ -14,11 +14,10 @@
 
                     <form method="POST" action="{% url 'gerenciar_usuario' %}">
                         {% csrf_token %}
-                        
                         <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
                             <div class="search-container">
                                 <label for="cpf" class="form-label">CPF</label>
-                                <input id="usuarios" name="cpf" class="form-control" required>
+                                <input id="usuarios" name="cpf" value="{{usuario.username}}" class="form-control" required>
                             </div>
                             <div class="col-12 col-md-4 d-flex flex-column align-items-start">
                                 <label for="papel" class="form-label">Papel</label>

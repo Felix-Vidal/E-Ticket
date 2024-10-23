@@ -30,6 +30,8 @@ urlpatterns = [
     path('manage/usuarioCompra/', usuarioCompra, name='usuarioCompra'),
     path('manage/usuarios/', usuarios, name='usuarios'),
     path('manage/add_usuario/', add_usuario, name='adicionarUsuario') ,
-    path('gerenciar_usuario/', gerenciar_usuario, name='gerenciar_usuario')
+    path('manage/usuarios/editar/<int:id>/', editar_usuario, name='editar_usuario'),
+    path('manage/usuarios/excluir/<int:id>/', excluir_usuario, name='excluir_usuario'),
+    path('manage/gerenciar_usuario/', gerenciar_usuario, name='gerenciar_usuario')
     
 ]

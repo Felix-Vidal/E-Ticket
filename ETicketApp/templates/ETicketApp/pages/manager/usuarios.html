@@ -46,14 +46,14 @@
                                             {{ grupo.name }}{% if not forloop.last %}, {% endif %}
                                         {% endfor %}
                                     </td>
-                                    {% comment %} <td>
+                                    <td>
                                         <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary me-2">
                                             <i class="fa-solid fa-edit"></i> Editar
                                         </a>
                                         <a href="{% url 'excluir_usuario' usuario.id %}" class="btn btn-sm btn-danger">
-                                            <i class="fa-solid fa-trash"></i> Excluir
+                                            <i class="fa-solid fa-trash"></i> Retirar cargo
                                         </a>
-                                    </td> {% endcomment %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
