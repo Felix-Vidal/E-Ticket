@@ -342,10 +342,10 @@ def usuarioCompra (request):
                     personal_data.credito += valor_decimal
                     personal_data.save()
                     messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
-                    return redirect('home')  # Redireciona para a página inicial
+                    return redirect('vender')  # Redireciona para a página inicial
                 except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
                     messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  # Mensagem de erro
-                    return redirect('home')  # Volta para a mesma página
+                    return redirect('vender')  # Volta para a mesma página
             
     print("terceiro")
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')

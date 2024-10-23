@@ -3,11 +3,13 @@
 {% block content %}
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 <div id="maior" class="content d-flex justify-content-center">
-    <div class="container-fluid">
+    <div id="venda-unico" class="container-fluid">
         <div id="form-venda" class="row justify-content-center">
             
-            <div id="form-venda" class="col-12 col-md-6 col-lg-6">
-                <h1 id="titulo-gera">Gerar Ticket Unico </h1>
+            <div id="form-venda" class="col-12 col-md-8 col-lg-8">
+                <div class= "col-12 ol-md-8 col-lg-8">
+                    <h1 id="titulo-gera">Gerar Ticket Unico </h1>
+                </div>
                 <form>
                     <div class="mb-3">
                         <label for="Email" class="form-label">Email:</label>
@@ -54,12 +56,13 @@
                         </div>
 
                     </div>
-                    <div class="d-flex justify-content-between">
-                        <a id="volta" href="{% url 'vender' %}" class="btn btn-secondary">
+                    <div class="d-flex flex-column flex-md-row justify-content-between">
+                        <!-- Botão à esquerda -->
+                        <a id="volta" href="{% url 'vender' %}" class="btn btn-secondary mb-2">
                             <i class="fa-solid fa-arrow-left"></i> Voltar
                         </a>
-                    
                         
+                        <!-- Botão à direita -->
                         <a id="confirma" class="btn btn-success">
                             <i class="fa-solid fa-check"></i> Confirmar
                         </a>

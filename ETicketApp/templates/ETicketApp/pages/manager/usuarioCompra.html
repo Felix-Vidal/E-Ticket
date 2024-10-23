@@ -3,13 +3,13 @@
 {% block content %}
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 <div id="geral" class="content d-flex justify-content-center">
-    <div id="row-main" class="row justify-content-center" style="margin-top: 8%;">
+    <div id="row-main" class="row justify-content-center" >
         <div class="col-8col-md-6 col-lg-6 ">
             <h1 id="titulo-compra">Gerar Ticket</h1>
         </div>
 
         <div id="conteudo"
-            class="col-12 col-md-10 d-flex flex-column flex-md-row align-items-start  justify-content-center">
+            class="col-12 col-md-10 d-flex flex-column flex-md-row align-items-start justify-content-center">
             <img id="user-compra-perfil" src="/static/manager/img/perfil.jpg"
                 class="img-thumbnail rounded-circle img-fluid mb-3">
 
@@ -35,7 +35,7 @@
                     <div class="d-flex flex-column flex-md-row col-12 align-items-center mx-3 mb-3 ">
                         <div id="valor-main" class="col-12 col-md-8 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
                             <label for="valor" >Valor:</label>
-                            <input type="text" id="valor" name="valor" class="form-control" aria-describedby="passwordHelpBlock">
+                            <input type="number" id="valor" step=0.01 name="valor" class="form-control" aria-describedby="passwordHelpBlock">
                             <div id="valor" class="form-text"></div>
                         </div>
 
