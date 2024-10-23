@@ -15,6 +15,7 @@ from io import BytesIO
 import base64
 import qrcode
 from decimal import Decimal
+import random
 
 # Create your views here.
 
@@ -45,12 +46,30 @@ def home(request):
 def aumentar_credito(request):
     if request.method == 'POST':
         valor = request.POST.get('valor')
-        if valor:
+        
+        # metodo_pagamento = request.POST.get('metodo_pagamento')  # Adicione o método de pagamento no formulário
+        
+        
+        # Gera um método de pagamento aleatório
+        metodo_pagamento = random.choice([MetodoPagamentoEnum.PIX.value, MetodoPagamentoEnum.DINHEIRO.value, MetodoPagamentoEnum.CARTAO.value])
+        
+        
+        if valor and metodo_pagamento:
             try:
                 valor_decimal = Decimal(valor)
                 personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
+                
+                # Atualiza o crédito do usuário
                 personal_data.credito += valor_decimal
                 personal_data.save()
+
+                # Cria um registro na tabela Credito
+                Credito.objects.create(
+                    usuario=request.user,
+                    valor=valor_decimal,
+                    metodo_pagamento=metodo_pagamento
+                )
+                
                 messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
                 return redirect('home')  # Redireciona para a página inicial
             except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
@@ -185,7 +204,15 @@ def login(request):
 
 @login_required
 def historico(request):
-    return render(request, 'ETicketApp/pages/user/historico.html')
+    
+    # Busca o histórico de créditos do usuário logado
+    historico = Credito.objects.filter(usuario=request.user).order_by('-data', '-hora')
+    
+    context = {
+        'historico': historico        # Passa o histórico para o template
+    }
+    
+    return render(request, 'ETicketApp/pages/user/historico.html', context)
 
 
 # MANAGER
@@ -214,12 +241,12 @@ def validarUsuario(request):  # Recebe o código como parâmetro
         classificacoes = " / ".join(dados_pessoais.classificacoes.values_list('nome', flat=True))  # Junta as classificações
         current_hour = datetime.now().hour
         if 6 <= current_hour < 10:
-            meal_type = 1
+            tipo_refeicao = "CAFE_DA_MANHA"
         elif 10 <= current_hour < 17:
-            meal_type = 2
+            tipo_refeicao = "ALMOCO"
         else:
-            meal_type = 3
-        nome_refeicao = TipoRefeicaoEnum.get_name_by_value(meal_type)
+            tipo_refeicao = "JANTAR"
+        nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
         context = {
             'nome_completo': dados_pessoais.nome_completo,
             'cpf': dados_pessoais.cpf,

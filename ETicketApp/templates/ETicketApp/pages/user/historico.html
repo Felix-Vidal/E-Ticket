@@ -17,39 +17,25 @@
     </a>
 
 </div>
-<h1 id="title">Historico</h1>
+<h1 id="title">Histórico de Crédito</h1>
 <table class="table">
     <tbody>
-      <tr>
-        <th>
-            <h6>Comprar de R$ XX.XX</h6>
-            <h6>Metodo Pagamento: Cartao de credito</h6>
-        </th>
-        <td>
-            <h6>03 JUL</h6>
-            <h6>11:32</h6>
-        </td>
-      </tr>
-      <tr>
-        <th>
-            <h6>Comprar de R$ XX.XX</h6>
-            <h6>Metodo Pagamento: Cartao de credito</h6>
-        </th>
-        <td>
-            <h6>03 JUL</h6>
-            <h6>11:32</h6>
-        </td>
-      </tr>
-      <tr>
-        <th>
-            <h6>Comprar de R$ XX.XX</h6>
-            <h6>Metodo Pagamento: Cartao de credito</h6>
-        </th>
-        <td>
-            <h6>03 JUL</h6>
-            <h6>11:32</h6>
-        </td>
-      </tr>
+        {% for credito in historico %}
+        <tr>
+            <th>
+                <h6>Compra de R$ {{ credito.valor }}</h6>
+                <h6>Método Pagamento: {{ credito.get_metodo_pagamento_display }}</h6>
+            </th>
+            <td>
+                <h6>{{ credito.data|date:"d M" }}</h6>
+                <h6>{{ credito.hora|time:"H:i" }}</h6>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">Nenhum histórico de crédito encontrado.</td>
+        </tr>
+        {% endfor %}
     </tbody>
-  </table>
+</table>
 {% endblock content %}

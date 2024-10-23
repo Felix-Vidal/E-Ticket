@@ -1,9 +1,9 @@
 from enum import Enum
 
 class TipoRefeicaoEnum(Enum):
-    CAFE_DA_MANHA = 1
-    ALMOCO = 2
-    JANTAR = 3
+    CAFE_DA_MANHA = "CAFE_DA_MANHA"
+    ALMOCO = "ALMOCO"
+    JANTAR = "JANTAR"
 
     @classmethod
     def choices(cls):
@@ -17,9 +17,9 @@ class TipoRefeicaoEnum(Enum):
         return None
 
 class MetodoPagamentoEnum(Enum):
-    PIX = 1
-    DINHEIRO = 2
-    CARTAO = 3
+    PIX = "PIX"
+    DINHEIRO = "DINHEIRO"
+    CARTAO = "CARTAO"
 
     @classmethod
     def choices(cls):
