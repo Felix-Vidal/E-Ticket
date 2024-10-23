@@ -318,7 +318,37 @@ def vendaUnico (request):
     return render(request, 'ETicketApp/pages/manager/vendaUnico.html')
 
 def usuarioCompra (request):
-    return render(request, 'ETicketApp/pages/manager/UsuarioCompra.html')
+    if request.method == 'POST':
+        if request.POST.get('matricula'):
+            matricula = request.POST.get('matricula')
+            print(matricula)
+            dados_pessoais = DadoPessoal.objects.get(matricula=matricula)
+            context = {
+                'nome_completo': dados_pessoais.nome_completo,
+                'cpf': dados_pessoais.cpf,
+                'matricula': dados_pessoais.matricula,
+                'credito': dados_pessoais.credito,
+                'unidade': dados_pessoais.unidade,
+            }
+            print(dados_pessoais)
+            return render(request, 'ETicketApp/pages/manager/usuarioCompra.html', context)
+        print(request.POST.get('valor'))
+        if request.POST.get('valor'):
+            valor = request.POST.get('valor')
+            if valor:
+                try:
+                    valor_decimal = Decimal(valor)
+                    personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
+                    personal_data.credito += valor_decimal
+                    personal_data.save()
+                    messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
+                    return redirect('home')  # Redireciona para a página inicial
+                except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
+                    messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  # Mensagem de erro
+                    return redirect('home')  # Volta para a mesma página
+            
+    print("terceiro")
+    return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
 def usuarios (request):
     return render(request, 'ETicketApp/pages/manager/usuarios.html')

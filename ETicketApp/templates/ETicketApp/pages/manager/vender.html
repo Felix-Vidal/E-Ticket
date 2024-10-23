@@ -19,25 +19,29 @@
                         </div>
                     </div>
                 </a>
-                <div  id="teste" class="col-12 col-md-5"  style=" margin-top: 15%;">
-                    <label id="form1" style="font-size: 20px;" class="form-label">Pesquisar Usuario:</label>
-                    <input id="codigo" style="border: 2px solid #007bff; width: 240%;" type="text" class="form-control" placeholder="Digite o código">
-                </div> 
+
+                <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
+
                 <form id="codigo-form" method="POST" action="{% url 'usuarioCompra' %}">
                     {% csrf_token %}
-                    <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;" >
-                        <div>
-                            <a href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 150px;">
-                                <i class="fa-solid fa-arrow-left"></i> Voltar
-                            </a>
+                    <div  id="teste" class="col-12 col-md-5"  style=" margin-top: 15%;">
+                        <label for="matricula" class="form-label">Pesquisar Usuario:</label>
+                        <input id="matricula" name="matricula" style="border: 2px solid #007bff; width: 240%;" type="text" class="form-control" placeholder="Digite o código">
+                    </div> 
+
+                        <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;" >
+                            <div>
+                                <a href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 150px;">
+                                    <i class="fa-solid fa-arrow-left"></i> Voltar
+                                </a>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary" id="btn-avancar" style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
+                                    <i class="fa-solid fa-search"></i> Pesquisar
+                                </button>
+                            </div>
+                            
                         </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary"  style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
-                                <i class="fa-solid fa-search"></i> Pesquisar
-                            </button>
-                        </div>
-                        
-                    </div>
                 </form>
    
                 
