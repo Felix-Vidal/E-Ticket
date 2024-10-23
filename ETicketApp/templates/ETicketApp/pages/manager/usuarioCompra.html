@@ -5,7 +5,7 @@
 {% include 'ETicketApp/partials/manager/alerta.html' %}
 <div id="geral" class="content d-flex justify-content-center">
     <div id="row-main" class="row justify-content-center" >
-        <div class="col-8col-md-6 col-lg-6 ">
+        <div class="col-8 col-md-6 col-lg-6 ">
             <h1 id="titulo-compra">Gerar Ticket</h1>
         </div>
 
@@ -17,7 +17,7 @@
 
             <form id="add-credito" method="POST" action="{% url 'usuarioCompra' %}">
                 {% csrf_token %}
-                <div id="user-conteudo" class="col-md-6 d-flex flex-column align-items-start">
+                <div id="user-conteudo" class="col-md-12 d-flex flex-column align-items-start">
                     <div class="d-flex flex-column flex-md-row col-12 align-items-center mx-3 mb-3">
                         <div id="user-nome" class="col-12 col-md-8 d-flex flex-column align-items-start me-2 mb-2 mb-md-0">
                             <label class="form-label mb-0 me-2 text-nowrap">Nome</label>
@@ -51,17 +51,16 @@
                         </div>
 
                     </div>
-                    <div id="botoes" class="d-flex flex-column flex-md-row col-12  mx-3 mb-3 justify-content-center">
+                    <div id="botoes" class="d-flex flex-column flex-md-row col-12  mx-3 mb-4 justify-content-center">
                         <!-- Botão de Voltar à esquerda com margem maior -->
-                        <div id="volta" class="col-12 col-md-4 d-flex flex-column align-items-start mb-3 mb-md-0 me-md-3">
+                        <div id="volta" class="col-12 col-md-5 d-flex flex-column mb-3 mb-md-0 me-md-3">
                             <a href="{% url 'vender' %}" class="btn btn-secondary btn-sm w-100 w-md-auto">
                                 <i class="fa-solid fa-arrow-left"></i> Voltar
                             </a>
                         </div>
 
-                        <!-- Botão de Confirmar alinhado à direita em telas grandes e com margem ajustada -->
-                        <div id="confirma" class="col-12 col-md-4 d-flex flex-column align-items-md-end">
-                            <button type="submit" class="btn btn-success btn-sm w-100 w-md-50">
+                        <div  class="col-12 col-md-3 d-flex flex-column align-items-md-end">
+                            <button type="submit" class="btn btn-success btn-sm w-100">
                                 <i class="fa-solid fa-check"></i> Confirmar
                             </button>
                         </div>
