@@ -10,7 +10,8 @@ urlpatterns = [
     path('perfil/', perfil, name='perfil'),
     path('login/', login, name='login'),
     path('historico/', historico, name='historico'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),    
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),  
+    path('valorPaga/', valorPaga, name='valorPaga'), 
     
     path('manage/', dashboard, name='manage'), # home
     path('manage/validar/', validar, name='validar'),

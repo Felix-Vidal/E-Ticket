@@ -9,14 +9,6 @@
 <div id="login" class="container-fluid">
  
   <div id="my-box">
-    <form method="POST" action="{% url 'aumentar-credito' %}">
-      {% csrf_token %}
-      <div class="mb-3">
-          <label for="valorInput" class="form-label">Valor</label>
-          <input type="text" class="form-control" id="valorInput" name="valor" placeholder="Digite o valor" required>
-      </div>
-    </form>
-
     <div class="row justify-content-center btn-pagamento">
       <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center mb-3 maior">
         <div class="card card-custom" data-bs-toggle="modal" data-bs-target="#modal-card">

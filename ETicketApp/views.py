@@ -372,6 +372,9 @@ def listar_usuarios_grupo(request):
 def add_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
 
+def valorPaga(request):
+    return render(request, 'ETicketApp/pages/user/valorPaga.html')
+
 def gerenciar_usuario(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')  # O nome do campo de input no template
