@@ -4,7 +4,7 @@
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 {% include 'ETicketApp/partials/manager/alerta.html' %}
 
-<form {% url 'menu' %} method="post">
+<form {% url 'cardapio' %} method="post" class="form-cardapio">
     {% csrf_token %}
 <div class="container-cardapio">
     <h2>Cardápio:</h2>

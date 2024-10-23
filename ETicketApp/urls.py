@@ -13,6 +13,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),  
     path('valorPaga/', valorPaga, name='valorPaga'), 
     
+    
+    path('menuExterno/', menuExterno, name='menuExterno'),
+    path('valorPagaExterno/', valorPagaExterno, name='valorPagaExterno'),
+    
     path('manage/', dashboard, name='manage'), # home
     path('manage/validar/', validar, name='validar'),
     path('manage/validarUsuario/', validarUsuario, name='validarUsuario'),
@@ -26,7 +30,6 @@ urlpatterns = [
     path('manage/usuarioCompra/', usuarioCompra, name='usuarioCompra'),
     path('manage/usuarios/', usuarios, name='usuarios'),
     path('manage/add_usuario/', add_usuario, name='adicionarUsuario') ,
-    path('gerenciar_usuario/', gerenciar_usuario, name='gerenciar_usuario'),
-    path('manage/cardapioExterno', cardapioExterno, name='cardapioExterno')
+    path('gerenciar_usuario/', gerenciar_usuario, name='gerenciar_usuario')
     
 ]

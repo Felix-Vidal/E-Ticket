@@ -553,6 +553,9 @@ banner{
 }
 
 /* cardapio */
+form.form-cardapio{
+    background-color: #f0f4ff;
+}
 .container-cardapio {
     margin-left: 15em; 
     width: calc(100% - 15em); 
@@ -562,9 +565,10 @@ banner{
 }
 
 input.data {
-    height: 4em;
-    width: 4em;
+    height: 3em;
+    width: 8em;
     border-radius: 5px;
+    margin-bottom: 1em;
 }
 
 h2 {

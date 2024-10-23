@@ -307,14 +307,17 @@ def relatorio (request):
 def cardapio (request):
     return render(request, 'ETicketApp/pages/manager/cardapio.html')
 
-def cardapioExterno (request):
-    return render(request, 'ETicketApp/pages/manager/cardapioExterno.html')
-
 def vender (request):
     return render(request, 'ETicketApp/pages/manager/vender.html')
 
 def vendaUnico (request):
     return render(request, 'ETicketApp/pages/manager/vendaUnico.html')
+
+def menuExterno (request):
+    return render(request, 'ETicketApp/pages/user/menuExterno.html')
+
+def valorPagaExterno (request):
+    return render(request, 'ETicketApp/pages/user/valorPagaExterno.html')
 
 def usuarioCompra (request):
     if request.method == 'POST':
@@ -410,24 +413,46 @@ def gerenciar_usuario(request):
         return redirect('usuarios')  # Redireciona após a operação
 
 
-def cadastro_cardapio(request):
-    cardapio = Cardapio()
-    cardapio.cafe = request.POST.get('cafe')
-    cardapio.cafe_inicio = request.POST.get('hora-inicio-cafe')
-    cardapio.cafe_inicio = request.POST.get('hora-final-cafe')
-    cardapio.almoco = request.POST.get('almoco')
-    cardapio.almoco_inicio = request.POST.get('hora-inicio-almoco')
-    cardapio.almoco_inicio = request.POST.get('hora-final-almoco')
-    cardapio.jantar = request.POST.get('cafe')
-    cardapio.jantar_inicio = request.POST.get('hora-inicio-jantar')
-    cardapio.jantar_inicio = request.POST.get('hora-final-jantar')
-    cardapio.save()
-    
-    mostrar_cardapio = {
-        "cardapio": Cardapio.objects.all()
-    }
-    
-    return render(request, 'ETicketApp/pages/manager/menu.html', mostrar_cardapio)
+
+def cadastrar_cardapio(request):
+    if request.method == 'POST':
+        # Obtém os dados do formulário
+        data = request.POST.get('data')
+        cafe = request.POST.get('cafe')
+        almoco = request.POST.get('almoco')
+        jantar = request.POST.get('jantar')
+
+        # Valida se todos os campos estão preenchidos
+        if data and cafe and almoco and jantar:
+            try:
+                # Converte a data para o formato correto
+                data_formatada = datetime.strptime(data, '%Y-%m-%d')
+
+                # Cria um novo cardápio e salva no banco de dados
+                novo_cardapio = Cardapio(
+                    data=data_formatada,
+                    cafe=cafe,
+                    almoco=almoco,
+                    jantar=jantar
+                )
+                novo_cardapio.save()
+
+                # Mensagem de sucesso
+                messages.success(request, 'Cardápio cadastrado com sucesso!')
+                return redirect('cardapio')  # Redireciona para a página de cardápio
+
+            except Exception as e:
+                # Em caso de erro, mostra uma mensagem de erro
+                messages.error(request, f'Erro ao cadastrar o cardápio: {str(e)}')
+                return redirect('cardapio')  # Redireciona para a mesma página para tentar novamente
+
+        else:
+            # Se algum campo estiver vazio, mostra uma mensagem de erro
+            messages.error(request, 'Por favor, preencha todos os campos.')
+            return redirect('cardapio')
+
+    # Caso contrário, exibe o formulário de cadastro de cardápio
+    return render(request, 'ETicketApp/pages/manager/cardapio.html')
 
 
 
