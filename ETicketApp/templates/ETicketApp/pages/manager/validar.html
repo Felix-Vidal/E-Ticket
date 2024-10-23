@@ -2,29 +2,6 @@
 
 {% block content %}
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
-
-{% if messages %}
-    <div id="message-box" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1050; width: 50%;">
-        {% for message in messages %}
-            {% if message.tags == 'success' %}
-                <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% elif message.tags == 'error' %}
-                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% elif message.tags == 'warning' %}
-                <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-{% endif %}
 <div class="container-fluid d-flex justify-content-center align-items-start mt-5">
     <div class="col-6 col-md-6 col-lg-6 mx-auto" style="margin-left: 5%; margin-top: 5%;">
         <h1 class="text-center mb-4">Validar QRCode:</h1>
