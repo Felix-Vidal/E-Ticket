@@ -34,6 +34,7 @@ h2{
 #title{
   text-align: center;
   margin: 1em;
+  margin-top: 5%;
 }
 
 .container-fluid {
@@ -44,19 +45,21 @@ h2{
 
 }
 #my-box {
-  padding: 5%;
+  padding: 2%;
   border-radius: 70px;
   background-color: #F5FAFF;
   border: 1px solid #0C4CA4;
-  width: 75%;
-  height: 15%;
+  width: 40%;
+  height: 35%;
 }
 
 
 #car, #car1 {
   font-size: 3rem;
   color: #ffffff;
-  width: auto; /* Remove o width fixo para deixar o conteúdo fluido */
+  width: auto; 
+  margin-top: 15px;
+ 
 }
 
 .card-body {
@@ -93,13 +96,21 @@ h2{
   .btn-pagamento {
     flex-direction: column;
     align-items: center;
+
   }
 
   .card-custom {
     margin-bottom: 20px;
     width: 100%;
     max-width: 300px;
+    background-color: #0C4CA4;
+
   }
+}
+.card-custom{
+  background-color: #0C4CA4;
+  width: 100%;
+  border-radius:15px ;
 }
 
 
