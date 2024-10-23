@@ -105,6 +105,7 @@ def login(request):
         password = request.POST.get('password')
 
         if not cpf or not password:
+            messages.error(request, 'CPF e senha são obrigatórios.')
             return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'CPF e senha são obrigatórios.'})
 
         try:
@@ -118,6 +119,7 @@ def login(request):
                 return redirect('home')  # Redireciona para a página inicial
 
             else:
+                messages.error(request, 'login ou Senha incorreta.')
                 return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Senha incorreta.'})
 
         except DadoPessoal.DoesNotExist:
@@ -133,6 +135,7 @@ def login(request):
                 external_data = response.json()
 
                 if external_data['record_count'] == 0:
+                    messages.error(request, 'Usuário não encontrado na API externa.')
                     return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Usuário não encontrado na API externa.'})
 
                 # Acessa o primeiro registro da lista "response"
@@ -173,6 +176,7 @@ def login(request):
                 return redirect('home')  # Redireciona para a página inicial após sucesso
 
             else:
+                messages.error(request, 'Erro na API externa.')
                 return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Erro na API externa.'})
 
     return render(request, 'ETicketApp/pages/user/login.html')
@@ -186,9 +190,12 @@ def historico(request):
 
 # MANAGER
 
+def is_in_group(user, group_names):
+    return user.groups.filter(name__in=group_names).exists()
 
 def is_superuser(user):
-    return user.is_superuser
+    grupos = ['ADM', 'Colaborador', 'Bolsista']
+    return is_in_group(user, grupos)
 
 @user_passes_test(is_superuser)
 def dashboard (request):
