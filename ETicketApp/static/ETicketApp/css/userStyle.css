@@ -106,6 +106,10 @@ h2{
     background-color: #0C4CA4;
 
   }
+  #decoracao{
+    width: 85%;
+    height: 45%;
+  }
 }
 .card-custom{
   background-color: #0C4CA4;
@@ -307,8 +311,6 @@ body.login {
   border-radius: 70px;
   background-color: #F5FAFF;
   border: 1px solid #0C4CA4;
-  width: 45%;
-  height: 40%;
 }
 #valor{
   font-size: 25px;
