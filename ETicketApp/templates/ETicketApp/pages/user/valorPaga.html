@@ -1,0 +1,28 @@
+{% extends "global/base_user.html" %}
+{% block content %}
+{% include 'ETicketApp/partials/user/header.html' %}
+
+<h1 id="title">Recarregar</h1>
+
+<div id="decoracao" class="container d-flex ">  
+    <div class="col-md-12 col-12">
+        <div>
+            <form method="POST" action="{% url 'aumentar-credito' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label id="valor" for="valorInput" class="form-label">Valor R$:</label>
+                    <input type="text" class="form-control" id="valorInput" name="valor" placeholder="00,00" required>
+                </div>
+                
+                <div class="d-flex justify-content-center"> 
+                    <a href="{% url 'pagamento' %}"  type="submit" id="confirma" class="btn btn-success">
+                        <i class="fa-solid fa-check"></i> Confirmar
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock content %}

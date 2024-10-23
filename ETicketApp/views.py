@@ -326,6 +326,9 @@ def usuarios (request):
 def add_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
 
+def valorPaga(request):
+    return render(request, 'ETicketApp/pages/user/valorPaga.html')
+
 def cadastro_cardapio(request):
     cardapio = Cardapio()
     cardapio.cafe = request.POST.get('cafe')
