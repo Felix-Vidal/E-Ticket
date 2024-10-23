@@ -4,12 +4,11 @@
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 {% include 'ETicketApp/partials/manager/alerta.html' %}
 
-<div id="container-maior" class="container">  
-    <div id="container-menor" class="row justify-content-center"> 
-        <div id="Conteudo-total"> 
-            <div class="row justify-content-center"> 
-                
-                <div class="col-8 col-md-8 d-flex flex-column align-items-center"> 
+<div id="container-maior" class="container">
+    <div id="container-menor" class="row justify-content-center">
+        <div id="Conteudo-total">
+            <div class="row justify-content-center">
+                <div class="col-8 col-md-8 d-flex flex-column align-items-center">
                     <h1 id="usuarios-lista">Usuários</h1>
                     <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
                         <div class="search-container">
@@ -30,35 +29,33 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Nome</th>
-                                    <th scope="col">Papel</th>
+                                    <th scope="col">Grupo(s)</th>
                                     <th scope="col">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for usuario in usuarios %}
                                 <tr>
-                                    <td>João Félix Moreira Vidal</td>
-                                    <td>ADM</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-primary me-2">
+                                        <!-- Acessa o nome completo diretamente através do relacionamento OneToOneField -->
+                                        {{ usuario.dadopessoal.nome_completo }}
+                                    </td>
+                                    <td>
+                                        <!-- Acessa os grupos do usuário -->
+                                        {% for grupo in usuario.groups.all %}
+                                            {{ grupo.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    {% comment %} <td>
+                                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary me-2">
                                             <i class="fa-solid fa-edit"></i> Editar
                                         </a>
-                                        <a href="#" class="btn btn-sm btn-danger">
+                                        <a href="{% url 'excluir_usuario' usuario.id %}" class="btn btn-sm btn-danger">
                                             <i class="fa-solid fa-trash"></i> Excluir
                                         </a>
-                                    </td>
+                                    </td> {% endcomment %}
                                 </tr>
-                                <tr>
-                                    <td>Paulo Sampaio</td>
-                                    <td>Colaborador</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-primary me-2">
-                                            <i class="fa-solid fa-edit"></i> Editar
-                                        </a>
-                                        <a href="#" class="btn btn-sm btn-danger">
-                                            <i class="fa-solid fa-trash"></i> Excluir
-                                        </a>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -66,11 +63,9 @@
                     <div class="col-10 col-md-12 d-flex flex-column align-items-start mx-3 mb-3">
                         <div class="d-flex flex-column flex-md-row justify-content-between w-100 mt-3 btns">
                             <a id="texto-volta" href="{% url 'relatorio' %}" class="btn btn-secondary mb-2 mb-md-0">
-                                <i class="fa-solid fa-arrow-left"></i> Voltar 
+                                <i class="fa-solid fa-arrow-left"></i> Voltar
                             </a>
-                            
-                            <a id="texto-add" href="{% url 'adicionarUsuario' %}" class="btn btn-success"  type="submit">Adicionar
-                            </a>
+                            <a id="texto-add" href="{% url 'adicionarUsuario' %}" class="btn btn-success" type="submit">Adicionar</a>
                         </div>
                     </div>
                 </div>

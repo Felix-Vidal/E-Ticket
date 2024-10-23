@@ -25,6 +25,7 @@ urlpatterns = [
     path('manage/usuarioCompra/', usuarioCompra, name='usuarioCompra'),
     path('manage/usuarios/', usuarios, name='usuarios'),
     path('manage/add_usuario/', add_usuario, name='adicionarUsuario') ,
+    path('gerenciar_usuario/', gerenciar_usuario, name='gerenciar_usuario'),
     path('manage/cardapioExterno', cardapioExterno, name='cardapioExterno')
     
 ]

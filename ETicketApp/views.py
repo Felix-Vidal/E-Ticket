@@ -4,7 +4,7 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 from .models import *
@@ -285,7 +285,6 @@ def validar_usuario(request):
                     hora=datetime.now().time(),
                     menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first()
                 )
-                print(Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first())
 
                 messages.success(request, 'Refeição validada com sucesso!')
             else:
@@ -351,10 +350,62 @@ def usuarioCompra (request):
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
 def usuarios (request):
-    return render(request, 'ETicketApp/pages/manager/usuarios.html')
+    usuarios = User.objects.filter(groups__isnull=False).distinct()
+
+
+    # Passar os dados para o template
+    context = {
+        'usuarios': usuarios
+    }
+    return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
+
+def listar_usuarios_grupo(request):
+    grupo_colaboradores = Group.objects.get(name="Colaboradores")  # Nome do grupo
+    usuarios = grupo_colaboradores.user_set.all()  # Todos os usuários no grupo
+
+    # Passar os usuários para o template
+    context = {
+        'usuarios': usuarios,
+    }
+    return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
 def add_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
+
+def gerenciar_usuario(request):
+    if request.method == 'POST':
+        cpf = request.POST.get('cpf')  # O nome do campo de input no template
+        papel = request.POST.get('papel')  # O ID do papel selecionado
+        
+        # Mapeamento de papéis
+        papeis_dict = {
+            '1': 'ADM',
+            '2': 'Colaborador',
+            '3': 'Bolsista'
+        }
+
+        try:
+            user = User.objects.get(username=cpf)
+            print(papel, papeis_dict)
+            # Verifica se o papel é válido
+            if papel in papeis_dict:
+                # Remove o usuário de todos os grupos primeiro
+                user.groups.clear()
+
+                # Adicionar o usuário ao grupo selecionado
+                grupo = Group.objects.get(name=papeis_dict[papel])
+                print(grupo)
+                user.groups.add(grupo)
+
+                messages.success(request, f'{user.username} foi adicionado ao grupo {grupo.name} com sucesso.')
+            else:
+                messages.error(request, 'Papel inválido.')
+        
+        except User.DoesNotExist:
+            messages.error(request, 'Usuário não encontrado.')
+
+        return redirect('usuarios')  # Redireciona após a operação
+
 
 def cadastro_cardapio(request):
     cardapio = Cardapio()
