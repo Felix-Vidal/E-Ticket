@@ -2,42 +2,47 @@
 
 {% block content %}
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
 
-<div id="top" class="content d-flex justify-content-center">
+<div id="top" class="content d-flex justify-content-center" style=" margin-top: 5%;">
     <div class="container-fluid">
-        <div  class=" maior-venda row justify-content-center">
+        <div class="row justify-content-center" style="margin-top: 2rem;">
             
             <div class="col-12 col-md-6 col-lg-4"> 
-                <h1  id="titulo-vender">Vender Ticket</h1>
-                <a id="cardVenda"href="{% url 'vendaUnico' %}">
-                <div id="card-gerar" class=" card mb-4">
-                        <div id="card-icone " class="d-flex justify-content-center align-items-center">
-                            <i id="icone-qr" class="fa-solid fa-qrcode"></i>
+                <h1  id="titulo" style="margin-bottom:55px; text-align:center">Vender Ticket</h1>
+                <a href="{% url 'vendaUnico' %}" style="text-decoration: none;">
+                    <div class="card mb-4" style="border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff;">
+                        <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
+                            <i style="font-size: 100px;" class="fa-solid fa-qrcode"></i>
                         </div>
                         <div class="card-body text-center">
-                            <p id="texto-venda" class="card-text">Gerar Ticket Único</p>
+                            <p class="card-text" style="font-size: 24px;">Gerar Ticket Único</p>
                         </div>
                     </div>
                 </a>
-                <div id="pesquisa-user" class="col-12 col-md-5 lg-4 ">
-                    <label id="form1" class="form-label">Pesquisar Usuario:</label>
-                    <input id="codigo" type="text" class="form-control" placeholder="Digite o código">
-                </div> 
+
+                <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
+
                 <form id="codigo-form" method="POST" action="{% url 'usuarioCompra' %}">
                     {% csrf_token %}
-                    <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12">
-                        <div>
-                            <a id="volta-geral" href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0">
-                                <i class="fa-solid fa-arrow-left"></i> Voltar
-                            </a>
+                    <div  id="teste" class="col-12 col-md-5"  style=" margin-top: 15%;">
+                        <label for="matricula" class="form-label">Pesquisar Usuario:</label>
+                        <input id="matricula" name="matricula" style="border: 2px solid #007bff; width: 240%;" type="number" class="form-control" placeholder="Digite o código">
+                    </div> 
+
+                        <div id="botoes" class="d-flex flex-column flex-md-row justify-content-between col-12" style="margin-top: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center;" >
+                            <div>
+                                <a href="{% url 'manage' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 150px;">
+                                    <i class="fa-solid fa-arrow-left"></i> Voltar
+                                </a>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary" id="btn-avancar" style="font-size: 20px; background-color: #0E4DA4; width: 150px;">
+                                    <i class="fa-solid fa-search"></i> Pesquisar
+                                </button>
+                            </div>
+                            
                         </div>
-                        <div>
-                            <button id="botao-pesquisa" type="submit" class="btn btn-primary">
-                                <i class="fa-solid fa-search"></i> Pesquisar
-                            </button>
-                        </div>
-                        
-                    </div>
                 </form>
    
                 
@@ -50,5 +55,29 @@
 </div>
 
 
+<style>
+    @media (max-width: 912px) {
+        .content {
+            width: 100%; /* Garante que o conteúdo ocupe toda a largura disponível */
+            margin-left:100px;
+        }
+    
+        .sidebar {
+            width: 60px; /* Ajuste a largura do sidebar para que fique mais estreito em telas pequenas */
+        }
+        .card{
+            width:90%;
+            align-items: center
+        }
+        #teste{
+            width:40%;
+        }
+
+        .btn{
+            width:250px
+        }
+        
+    }
+    </style>
 
 {% endblock content %}
