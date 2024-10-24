@@ -701,3 +701,124 @@ textarea {
     }
 }
  
+/* classificação */
+div#classificacao-container {
+    max-width: 900px;
+    margin-left: 15%;
+    margin-right: 5%;
+    margin-top: 3%;
+}
+
+#classificacao-titulo {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+#classificacao-add-button {
+    display: block;
+    width: 100%;
+    max-width: 250px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #0C4CA4;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+#classificacao-tabela {
+    width: 100%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#classificacao-tabela th, #classificacao-tabela td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #dddddd;
+}
+
+#classificacao-tabela th {
+    background-color: #0C4CA4;
+    color: white;
+}
+
+#classificacao-tabela tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.classificacao-acao-button {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.classificacao-edit-button {
+    background-color: #28a745; 
+}
+
+.classificacao-delete-button {
+    background-color: #dc3545; 
+}
+
+@media (max-width: 768px) {
+    #classificacao-container {
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+
+    #classificacao-titulo {
+        font-size: 1.5rem;
+    }
+
+    #classificacao-add-button {
+        font-size: 1rem;
+    }
+
+    #classificacao-tabela th, #classificacao-tabela td {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .classificacao-acao-button {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* classificação form */
+
+.container-classificacao {
+    margin-top: 10%;
+    margin-left: 15%;
+    text-align: center;
+}
+
+#form-classificacao {
+    margin-top: 5%;
+    margin-bottom: 3%; 
+}
+
+.div-f {
+    margin-top: 20px; 
+}
+
+.btn-classificacao-salvar {
+    margin-right: 1em;
+    float: right;
+    
+}
+
+.btn-classificacao-voltar {
+    float: left; 
+}
+
