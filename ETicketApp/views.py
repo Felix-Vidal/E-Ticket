@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
+from .forms import ClassificacaoForm
 
 
 from .models import *
@@ -15,6 +16,7 @@ from io import BytesIO
 import base64
 import qrcode
 from decimal import Decimal
+import random
 
 # Create your views here.
 
@@ -45,12 +47,30 @@ def home(request):
 def aumentar_credito(request):
     if request.method == 'POST':
         valor = request.POST.get('valor')
-        if valor:
+        
+        # metodo_pagamento = request.POST.get('metodo_pagamento')  # Adicione o método de pagamento no formulário
+        
+        
+        # Gera um método de pagamento aleatório
+        metodo_pagamento = random.choice([MetodoPagamentoEnum.PIX.value, MetodoPagamentoEnum.DINHEIRO.value, MetodoPagamentoEnum.CARTAO.value])
+        
+        
+        if valor and metodo_pagamento:
             try:
                 valor_decimal = Decimal(valor)
                 personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
+                
+                # Atualiza o crédito do usuário
                 personal_data.credito += valor_decimal
                 personal_data.save()
+
+                # Cria um registro na tabela Credito
+                Credito.objects.create(
+                    usuario=request.user,
+                    valor=valor_decimal,
+                    metodo_pagamento=metodo_pagamento
+                )
+                
                 messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
                 return redirect('home')  # Redireciona para a página inicial
             except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
@@ -105,6 +125,7 @@ def login(request):
         password = request.POST.get('password')
 
         if not cpf or not password:
+            messages.error(request, 'CPF e senha são obrigatórios.')
             return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'CPF e senha são obrigatórios.'})
 
         try:
@@ -118,6 +139,7 @@ def login(request):
                 return redirect('home')  # Redireciona para a página inicial
 
             else:
+                messages.error(request, 'login ou Senha incorreta.')
                 return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Senha incorreta.'})
 
         except DadoPessoal.DoesNotExist:
@@ -133,6 +155,7 @@ def login(request):
                 external_data = response.json()
 
                 if external_data['record_count'] == 0:
+                    messages.error(request, 'Usuário não encontrado na API externa.')
                     return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Usuário não encontrado na API externa.'})
 
                 # Acessa o primeiro registro da lista "response"
@@ -173,6 +196,7 @@ def login(request):
                 return redirect('home')  # Redireciona para a página inicial após sucesso
 
             else:
+                messages.error(request, 'Erro na API externa.')
                 return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Erro na API externa.'})
 
     return render(request, 'ETicketApp/pages/user/login.html')
@@ -181,14 +205,35 @@ def login(request):
 
 @login_required
 def historico(request):
-    return render(request, 'ETicketApp/pages/user/historico.html')
+    
+    # Busca o histórico de créditos do usuário logado
+    historico = Credito.objects.filter(usuario=request.user).order_by('-data', '-hora')
+    
+    context = {
+        'historico': historico        # Passa o histórico para o template
+    }
+    
+    return render(request, 'ETicketApp/pages/user/historico.html', context)
 
+@login_required
+def historico_refeicoes(request):
+
+    historico_refeicoes = Refeicao.objects.filter(usuario=request.user).select_related('usuario', 'menu', 'ticket_unico').order_by('-data', '-hora')
+
+    context = {
+        'historico_refeicoes': historico_refeicoes,
+    }
+    
+    return render(request, 'ETicketApp/pages/user/historico_refeicoes.html', context)
 
 # MANAGER
 
+def is_in_group(user, group_names):
+    return user.groups.filter(name__in=group_names).exists()
 
 def is_superuser(user):
-    return user.is_superuser
+    grupos = ['ADM', 'Colaborador', 'Bolsista']
+    return is_in_group(user, grupos)
 
 @user_passes_test(is_superuser)
 def dashboard (request):
@@ -207,12 +252,12 @@ def validarUsuario(request):  # Recebe o código como parâmetro
         classificacoes = " / ".join(dados_pessoais.classificacoes.values_list('nome', flat=True))  # Junta as classificações
         current_hour = datetime.now().hour
         if 6 <= current_hour < 10:
-            meal_type = 1
+            tipo_refeicao = "CAFE_DA_MANHA"
         elif 10 <= current_hour < 17:
-            meal_type = 2
+            tipo_refeicao = "ALMOCO"
         else:
-            meal_type = 3
-        nome_refeicao = TipoRefeicaoEnum.get_name_by_value(meal_type)
+            tipo_refeicao = "JANTAR"
+        nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
         context = {
             'nome_completo': dados_pessoais.nome_completo,
             'cpf': dados_pessoais.cpf,
@@ -307,18 +352,23 @@ def relatorio (request):
 def cardapio (request):
     return render(request, 'ETicketApp/pages/manager/cardapio.html')
 
+@user_passes_test(is_superuser)
 def vender (request):
     return render(request, 'ETicketApp/pages/manager/vender.html')
 
+@user_passes_test(is_superuser)
 def vendaUnico (request):
     return render(request, 'ETicketApp/pages/manager/vendaUnico.html')
 
+@user_passes_test(is_superuser)
 def menuExterno (request):
     return render(request, 'ETicketApp/pages/user/menuExterno.html')
 
+@user_passes_test(is_superuser)
 def valorPagaExterno (request):
     return render(request, 'ETicketApp/pages/user/valorPagaExterno.html')
 
+@user_passes_test(is_superuser)
 def usuarioCompra (request):
     if request.method == 'POST':
         if request.POST.get('matricula'):
@@ -352,6 +402,7 @@ def usuarioCompra (request):
     print("terceiro")
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
+@user_passes_test(is_superuser)
 def usuarios (request):
     usuarios = User.objects.filter(groups__isnull=False).distinct()
 
@@ -362,6 +413,7 @@ def usuarios (request):
     }
     return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
+@user_passes_test(is_superuser)
 def listar_usuarios_grupo(request):
     grupo_colaboradores = Group.objects.get(name="Colaboradores")  # Nome do grupo
     usuarios = grupo_colaboradores.user_set.all()  # Todos os usuários no grupo
@@ -372,12 +424,15 @@ def listar_usuarios_grupo(request):
     }
     return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
+@user_passes_test(is_superuser)
 def add_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
 
+@user_passes_test(is_superuser)
 def valorPaga(request):
     return render(request, 'ETicketApp/pages/user/valorPaga.html')
 
+@user_passes_test(is_superuser)
 def gerenciar_usuario(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')  # O nome do campo de input no template
@@ -412,6 +467,7 @@ def gerenciar_usuario(request):
 
         return redirect('usuarios')  # Redireciona após a operação
 
+@user_passes_test(is_superuser)
 def editar_usuario(request, id):
     usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
     
@@ -431,6 +487,7 @@ def editar_usuario(request, id):
     grupos = Group.objects.all()  # Busca todos os grupos disponíveis
     return render(request, 'ETicketApp/pages/manager/add_user.html', {'usuario': usuario, 'grupos': grupos})
 
+@user_passes_test(is_superuser)
 def excluir_usuario(request, id):
     usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
     
@@ -440,6 +497,7 @@ def excluir_usuario(request, id):
     messages.success(request, 'Usuário removido de todos os grupos!')
     return redirect('usuarios')  # Redireciona para a lista de usuários
 
+@user_passes_test(is_superuser)
 def cadastrar_cardapio(request):
     if request.method == 'POST':
         # Obtém os dados do formulário
@@ -476,10 +534,38 @@ def cadastrar_cardapio(request):
             # Se algum campo estiver vazio, mostra uma mensagem de erro
             messages.error(request, 'Por favor, preencha todos os campos.')
             return redirect('cardapio')
+        
+
 
     # Caso contrário, exibe o formulário de cadastro de cardápio
     return render(request, 'ETicketApp/pages/manager/cardapio.html')
 
+@user_passes_test(is_superuser)
+def classificacao(request):
+    classificacoes = Classificacao.objects.all()
+    return render(request, 'ETicketApp/pages/manager/classificacao.html', {'classificacoes': classificacoes})
 
+@user_passes_test(is_superuser)
+def classificacao_add_edit(request, pk=None):
+    if pk:
+        classificacao = get_object_or_404(Classificacao, pk=pk)
+    else:
+        classificacao = None
 
+    if request.method == "POST":
+        form = ClassificacaoForm(request.POST, instance=classificacao)
+        if form.is_valid():
+            form.save()
+            return redirect('classificacao')
+    else:
+        form = ClassificacaoForm(instance=classificacao)
 
+    return render(request, 'ETicketApp/pages/manager/classificacao_form.html', {'form': form})
+
+@user_passes_test(is_superuser)
+def classificacao_delete(request, pk):
+    classificacao = get_object_or_404(Classificacao, pk=pk)
+    if request.method == "POST":
+        classificacao.delete()
+        return redirect('classificacao')
+    return render(request, 'ETicketApp/pages/manager/classificacao.html', {'classificacao': classificacao})

@@ -315,3 +315,19 @@ body.login {
 #valor{
   font-size: 25px;
 }
+
+/* Histórico */
+a{
+  text-decoration: none;
+}
+
+div#card-pix {
+  height: 10em; 
+  width: 10em; 
+  background-color:#0C4CA4
+}
+
+div.card-body p{
+  color: #fff;
+  font-size: 18px;
+}

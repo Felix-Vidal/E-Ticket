@@ -22,9 +22,19 @@
                     <span class="nav_name">Usuários</span>
                 </a>
 
+                <a href="{% url 'classificacao' %}" id="users" class="nav_link" routerLinkActive="active">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="nav_name">classificação</span>
+                </a>
+
                 <a id="perfil" class="nav_link" routerLinkActive="active">
                     <i class="fa-solid fa-user"></i>
                     <span class="nav_name">Perfil</span>
+                </a>
+
+                <a href="{% url 'home' %}" id="users" class="nav_link" routerLinkActive="active">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="nav_name">Voltar</span>
                 </a>
 
                 <form action="{% url 'logout' %}" class="nav_link" id="logout" method="post">

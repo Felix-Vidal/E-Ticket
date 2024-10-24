@@ -1,0 +1,45 @@
+{% extends 'global/base_manager.html' %}
+
+{% block content %} 
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<div class="container">
+    <h1>Lista de Classificações</h1>
+
+    <!-- Botão para Adicionar Classificação -->
+    <a href="{% url 'classificacao_add' %}" class="button add-button">Adicionar Classificação</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Café da Manhã</th>
+                <th>Almoço</th>
+                <th>Jantar</th>
+                <th>Prioridade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for classificacao in classificacoes %}
+            <tr>
+                <td>{{ classificacao.nome }}</td>
+                <td>R$ {{ classificacao.valor_cafe_manha }}</td>
+                <td>R$ {{ classificacao.valor_almoco }}</td>
+                <td>R$ {{ classificacao.valor_jantar }}</td>
+                <td>{{ classificacao.prioridade }}</td>
+                <td>
+                    <a href="{% url 'classificacao_edit' classificacao.id %}" class="button button-edit">Editar</a>
+                    <form action="{% url 'classificacao_delete' classificacao.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-delete" onclick="return confirm('Tem certeza que deseja excluir esta classificação?');">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
