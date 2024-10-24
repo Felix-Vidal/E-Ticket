@@ -1,3 +1,4 @@
+{% include 'ETicketApp/partials/user/alerta.html' %}
 <div class="modal fade" id="modal-card" tabindex="-1" aria-labelledby="modal-cardLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div id="modal-text" class="modal-content">
@@ -6,41 +7,40 @@
                 <button id="close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form method="POST" action="{% url 'aumentar-credito' %}"> <!-- Form com POST e CSRF -->
+                    {% csrf_token %}
                     <div class="container-fluid">
-                        <div  class="col-md-12">
-                    <h2>Dados do Cartão</h2>
+                        <div class="col-md-12">
+                            <h2>Dados do Cartão</h2>
                             <div class="col-md-12">
                                 <label>Número do Cartão:<span class="mandatory">*</span></label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" name="numero_cartao" required>
                             </div>
-                            <div class="">
-                                <div class="col-md-12">
-                                    <label class="pay">Data de validade <span class="mandatory">*</span></label>
-                                    <input type="text" placeholder="MM/YY" minlength="5" maxlength="5"
-                                        class="form-control">
-                                </div>
-                                <div class="col-md-12">
-                                    <label class="pay">CVV <span class="mandatory">*</span></label>
-                                    <input type="password" placeholder="&#9679;&#9679;&#9679;"
-                                        class="placeicon form-control" minlength="3" maxlength="3">
-                                </div>
+                            <div class="col-md-12">
+                                <label>Data de validade <span class="mandatory">*</span></label>
+                                <input type="text" placeholder="MM/YY" minlength="4" maxlength="4" class="form-control" name="validade_cartao" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label>CVV <span class="mandatory">*</span></label>
+                                <input type="password" placeholder="&#9679;&#9679;&#9679;" class="form-control" minlength="3" maxlength="3" name="cvv_cartao" required>
                             </div>
                             <div class="col-md-12">
                                 <label>Nome no Cartão:</label>
-                                <input type="text" class="form-control">
-
+                                <input type="text" class="form-control" name="nome_cartao" required>
+                            </div>
+                            <div class="col-md-12">
                                 <label>CPF:<span class="mandatory">*</span></label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" name="cpf_cartao" required>
                             </div>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a href="{% url 'home' %}"   id="salvar" type="button" class="btn btn-primary">Confirmar </a>
+                <!-- Botão de submissão do formulário -->
+                <a href="{% url 'home' %}" type="submit" id="confirma" class="btn btn-success">Confirmar</a>
             </div>
+                </form>
         </div>
     </div>
 </div>

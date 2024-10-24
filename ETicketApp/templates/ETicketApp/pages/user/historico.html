@@ -5,37 +5,42 @@
 {% block content %}
 {% include 'ETicketApp/partials/user/header.html' %}
 {% include 'ETicketApp/partials/user/alerta.html' %}
-<h1 id="title">Ticket</h1>
+<h1 id="title" class="text-center">Ticket</h1>
+
 <div class="container-fluid">
-    <a href="{% url 'historico_refeicoes' %}" class='mx-1'>
-        <div id="card-pix" class="card">
+    <a href="{% url 'historico_refeicoes' %}" class="mx-1">
+        <div id="card-pix" class="card text-center">
             <i class="fa-solid fa-bowl-food mt-3" style="color: #ffffff; height: 3em;"></i>
             <div class="card-body">
-                <p>Refeicoes Feitas</p>
+                <p>Refeições Feitas</p>
             </div>
         </div>
     </a>
-
 </div>
-<h1 id="title">Histórico de Crédito</h1>
-<table class="table">
-    <tbody>
-        {% for credito in historico %}
-        <tr>
-            <th>
-                <h6>Compra de R$ {{ credito.valor }}</h6>
-                <h6>Método Pagamento: {{ credito.get_metodo_pagamento_display }}</h6>
-            </th>
-            <td>
-                <h6>{{ credito.data|date:"d M" }}</h6>
-                <h6>{{ credito.hora|time:"H:i" }}</h6>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="2">Nenhum histórico de crédito encontrado.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+<h1 id="title" class="text-center">Histórico de Crédito</h1>
+
+<div class="container">
+    <table class="table table-primary table-responsive col-12 col-md-6 mx-auto">
+        <tbody>
+            {% for credito in historico %}
+            <tr>
+                <th>
+                    <h6>Compra de R$ {{ credito.valor }}</h6>
+                    <h6>Método de Pagamento: {{ credito.get_metodo_pagamento_display }}</h6>
+                </th>
+                <td>
+                    <h6>{{ credito.data|date:"d M" }}</h6>
+                    <h6>{{ credito.hora|time:"H:i" }}</h6>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center">Nenhum histórico de crédito encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 {% endblock content %}
