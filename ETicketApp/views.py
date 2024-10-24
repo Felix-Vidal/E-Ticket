@@ -50,14 +50,18 @@ def aumentar_credito(request):
         
         # metodo_pagamento = request.POST.get('metodo_pagamento')  # Adicione o método de pagamento no formulário
         
-        
         # Gera um método de pagamento aleatório
         metodo_pagamento = random.choice([MetodoPagamentoEnum.PIX.value, MetodoPagamentoEnum.DINHEIRO.value, MetodoPagamentoEnum.CARTAO.value])
-        
         
         if valor and metodo_pagamento:
             try:
                 valor_decimal = Decimal(valor)
+                
+                # Verifica se o valor é positivo
+                if valor_decimal <= 0:
+                    messages.error(request, 'O valor deve ser positivo.')  # Mensagem de erro se o valor for negativo ou zero
+                    return redirect('home')
+                
                 personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
                 
                 # Atualiza o crédito do usuário
@@ -415,14 +419,18 @@ def usuarioCompra (request):
                 'credito': dados_pessoais.credito,
                 'unidade': dados_pessoais.unidade,
             }
-            print(dados_pessoais)
             return render(request, 'ETicketApp/pages/manager/usuarioCompra.html', context)
         print(request.POST.get('valor'))
         if request.POST.get('valor'):
             valor = request.POST.get('valor')
-            if valor:
+            if valor:         
                 try:
                     valor_decimal = Decimal(valor)
+                    
+                    if valor_decimal <= 0:
+                        messages.error(request, 'O valor deve ser positivo.')  # Mensagem de erro se o valor for negativo ou zero
+                        return redirect('vender')
+                    
                     personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
                     personal_data.credito += valor_decimal
                     personal_data.save()
@@ -432,7 +440,6 @@ def usuarioCompra (request):
                     messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  # Mensagem de erro
                     return redirect('vender')  # Volta para a mesma página
             
-    print("terceiro")
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
 @user_passes_test(is_superuser)
