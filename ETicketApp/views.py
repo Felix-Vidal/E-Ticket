@@ -215,6 +215,16 @@ def historico(request):
     
     return render(request, 'ETicketApp/pages/user/historico.html', context)
 
+@login_required
+def historico_refeicoes(request):
+
+    historico_refeicoes = Refeicao.objects.filter(usuario=request.user).select_related('usuario', 'menu', 'ticket_unico').order_by('-data', '-hora')
+
+    context = {
+        'historico_refeicoes': historico_refeicoes,
+    }
+    
+    return render(request, 'ETicketApp/pages/user/historico_refeicoes.html', context)
 
 # MANAGER
 
@@ -342,18 +352,23 @@ def relatorio (request):
 def cardapio (request):
     return render(request, 'ETicketApp/pages/manager/cardapio.html')
 
+@user_passes_test(is_superuser)
 def vender (request):
     return render(request, 'ETicketApp/pages/manager/vender.html')
 
+@user_passes_test(is_superuser)
 def vendaUnico (request):
     return render(request, 'ETicketApp/pages/manager/vendaUnico.html')
 
+@user_passes_test(is_superuser)
 def menuExterno (request):
     return render(request, 'ETicketApp/pages/user/menuExterno.html')
 
+@user_passes_test(is_superuser)
 def valorPagaExterno (request):
     return render(request, 'ETicketApp/pages/user/valorPagaExterno.html')
 
+@user_passes_test(is_superuser)
 def usuarioCompra (request):
     if request.method == 'POST':
         if request.POST.get('matricula'):
@@ -387,6 +402,7 @@ def usuarioCompra (request):
     print("terceiro")
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
+@user_passes_test(is_superuser)
 def usuarios (request):
     usuarios = User.objects.filter(groups__isnull=False).distinct()
 
@@ -397,6 +413,7 @@ def usuarios (request):
     }
     return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
+@user_passes_test(is_superuser)
 def listar_usuarios_grupo(request):
     grupo_colaboradores = Group.objects.get(name="Colaboradores")  # Nome do grupo
     usuarios = grupo_colaboradores.user_set.all()  # Todos os usuários no grupo
@@ -407,12 +424,15 @@ def listar_usuarios_grupo(request):
     }
     return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
+@user_passes_test(is_superuser)
 def add_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
 
+@user_passes_test(is_superuser)
 def valorPaga(request):
     return render(request, 'ETicketApp/pages/user/valorPaga.html')
 
+@user_passes_test(is_superuser)
 def gerenciar_usuario(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')  # O nome do campo de input no template
@@ -447,6 +467,7 @@ def gerenciar_usuario(request):
 
         return redirect('usuarios')  # Redireciona após a operação
 
+@user_passes_test(is_superuser)
 def editar_usuario(request, id):
     usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
     
@@ -466,6 +487,7 @@ def editar_usuario(request, id):
     grupos = Group.objects.all()  # Busca todos os grupos disponíveis
     return render(request, 'ETicketApp/pages/manager/add_user.html', {'usuario': usuario, 'grupos': grupos})
 
+@user_passes_test(is_superuser)
 def excluir_usuario(request, id):
     usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
     
@@ -475,6 +497,7 @@ def excluir_usuario(request, id):
     messages.success(request, 'Usuário removido de todos os grupos!')
     return redirect('usuarios')  # Redireciona para a lista de usuários
 
+@user_passes_test(is_superuser)
 def cadastrar_cardapio(request):
     if request.method == 'POST':
         # Obtém os dados do formulário
@@ -517,13 +540,12 @@ def cadastrar_cardapio(request):
     # Caso contrário, exibe o formulário de cadastro de cardápio
     return render(request, 'ETicketApp/pages/manager/cardapio.html')
 
-
-
-
+@user_passes_test(is_superuser)
 def classificacao(request):
     classificacoes = Classificacao.objects.all()
     return render(request, 'ETicketApp/pages/manager/classificacao.html', {'classificacoes': classificacoes})
 
+@user_passes_test(is_superuser)
 def classificacao_add_edit(request, pk=None):
     if pk:
         classificacao = get_object_or_404(Classificacao, pk=pk)
@@ -540,6 +562,7 @@ def classificacao_add_edit(request, pk=None):
 
     return render(request, 'ETicketApp/pages/manager/classificacao_form.html', {'form': form})
 
+@user_passes_test(is_superuser)
 def classificacao_delete(request, pk):
     classificacao = get_object_or_404(Classificacao, pk=pk)
     if request.method == "POST":

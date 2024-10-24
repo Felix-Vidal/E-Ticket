@@ -32,6 +32,11 @@
                     <span class="nav_name">Perfil</span>
                 </a>
 
+                <a href="{% url 'home' %}" id="users" class="nav_link" routerLinkActive="active">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="nav_name">Voltar</span>
+                </a>
+
                 <form action="{% url 'logout' %}" class="nav_link" id="logout" method="post">
                     {% csrf_token %}
                     <button class="nav_name" type="submit"><span class="nav_name"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair </span></button>

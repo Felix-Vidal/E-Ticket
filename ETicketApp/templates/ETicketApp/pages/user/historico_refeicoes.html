@@ -1,0 +1,50 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}historico |{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/user/header.html' %}
+{% include 'ETicketApp/partials/user/alerta.html' %}
+
+<h1 id="title">Histórico de Refeições</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Refeição</th>
+            <th>Menu</th>
+            <th>Valor</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for refeicao in historico_refeicoes %}
+        <tr>
+            <td>
+                <h6>{{ refeicao.data|date:"d M" }}</h6>
+            </td>
+            <td>
+                <h6>{{ refeicao.hora|time:"H:i" }}</h6>
+            </td>
+            <td>
+                <h6>{{ refeicao.menu.tipo_refeicao }}</h6>
+            </td>
+            <td>
+                <h6>{{ refeicao.menu.menu }}</h6>
+            </td>
+            <td>
+                <h6>R$ {{ refeicao.valor }}</h6>
+            </td>
+            <td>
+                <h6>{% if refeicao.gratuito %}Gratuito{% else %}Pago{% endif %}</h6>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">Nenhum histórico de refeição encontrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
