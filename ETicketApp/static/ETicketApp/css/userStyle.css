@@ -332,6 +332,10 @@ div#card-pix {
 }
 
 div.card-body p{
+  font-size: 18px;
+}
+
+div.card-body p.refeicoes{
   color: #fff;
   font-size: 18px;
 }

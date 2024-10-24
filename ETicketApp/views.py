@@ -393,11 +393,11 @@ def vender (request):
 def vendaUnico (request):
     return render(request, 'ETicketApp/pages/manager/vendaUnico.html')
 
-@user_passes_test(is_superuser)
+
 def menuExterno (request):
     return render(request, 'ETicketApp/pages/user/menuExterno.html')
 
-@user_passes_test(is_superuser)
+
 def valorPagaExterno (request):
     return render(request, 'ETicketApp/pages/user/valorPagaExterno.html')
 
