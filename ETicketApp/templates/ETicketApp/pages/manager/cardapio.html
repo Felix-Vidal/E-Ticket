@@ -1,32 +1,49 @@
 {% extends 'global/base_manager.html' %}
 
 {% block content %}
-{% include 'ETicketApp/partials/manager/sideBar.html' %}
 {% include 'ETicketApp/partials/manager/alerta.html' %}
 
-<form {% url 'cardapio' %} method="post" class="form-cardapio">
-    {% csrf_token %}
-<div class="container-cardapio">
-    <h2>Cardápio:</h2>
-    <input type="date" class='data'></input>
-    
-    <div class="section-refeicoes">
-        <label for="cafe">Café Da Manhã:</label>
-        <textarea rows="4" cols="50" name="cafe"></textarea>
-    </div>
+<h1 id="title">Listagem de Cardápios</h1>
 
-    <div class="section-refeicoes">
-        <label for="almoco">Almoço:</label>
-        <textarea rows="4" cols="50" name="almoco"></textarea>
-    </div>
+<!-- Botão para adicionar um novo cardápio -->
+<a href="{% url 'adicionar_cardapio' %}" class="btn btn-primary mb-3">Adicionar Novo Cardápio</a>
 
-    <div class="section-refeicoes">
-        <label for="jantar">Jantar:</label>
-        <textarea rows="4" cols="50" name="jantar"></textarea>
-    </div>
-<div class="continuar">
-    <button class="btn-continuar">Continuar</button>
-</div>
-</div>
-</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Tipo de Refeição</th>
+            <th>Menu</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if cardapios %}
+            {% for cardapio in cardapios %}
+            <tr>
+                <td>
+                    <h6>{{ cardapio.data|date:"d M Y" }}</h6>
+                </td>
+                <td>
+                    <h6>{{ cardapio.get_tipo_refeicao_display }}</h6>
+                </td>
+                <td>
+                    <h6>{{ cardapio.menu }}</h6>
+                </td>
+                <td>
+                    <!-- Botões de Editar e Excluir -->
+                    <a href="{% url 'editar_cardapio' cardapio.id %}" >Editar</a>
+                    <a href="{% url 'excluir_cardapio' cardapio.id %}" 
+                       onclick="return confirm('Tem certeza que deseja excluir este cardápio?');">Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="4">Nenhum cardápio disponível.</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+
 {% endblock %}

@@ -46,4 +46,9 @@ urlpatterns = [
     path('classificacoes/<int:pk>/edit/', classificacao_add_edit, name='classificacao_edit'),  # Editar
     path('classificacoes/<int:pk>/delete/', classificacao_delete, name='classificacao_delete'),
     
+    path('cardapios/', cardapio, name='cardapio'),
+    path('cardapios/add/', adicionar_cardapio, name='adicionar_cardapio'),
+    path('cardapios/edit/<int:id>/', editar_cardapio, name='editar_cardapio'),
+    path('cardapios/delete/<int:id>/', excluir_cardapio, name='excluir_cardapio'),
+    
 ]

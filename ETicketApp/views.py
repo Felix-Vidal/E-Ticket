@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
-from .forms import ClassificacaoForm
+from .forms import *
 
 
 from .models import *
@@ -349,8 +349,41 @@ def relatorio (request):
     return render(request, 'ETicketApp/pages/manager/relatorio.html')
 
 @user_passes_test(is_superuser)
-def cardapio (request):
-    return render(request, 'ETicketApp/pages/manager/cardapio.html')
+def cardapio(request):
+    # Recupera todos os cardápios ordenados pela data, do mais recente ao mais antigo
+    cardapios = Cardapio.objects.all().order_by('-data')
+    
+    context = {
+        'cardapios': cardapios,
+    }
+    
+    return render(request, 'ETicketApp/pages/manager/cardapio.html', context)
+
+def adicionar_cardapio(request):
+    if request.method == 'POST':
+        form = CardapioForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapio')
+    else:
+        form = CardapioForm()
+    return render(request, 'ETicketApp/pages/manager/cardapio_form.html', {'form': form})
+
+def editar_cardapio(request, id):
+    cardapio = get_object_or_404(Cardapio, id=id)
+    if request.method == 'POST':
+        form = CardapioForm(request.POST, instance=cardapio)
+        if form.is_valid():
+            form.save()
+            return redirect('cardapio')
+    else:
+        form = CardapioForm(instance=cardapio)
+    return render(request, 'ETicketApp/pages/manager/cardapio_form.html', {'form': form})
+
+def excluir_cardapio(request, id):
+    cardapio = get_object_or_404(Cardapio, id=id)
+    cardapio.delete()
+    return redirect('cardapio')
 
 @user_passes_test(is_superuser)
 def vender (request):
@@ -496,6 +529,8 @@ def excluir_usuario(request, id):
     
     messages.success(request, 'Usuário removido de todos os grupos!')
     return redirect('usuarios')  # Redireciona para a lista de usuários
+
+
 
 @user_passes_test(is_superuser)
 def cadastrar_cardapio(request):
