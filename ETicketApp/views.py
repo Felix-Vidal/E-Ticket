@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
+from .forms import ClassificacaoForm
 
 
 from .models import *
@@ -510,6 +511,8 @@ def cadastrar_cardapio(request):
             # Se algum campo estiver vazio, mostra uma mensagem de erro
             messages.error(request, 'Por favor, preencha todos os campos.')
             return redirect('cardapio')
+        
+
 
     # Caso contrário, exibe o formulário de cadastro de cardápio
     return render(request, 'ETicketApp/pages/manager/cardapio.html')
@@ -517,3 +520,29 @@ def cadastrar_cardapio(request):
 
 
 
+def classificacao(request):
+    classificacoes = Classificacao.objects.all()
+    return render(request, 'ETicketApp/pages/manager/classificacao.html', {'classificacoes': classificacoes})
+
+def classificacao_add_edit(request, pk=None):
+    if pk:
+        classificacao = get_object_or_404(Classificacao, pk=pk)
+    else:
+        classificacao = None
+
+    if request.method == "POST":
+        form = ClassificacaoForm(request.POST, instance=classificacao)
+        if form.is_valid():
+            form.save()
+            return redirect('classificacao')
+    else:
+        form = ClassificacaoForm(instance=classificacao)
+
+    return render(request, 'ETicketApp/pages/manager/classificacao_form.html', {'form': form})
+
+def classificacao_delete(request, pk):
+    classificacao = get_object_or_404(Classificacao, pk=pk)
+    if request.method == "POST":
+        classificacao.delete()
+        return redirect('classificacao')
+    return render(request, 'ETicketApp/pages/manager/classificacao.html', {'classificacao': classificacao})
