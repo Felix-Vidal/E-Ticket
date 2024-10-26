@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from .enums import TipoRefeicaoEnum, MetodoPagamentoEnum
@@ -49,9 +50,15 @@ class TicketUnico(models.Model):
     tipo_refeicao = models.CharField(max_length=15, choices=TipoRefeicaoEnum.choices())
     classificacao = models.ForeignKey(Classificacao, on_delete=models.CASCADE)
     valido = models.BooleanField(default=True)
+    codigo = models.CharField(max_length=36, unique=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.codigo:  # Gera o código apenas uma vez, no momento da criação
+            self.codigo = str(uuid.uuid4())
+        super(TicketUnico, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"Ticket: {self.valor} - {self.metodo_pagamento} - {self.tipo_refeicao} - Válido: {self.valido}"
+        return f"Ticket: {self.valor} - {self.metodo_pagamento} - {self.tipo_refeicao} - Válido: {self.valido} - Código: {self.codigo}"
     
 class Cardapio(models.Model):
     

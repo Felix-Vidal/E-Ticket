@@ -26,6 +26,10 @@ urlpatterns = [
     
     path('manage/ticketUnico/', ticketUnico, name='ticketUnico'),
     
+    path('gerar-ticket-unico/', gerar_ticket_unico, name='gerar_ticket_unico'),
+    path('ticket/<int:ticket_id>/qrcode/', gerar_qrcode, name='gerar_qrcode'),
+    path('listar-tickets/', listar_tickets, name='listar_tickets'),
+    
     path('manage/relatorio/', relatorio, name='relatorio'),
     
     path('manage/cardapio/', cardapio, name='cardapio'),

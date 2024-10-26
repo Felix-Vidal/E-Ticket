@@ -19,7 +19,7 @@ from decimal import Decimal
 import random
 
 # Create your views here.
-
+# ----------- usuario final ------------
 @login_required
 def home(request):
     # Obtém os dados pessoais do usuário logado
@@ -230,7 +230,21 @@ def historico_refeicoes(request):
     
     return render(request, 'ETicketApp/pages/user/historico_refeicoes.html', context)
 
-# MANAGER
+@login_required
+def valorPaga(request):
+    return render(request, 'ETicketApp/pages/user/valorPaga.html')
+
+# ----------- usuario externo ------------
+
+def valorPagaExterno (request):
+    return render(request, 'ETicketApp/pages/user/valorPagaExterno.html')
+
+def menuExterno (request):
+    return render(request, 'ETicketApp/pages/user/menuExterno.html')
+
+
+
+# ----------- usuario gerenciador ------------
 
 def is_in_group(user, group_names):
     return user.groups.filter(name__in=group_names).exists()
@@ -248,12 +262,22 @@ def validar (request):
     return render(request, 'ETicketApp/pages/manager/validar.html')
 
 @user_passes_test(is_superuser)
-def validarUsuario(request):  # Recebe o código como parâmetro
+def validarUsuario(request):  
     if request.method == 'POST':
-        matricula = request.POST.get('matricula')
-        # Obtém os dados do usuário usando a matrícula
-        dados_pessoais = DadoPessoal.objects.get(matricula=matricula)
-        classificacoes = " / ".join(dados_pessoais.classificacoes.values_list('nome', flat=True))  # Junta as classificações
+        codigo = request.POST.get('matricula')  # Pode ser matrícula (numérica) ou código do ticket (UUID)
+
+        # Verifica se o código é numérico para tentar buscar DadoPessoal
+        if codigo.isdigit():
+            try:
+                dados_pessoais = DadoPessoal.objects.get(matricula=codigo)
+                # Obtém as classificações do usuário
+                classificacoes = " / ".join(dados_pessoais.classificacoes.values_list('nome', flat=True))
+            except DadoPessoal.DoesNotExist:
+                dados_pessoais = None
+        else:
+            dados_pessoais = None
+
+        # Identifica o tipo de refeição com base no horário atual
         current_hour = datetime.now().hour
         if 6 <= current_hour < 10:
             tipo_refeicao = "CAFE_DA_MANHA"
@@ -262,16 +286,53 @@ def validarUsuario(request):  # Recebe o código como parâmetro
         else:
             tipo_refeicao = "JANTAR"
         nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
-        context = {
-            'nome_completo': dados_pessoais.nome_completo,
-            'cpf': dados_pessoais.cpf,
-            'matricula': dados_pessoais.matricula,
-            'credito': dados_pessoais.credito,  # Certifique-se de ter um campo de saldo
-            'unidade': dados_pessoais.unidade,        # Adicione um campo de unidade
-            'classificacoes': classificacoes,
-            'tipo_refeicao': nome_refeicao,
-        }
-        return render(request, 'ETicketApp/pages/manager/validarUsuario.html', context)
+
+        # Se dados_pessoais não existe, tenta buscar como TicketUnico
+        if not dados_pessoais:
+            try:
+                ticket = TicketUnico.objects.get(codigo=codigo)
+                if ticket.valido:
+                    # Verifica se o tipo de refeição do ticket corresponde ao horário atual
+                    if ticket.tipo_refeicao == tipo_refeicao:
+                        ticket.valido = False
+                        ticket.save()
+                        
+                        # Registra a refeição
+                        Refeicao.objects.create(
+                            valor=ticket.valor,
+                            gratuito=False,
+                            data=datetime.now().date(),
+                            hora=datetime.now().time(),
+                            menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first(),
+                            ticket_unico=ticket
+                        )
+                        messages.success(request, 'Ticket validado com sucesso!')
+                        return None
+                    else:
+                        messages.error(request, 'Tipo de refeição inválido para o horário atual.')
+
+                        return redirect('validar')
+                else:
+                    messages.error(request, 'Ticket já foi utilizado ou está inválido.')
+
+                    return redirect('validar')
+            except TicketUnico.DoesNotExist:
+                messages.error(request, 'Código inválido. Não corresponde a uma matrícula ou ticket válido.')
+                return redirect('validar')
+
+        # Prepara o contexto e renderiza a página
+        if dados_pessoais:
+            context = {
+                'nome_completo': dados_pessoais.nome_completo,
+                'cpf': dados_pessoais.cpf,
+                'matricula': dados_pessoais.matricula,
+                'credito': dados_pessoais.credito,
+                'unidade': dados_pessoais.unidade,
+                'classificacoes': classificacoes,
+                'tipo_refeicao': nome_refeicao,
+            }
+            return render(request, 'ETicketApp/pages/manager/validarUsuario.html', context)
+
     return render(request, 'ETicketApp/pages/manager/validarUsuario.html')
 
 @user_passes_test(is_superuser)
@@ -363,6 +424,7 @@ def cardapio(request):
     
     return render(request, 'ETicketApp/pages/manager/cardapio.html', context)
 
+@user_passes_test(is_superuser)
 def adicionar_cardapio(request):
     if request.method == 'POST':
         form = CardapioForm(request.POST)
@@ -373,6 +435,7 @@ def adicionar_cardapio(request):
         form = CardapioForm()
     return render(request, 'ETicketApp/pages/manager/cardapio_form.html', {'form': form})
 
+@user_passes_test(is_superuser)
 def editar_cardapio(request, id):
     cardapio = get_object_or_404(Cardapio, id=id)
     if request.method == 'POST':
@@ -384,6 +447,7 @@ def editar_cardapio(request, id):
         form = CardapioForm(instance=cardapio)
     return render(request, 'ETicketApp/pages/manager/cardapio_form.html', {'form': form})
 
+@user_passes_test(is_superuser)
 def excluir_cardapio(request, id):
     cardapio = get_object_or_404(Cardapio, id=id)
     cardapio.delete()
@@ -396,14 +460,6 @@ def vender (request):
 @user_passes_test(is_superuser)
 def vendaUnico (request):
     return render(request, 'ETicketApp/pages/manager/vendaUnico.html')
-
-
-def menuExterno (request):
-    return render(request, 'ETicketApp/pages/user/menuExterno.html')
-
-
-def valorPagaExterno (request):
-    return render(request, 'ETicketApp/pages/user/valorPagaExterno.html')
 
 @user_passes_test(is_superuser)
 def usuarioCompra (request):
@@ -467,10 +523,6 @@ def listar_usuarios_grupo(request):
 @user_passes_test(is_superuser)
 def add_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
-
-@user_passes_test(is_superuser)
-def valorPaga(request):
-    return render(request, 'ETicketApp/pages/user/valorPaga.html')
 
 @user_passes_test(is_superuser)
 def gerenciar_usuario(request):
@@ -611,3 +663,75 @@ def classificacao_delete(request, pk):
         classificacao.delete()
         return redirect('classificacao')
     return render(request, 'ETicketApp/pages/manager/classificacao.html', {'classificacao': classificacao})
+
+def gerar_ticket_unico(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        classificacao = request.POST.get('classificacao')
+        pagamento = request.POST.get('pagamento')
+        cafe = int(request.POST.get('cafe', 0))
+        almoco = int(request.POST.get('almoco', 0))
+        janta = int(request.POST.get('janta', 0))
+        refeicao = int(request.POST.get('refeicao', 0))
+
+        try:
+            classificacao_obj = Classificacao.objects.get(nome=classificacao)
+            tickets_criados = []
+
+            for _ in range(cafe):
+                ticket = TicketUnico.objects.create(
+                    valor=classificacao_obj.valor_cafe_manha,
+                    metodo_pagamento=pagamento,
+                    tipo_refeicao='CAFE_DA_MANHA',
+                    classificacao=classificacao_obj
+                )
+                tickets_criados.append(ticket)
+            
+            for _ in range(almoco):
+                ticket = TicketUnico.objects.create(
+                    valor=classificacao_obj.valor_almoco,
+                    metodo_pagamento=pagamento,
+                    tipo_refeicao='ALMOCO',
+                    classificacao=classificacao_obj
+                )
+                tickets_criados.append(ticket)
+
+            for _ in range(janta):
+                ticket = TicketUnico.objects.create(
+                    valor=classificacao_obj.valor_jantar,
+                    metodo_pagamento=pagamento,
+                    tipo_refeicao='JANTAR',
+                    classificacao=classificacao_obj
+                )
+                tickets_criados.append(ticket)
+
+            messages.success(request, 'Tickets gerados com sucesso!')
+            
+            # Armazena os IDs dos tickets criados na sessão
+            request.session['tickets_criados_ids'] = [ticket.id for ticket in tickets_criados]
+            return redirect('listar_tickets')  # Redireciona para a página de listagem de tickets
+
+        except Classificacao.DoesNotExist:
+            messages.error(request, 'Classificação não encontrada.')
+
+    return render(request, 'ETicketApp/pages/manager/vendaUnico.html')
+
+def listar_tickets(request):
+    # Recupera os IDs dos tickets criados armazenados na sessão
+    tickets_ids = request.session.get('tickets_criados_ids', [])
+    tickets_criados = TicketUnico.objects.filter(id__in=tickets_ids)
+
+    # Limpa os IDs da sessão após exibir os tickets
+    request.session['tickets_criados_ids'] = []
+
+    return render(request, 'ETicketApp/pages/manager/mostra_ticket_unico.html', {'tickets': tickets_criados})
+
+def gerar_qrcode(request, ticket_id):
+    ticket = TicketUnico.objects.get(id=ticket_id)
+    # Gera o QR code com o valor de `codigo` do ticket
+    qr = qrcode.make(str(ticket.codigo))
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    return HttpResponse(buffer, content_type="image/png")

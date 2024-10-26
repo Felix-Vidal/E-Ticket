@@ -11,65 +11,60 @@
                 <div class= "col-12 ol-md-8 col-lg-8">
                     <h1 id="titulo-gera">Gerar Ticket Unico </h1>
                 </div>
-                <form>
+                <form method="POST" action="{% url 'gerar_ticket_unico' %}">
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label for="Email" class="form-label">Email:</label>
-                        <input id="input-email" type="email" class="form-control" id="Email" aria-describedby="email">
-                       
+                        <input id="input-email" name="email" type="email" class="form-control" aria-describedby="email">
                     </div>
-                  
-
-                    <div class="mb-3 row d-flex justify-content-between">
-                        <div class="col-12 col-md-5"> 
-                            <label for="classificacao" class="form-label">Classificação:</label>
-                            <select id="select-unico" class="form-select w-100" aria-label="Default select example">
-                                <option selected>Comunidade Externa</option>
-                                <option value="1">Especial</option>
-                            </select>
-                        </div>
-                        <div class="col-12 col-md-5"> 
-                            <label for="pagamento" class="form-label">Forma de pagamento:</label>
-                            <select id="select-pagamento" class="form-select w-100" aria-label="Default select example">
-                                <option selected>Pix</option>
-                                <option value="1">Dinheiro</option>
-                                <option value="1">Cartao</option>
-                            </select>
-                        </div>
-
-                        <div id="cafe-manha" class="col-12 col-md-5"> 
-                            <label for="cafe" class="form-label">Qtd. Café da Manhã:</label>
-                            <input id="cafee" type="cafe" class="form-control"aria-describedby="cafe">
-                        </div>
-
-                        <div id="jantas" class="col-12 col-md-5"> 
-                            <label for="janta" class="form-label">Qtd. de Jantar:</label>
-                        <input id="jantar-label" type="janta" class="form-control" aria-describedby="janta">
-                        </div>
-
-                        <div id="almoco" class="col-12 col-md-5"> 
-                            <label for="almoco" class="form-label">Qtd. de Almoço:</label>
-                            <input id="almoco-label" type="almoco" class="form-control" aria-describedby="almoco">
-                        </div>
-
-                        <div id="refeicoes" class="col-12 col-md-5"> 
-                            <label for="refeicao" class="form-label">Qtd. de Qualquer Refeição:</label>
-                            <input id="refeicao-label" type="almoco" class="form-control" aria-describedby="refeicao">
-                        </div>
-
+                    
+                    <!-- Classificação -->
+                    <div class="col-12 col-md-5"> 
+                        <label for="classificacao" class="form-label">Classificação:</label>
+                        <select id="select-unico" name="classificacao" class="form-select w-100">
+                            <option selected value="Comunidade Externa">Comunidade Externa</option>
+                            <option value="Especial">Especial</option>
+                        </select>
                     </div>
+                
+                    <!-- Forma de pagamento -->
+                    <div class="col-12 col-md-5"> 
+                        <label for="pagamento" class="form-label">Forma de pagamento:</label>
+                        <select id="select-pagamento" name="pagamento" class="form-select w-100">
+                            <option selected value="Pix">Pix</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Cartao">Cartão</option>
+                        </select>
+                    </div>
+                
+                    <!-- Quantidades de refeições -->
+                    <div class="col-12 col-md-5"> 
+                        <label for="cafe" class="form-label">Qtd. Café da Manhã:</label>
+                        <input id="cafee" name="cafe" type="number" class="form-control" min="0">
+                    </div>
+                    <div class="col-12 col-md-5"> 
+                        <label for="janta" class="form-label">Qtd. de Jantar:</label>
+                        <input id="jantar-label" name="janta" type="number" class="form-control" min="0">
+                    </div>
+                    <div class="col-12 col-md-5"> 
+                        <label for="almoco" class="form-label">Qtd. de Almoço:</label>
+                        <input id="almoco-label" name="almoco" type="number" class="form-control" min="0">
+                    </div>
+                    <div class="col-12 col-md-5"> 
+                        <label for="refeicao" class="form-label">Qtd. de Qualquer Refeição:</label>
+                        <input id="refeicao-label" name="refeicao" type="number" class="form-control" min="0">
+                    </div>
+                
+                    <!-- Botões -->
                     <div class="d-flex flex-column flex-md-row justify-content-between">
-                        <!-- Botão à esquerda -->
                         <a id="volta" href="{% url 'vender' %}" class="btn btn-secondary mb-2">
                             <i class="fa-solid fa-arrow-left"></i> Voltar
                         </a>
                         
-                        <!-- Botão à direita -->
-                        <a id="confirma" class="btn btn-success">
+                        <button id="confirma" type="submit" class="btn btn-success">
                             <i class="fa-solid fa-check"></i> Confirmar
-                        </a>
+                        </button>
                     </div>
-                    
-                    
                 </form>
             </div>
         
