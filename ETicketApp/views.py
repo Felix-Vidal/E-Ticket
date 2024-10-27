@@ -234,6 +234,11 @@ def historico_refeicoes(request):
 def valorPaga(request):
     return render(request, 'ETicketApp/pages/user/valorPaga.html')
 
+@login_required
+def informacao(request):
+    informacao = Informacao.objects.all().order_by('-data_publicacao')  # Ordena pela data de publicação, mais recente primeiro
+    return render(request, 'ETicketApp/pages/user/informacao.html', {'informacao': informacao})
+
 # ----------- usuario externo ------------
 
 def valorPagaExterno (request):
@@ -735,3 +740,38 @@ def gerar_qrcode(request, ticket_id):
     buffer.seek(0)
 
     return HttpResponse(buffer, content_type="image/png")
+
+def informacao_manage(request):
+    informacao = Informacao.objects.all()
+    return render(request, 'ETicketApp/pages/manager/informacao.html', {'informacao': informacao})
+
+def adicionar_informacao(request):
+    if request.method == 'POST':
+        form = InformacaoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "informação adicionado com sucesso!")
+            return redirect('informacao_manage')
+    else:
+        form = InformacaoForm()
+    return render(request, 'ETicketApp/pages/manager/informacao_form.html', {'form': form})
+
+def editar_informacao(request, id):
+    informacao = get_object_or_404(Informacao, id=id)
+    if request.method == 'POST':
+        form = InformacaoForm(request.POST, instance=informacao)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "informação atualizado com sucesso!")
+            return redirect('informacao_manage')
+    else:
+        form = InformacaoForm(instance=informacao)
+    return render(request, 'ETicketApp/pages/manager/informacao_form.html', {'form': form, 'informacao': informacao})
+
+def deletar_informacao(request, id):
+    informacao = get_object_or_404(Informacao, id=id)
+    if request.method == 'POST':
+        informacao.delete()
+        messages.success(request, "informacao deletado com sucesso!")
+        return redirect('informacao_manage')
+    return render(request, 'ETicketApp/pages/manager/deletar_informe.html', {'informacao': informacao})

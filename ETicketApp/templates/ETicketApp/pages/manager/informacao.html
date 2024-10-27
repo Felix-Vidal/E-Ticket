@@ -1,0 +1,51 @@
+{% extends "global/base_manager.html" %}
+
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<h2>Gerenciamento de informações</h2>
+
+<!-- Botão para adicionar novo info -->
+<a href="{% url 'adicionar_informacao' %}" class="btn btn-primary mb-3">Adicionar Novo informação</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Conteúdo</th>
+            <th>Data de Publicação</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for info in informacao %}
+        <tr>
+            <td>{{ info.id }}</td>
+            <td>{{ info.titulo }}</td>
+            <td>{{ info.conteudo|truncatewords:10 }}</td>
+            <td>{{ info.data_publicacao }}</td>
+            <td>
+                <!-- Botão para editar -->
+                <a href="{% url 'editar_informacao' info.id %}">Editar</a>
+
+                <!-- Botão para deletar -->
+                <form action="{% url 'deletar_informacao' info.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Tem certeza que deseja deletar este info?');">Deletar</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhum info encontrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

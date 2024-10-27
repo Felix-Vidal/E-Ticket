@@ -1,0 +1,16 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+    {% include 'ETicketApp/partials/user/header.html' %}
+    {% include 'ETicketApp/partials/user/alerta.html' %}
+    <h2>{% if informe %}Editar Informe: {{ informe.titulo }}{% else %}Adicionar Novo Informe{% endif %}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">{% if informe %}Atualizar{% else %}Salvar{% endif %}</button>
+        <a href="{% url 'informacao_manage' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+{% endblock content %}

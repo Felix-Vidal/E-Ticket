@@ -14,6 +14,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),  
     path('valorPaga/', valorPaga, name='valorPaga'), 
     
+    path('informacao/', informacao, name='informacao'),
     
     path('menuExterno/', menuExterno, name='menuExterno'),
     path('valorPagaExterno/', valorPagaExterno, name='valorPagaExterno'),
@@ -32,7 +33,7 @@ urlpatterns = [
     
     path('manage/relatorio/', relatorio, name='relatorio'),
     
-    path('manage/cardapio/', cardapio, name='cardapio'),
+
     
     path('manage/vender/', vender, name='vender'),    
     path('manage/vendaUnico/', vendaUnico, name='vendaUnico'), 
@@ -49,9 +50,14 @@ urlpatterns = [
     path('classificacoes/<int:pk>/edit/', classificacao_add_edit, name='classificacao_edit'),  # Editar
     path('classificacoes/<int:pk>/delete/', classificacao_delete, name='classificacao_delete'),
     
-    path('cardapios/', cardapio, name='cardapio'),
-    path('cardapios/add/', adicionar_cardapio, name='adicionar_cardapio'),
-    path('cardapios/edit/<int:id>/', editar_cardapio, name='editar_cardapio'),
-    path('cardapios/delete/<int:id>/', excluir_cardapio, name='excluir_cardapio'),
+    path('manage/cardapios/', cardapio, name='cardapio'),
+    path('manage/cardapios/add/', adicionar_cardapio, name='adicionar_cardapio'),
+    path('manage/cardapios/edit/<int:id>/', editar_cardapio, name='editar_cardapio'),
+    path('manage/cardapios/delete/<int:id>/', excluir_cardapio, name='excluir_cardapio'),
+    
+    path('manage/informes/', informacao_manage, name='informacao_manage'),
+    path('manage/informes/adicionar/', adicionar_informacao, name='adicionar_informacao'),
+    path('manage/informes/editar/<int:id>/', editar_informacao, name='editar_informacao'),
+    path('manage/informes/deletar/<int:id>/', deletar_informacao, name='deletar_informacao'),
     
 ]

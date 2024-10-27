@@ -85,3 +85,11 @@ class Refeicao(models.Model):
 
     def __str__(self):
         return f"Refeição no dia {self.data} às {self.hora} - Valor: {self.valor}"
+    
+class Informacao(models.Model):
+    titulo = models.CharField(max_length=255)   # Campo 'titulo' como String
+    conteudo = models.TextField()               # Campo 'conteudo' como String (text)
+    data_publicacao = models.DateTimeField(auto_now_add=True)  # Data e hora de publicação
+
+    def __str__(self):
+        return self.titulo

@@ -22,3 +22,8 @@ class CardapioForm(forms.ModelForm):
             'menu': forms.Textarea(attrs={'class': 'form-control'}),
             'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
+        
+class InformacaoForm(forms.ModelForm):
+    class Meta:
+        model = Informacao
+        fields = ['titulo', 'conteudo']

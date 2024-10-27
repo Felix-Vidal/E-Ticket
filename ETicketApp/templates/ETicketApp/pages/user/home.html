@@ -6,7 +6,5 @@
     {% include 'ETicketApp/partials/user/header.html' %}
     {% include 'ETicketApp/partials/user/alerta.html' %}
     {% include 'ETicketApp/partials/user/qrcode.html' %}
-    <div class="d-flex justify-content-center"> 
-        <a href="{% url 'valorPaga' %}"  type="submit" id="confirma" class="btn btn-success">Regarregar</a>
-    </div>
+    {% include 'ETicketApp/partials/user/btn_informacao.html' %}
 {% endblock content %}
