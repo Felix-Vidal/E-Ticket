@@ -826,6 +826,88 @@ div#classificacao-container {
     float: left; 
 }
 
-#container-informes {
+#container-informes-listar {
     margin: 20px 20px 20px 270px;
+    
 }
+
+
+/* add cardapio */
+#container-informes {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#container-informes .container {
+    width: 100%;
+    max-width: 600px;
+}
+
+#container-informes h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#container-informes .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+#container-informes .form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#container-informes .form-group input,
+#container-informes .form-group select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+}
+
+#container-informes form {
+    display: flex;
+    flex-direction: column;
+}
+
+#container-informes form .btn {
+    padding: 8px 16px;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+#container-informes form .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#container-informes form .btn-success {
+    align-self: flex-end;
+}
+
+#container-informes form #cancelamento {
+    background-color: #6c757d; /* Cinza padrão */
+    color: #fff;
+    border: 1px solid #6c757d;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    width: 17%;
+    margin-top: -7%;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+
+}
+
+#container-informes form #cancelamento:hover {
+    background-color: #5a6268; /* Cinza mais escuro para o efeito hover */
+    border-color: #545b62;
+    color: #fff;
+}
+
