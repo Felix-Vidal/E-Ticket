@@ -338,3 +338,7 @@ div.card-body p.refeicoes{
   color: #fff;
   font-size: 18px;
 }
+
+#container-informes {
+    margin: 20px 20px 20px 270px;
+}

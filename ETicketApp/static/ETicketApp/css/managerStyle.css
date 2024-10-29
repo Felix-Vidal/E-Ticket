@@ -454,7 +454,11 @@ banner{
         margin-top: 80px;
     }
     #confirmar-vendas a{
-       margin-left: 10px;
+        margin-left: 10px;
+    }
+
+    #container-informes {
+        margin-left: 100px;
     }
 }
 
@@ -822,3 +826,6 @@ div#classificacao-container {
     float: left; 
 }
 
+#container-informes {
+    margin: 20px 20px 20px 270px;
+}
