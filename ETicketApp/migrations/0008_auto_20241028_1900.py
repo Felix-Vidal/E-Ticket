@@ -9,9 +9,25 @@ from ..models import DadoPessoal, Classificacao # Certifique-se de importar seu 
 
 def create_default_classificacoes(apps, schema_editor):
     Classificacao = apps.get_model('ETicketApp', 'Classificacao')
-    # Create Classificacao entries
-    for nome in ['Docente', 'Discente', 'Servidor']:
-        Classificacao.objects.get_or_create(nome=nome)
+    # Criação de entradas de classificação com valores específicos de refeição
+    classificacoes = [
+        {'nome': 'Docente', 'valor_cafe_manha': 7.00, 'valor_almoco': 10.00, 'valor_jantar': 10.00, 'prioridade': 1},
+        {'nome': 'Discente', 'valor_cafe_manha': 1.00, 'valor_almoco': 1.00, 'valor_jantar': 1.00, 'prioridade': 3},
+        {'nome': 'Servidor', 'valor_cafe_manha': 12.00, 'valor_almoco': 12.00, 'valor_jantar': 12.00, 'prioridade': 2},
+        {'nome': 'Comunidade Externa', 'valor_cafe_manha': 12.00, 'valor_almoco': 12.00, 'valor_jantar': 12.00, 'prioridade': 4},
+        {'nome': 'Especial', 'valor_cafe_manha': 00.00, 'valor_almoco': 00.00, 'valor_jantar': 00.00, 'prioridade': 5}
+    ]
+    
+    for classificacao_data in classificacoes:
+        Classificacao.objects.get_or_create(
+            nome=classificacao_data['nome'],
+            defaults={
+                'valor_cafe_manha': classificacao_data['valor_cafe_manha'],
+                'valor_almoco': classificacao_data['valor_almoco'],
+                'valor_jantar': classificacao_data['valor_jantar'],
+                'prioridade': classificacao_data['prioridade']
+            }
+        )
 
 def create_default_groups(apps, schema_editor):
     Group = apps.get_model('auth', 'Group')

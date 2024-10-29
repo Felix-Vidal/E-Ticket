@@ -28,7 +28,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'historico' %}">Historico</a>
                     </li>
-                    {% if user.is_superuser %}
+                    {% load custom_tags %}
+
+                    {% if request.user|in_groups:"ADM,Colaborador,Bolsista" %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'manage' %}">Gerenciar</a>
                     </li>

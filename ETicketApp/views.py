@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
+from django import template
 from .forms import *
 
 
@@ -139,6 +140,7 @@ def login(request):
     if request.method == 'POST':
         cpf = request.POST.get('cpf')
         password = request.POST.get('password')
+        
 
         if not cpf or not password:
             messages.error(request, 'CPF e senha são obrigatórios.')
@@ -147,6 +149,7 @@ def login(request):
         try:
             # Tenta buscar o usuário localmente usando o CPF
             personal_data = DadoPessoal.objects.get(cpf=cpf)
+            print(personal_data)
             usuario = personal_data.usuario
 
             # Verifica se a senha está correta
@@ -264,11 +267,18 @@ def menuExterno (request):
 # ----------- usuario gerenciador ------------
 
 def is_in_group(user, group_names):
+
     return user.groups.filter(name__in=group_names).exists()
 
 def is_superuser(user):
     grupos = ['ADM', 'Colaborador', 'Bolsista']
     return user.is_superuser or is_in_group(user, grupos)
+
+register = template.Library()
+
+@register.filter
+def in_groups(user, group_names):
+    return user.groups.filter(name__in=group_names).exists()
 
 @user_passes_test(is_superuser)
 def dashboard (request):
