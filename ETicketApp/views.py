@@ -88,18 +88,30 @@ def pagamento(request):
 
 @login_required
 def menu(request):
-    hoje = date.today()  # Obtém a data de hoje
+    hoje = date.today()
     
-    # Filtra um item para cada tipo de refeição no menu do dia
+    # Filtra o cardápio para cada tipo de refeição do dia
     cafe = Cardapio.objects.filter(data=hoje, tipo_refeicao="CAFE_DA_MANHA").first()
     almoco = Cardapio.objects.filter(data=hoje, tipo_refeicao="ALMOCO").first()
     jantar = Cardapio.objects.filter(data=hoje, tipo_refeicao="JANTAR").first()
     
-    # Adiciona os menus ao contexto
+    # Obtem o dado pessoal do usuário e a classificação com a maior prioridade
+    dados_pessoais = DadoPessoal.objects.get(usuario=request.user)
+    classificacao = dados_pessoais.classificacoes.order_by('prioridade').first()  # Assumindo prioridade ascendente
+
+    # Prepara os valores com base na classificação
+    valor_cafe = classificacao.valor_cafe_manha if classificacao else None
+    valor_almoco = classificacao.valor_almoco if classificacao else None
+    valor_jantar = classificacao.valor_jantar if classificacao else None
+
+    # Adiciona os menus e os valores ao contexto
     context = {
         'cafe': cafe,
         'almoco': almoco,
         'jantar': jantar,
+        'valor_cafe': valor_cafe,
+        'valor_almoco': valor_almoco,
+        'valor_jantar': valor_jantar,
     }
     
     return render(request, 'ETicketApp/pages/user/menu.html', context)
@@ -256,7 +268,7 @@ def is_in_group(user, group_names):
 
 def is_superuser(user):
     grupos = ['ADM', 'Colaborador', 'Bolsista']
-    return is_in_group(user, grupos)
+    return user.is_superuser or is_in_group(user, grupos)
 
 @user_passes_test(is_superuser)
 def dashboard (request):

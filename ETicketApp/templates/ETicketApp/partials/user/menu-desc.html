@@ -3,21 +3,21 @@
    
        <div class="meal-section">
            <h2 class="meal-title">Café Da Manhã</h2>
-           <p>Valor: R$ 1,00</p>
+           <p>Valor: R$ {{ valor_cafe|default:"Indisponível" }}</p>
            <input type="text" class="meal-description" 
                   value="{% if cafe %}{{ cafe.menu }}{% else %}Indisponível{% endif %}" 
                   placeholder="{% if cafe %}{{ cafe.menu }}{% else %}Indisponível{% endif %}" 
                   disabled>
        
            <h2 class="meal-title">Almoço</h2>
-           <p>Valor: R$ 1,00</p>
+           <p>Valor: R$ {{ valor_almoco|default:"Indisponível" }}</p>
            <input type="text" class="meal-description" 
                   value="{% if almoco %}{{ almoco.menu }}{% else %}Indisponível{% endif %}" 
                   placeholder="{% if almoco %}{{ almoco.menu }}{% else %}Indisponível{% endif %}" 
                   disabled>
        
            <h2 class="meal-title">Janta</h2>
-           <p>Valor: R$ 1,00</p>
+           <p>Valor: R$ {{ valor_jantar|default:"Indisponível" }}</p>
            <input type="text" class="meal-description" 
                   value="{% if jantar %}{{ jantar.menu }}{% else %}Indisponível{% endif %}" 
                   placeholder="{% if jantar %}{{ jantar.menu }}{% else %}Indisponível{% endif %}" 
