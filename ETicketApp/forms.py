@@ -1,6 +1,16 @@
 from django import forms
 from .models import *
 
+class LoginForm(forms.Form):
+    cpf = forms.CharField(
+        label="CPF",
+        max_length=14,
+        widget=forms.TextInput(attrs={
+            'placeholder': '000.000.000-00',
+            'oninput': "this.value = this.value.replace(/\\D/g, '').replace(/(\\d{3})(\\d)/, '$1.$2').replace(/(\\d{3})(\\d)/, '$1.$2').replace(/(\\d{3})(\\d{1,2})$/, '$1-$2')"
+        })
+    )
+    password = forms.CharField(label="Senha", widget=forms.PasswordInput())
 class ClassificacaoForm(forms.ModelForm):
     class Meta:
         model = Classificacao

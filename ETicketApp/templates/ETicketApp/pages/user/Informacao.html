@@ -1,19 +1,29 @@
 {% extends "global/base_user.html" %}
 
-{% block title %}{% endblock title %}
+{% block title %}Informações |{% endblock title %}
 
 {% block content %}
 
-<div id="container-informes">
+<div>
     {% include 'ETicketApp/partials/user/header.html' %}
     {% include 'ETicketApp/partials/user/alerta.html' %}
-    <h2>{% if informe %}Editar Informe: {{ informe.titulo }}{% else %}Adicionar Novo Informe{% endif %}</h2>
+    <div class="container-informacao">
+        <h2>Informações</h2>
+        {% if informacao %}
+            <ul class="informacao-list">
+                {% for info in informacao %}
+                    <li class="informacao-item">
+                        <h3>{{ info.titulo }}</h3>
+                        <p>{{ info.conteudo }}</p>
+                        <small>Publicado em: {{ info.data_publicacao|date:"d/m/Y H:i" }}</small>
+                    </li>
+                    <hr>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Nenhuma informação disponível no momento.</p>
+        {% endif %}
+    </div>
     
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">{% if informe %}Atualizar{% else %}Salvar{% endif %}</button>
-        <a href="{% url 'informacao_manage' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
 </div>
 {% endblock content %}

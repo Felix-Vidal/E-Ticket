@@ -7,15 +7,19 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
 from django import template
 from .forms import *
-
-
 from .models import *
+
+import base64
+import qrcode
+from django.core.files.base import ContentFile
+
+
+
 import requests
 from django.contrib.auth.hashers import check_password, make_password
 from datetime import datetime, date
 from io import BytesIO
-import base64
-import qrcode
+
 from decimal import Decimal
 import random
 
@@ -64,12 +68,11 @@ def aumentar_credito(request):
                     return redirect('home')
                 
                 personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
-                
-                # Atualiza o crédito do usuário
+            
                 personal_data.credito += valor_decimal
                 personal_data.save()
 
-                # Cria um registro na tabela Credito
+
                 Credito.objects.create(
                     usuario=request.user,
                     valor=valor_decimal,
@@ -129,96 +132,137 @@ def perfil(request):
         'matricula': personal_data.matricula,
         'unidade': personal_data.unidade,
         'classificacoes': personal_data.classificacoes.all(),
+        'foto': personal_data.foto,
     }
     
     return render(request, 'ETicketApp/pages/user/perfil.html', context)
+
+
+def salvar_foto(foto_base64, usuario):
+    # Decodifica a imagem
+    format, imgstr = foto_base64.split(';base64,') 
+    ext = format.split('/')[-1]  # Extrai a extensão do formato
+    img_data = base64.b64decode(imgstr)  # Decodifica a imagem
+
+    # Cria um arquivo temporário para a imagem
+    file_name = f"{usuario.matricula}_foto.{ext}"  # Nome do arquivo
+    file = ContentFile(img_data, name=file_name)
+
+    # Salva a imagem no modelo
+    usuario.foto.save(file_name, file)
+    usuario.save()
 
 # Defina a URL da API externa
 UFAC_API_URL = "https://sistemas.ufac.br/api/csi/usuarios-ru/"
 BEARER_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzZWNyZXQiOiJROVlweEFMTndsRzJWbXlibTJWak4wY2dEcFhLRTMiLCJ0b2tlbiI6ImxFa2tBQTlhbTVianFwWTlzMWpLQzJOeXU1SWh5b01LTVBOS1huajFkRTNFRUNUcDQ1dmYzSmNOQ0pzQiIsInVzZXJuYW1lIjoiYWx1bm9zLXNpLWFwcC1ydSIsInBhc3N3b3JkIjoiUTlZcHhBTE53bEcyVm15Ym0yVmpOMGNnRHBYS0UzIiwiaWR1c2VyIjoiNSJ9.qZXjStlIV6g7BOiMSYg53oP4waIqkDnc63Ku10zpT3k"
 def login(request):
     if request.method == 'POST':
-        cpf = request.POST.get('cpf')
-        password = request.POST.get('password')
-        
-
-        if not cpf or not password:
-            messages.error(request, 'CPF e senha são obrigatórios.')
-            return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'CPF e senha são obrigatórios.'})
-
-        try:
-            # Tenta buscar o usuário localmente usando o CPF
-            personal_data = DadoPessoal.objects.get(cpf=cpf)
-            print(personal_data)
-            usuario = personal_data.usuario
-
-            # Verifica se a senha está correta
-            if check_password(password, usuario.password):
-                auth_login(request, usuario) 
-                return redirect('home')  # Redireciona para a página inicial
-
-            else:
-                messages.error(request, 'login ou Senha incorreta.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Senha incorreta.'})
-
-        except DadoPessoal.DoesNotExist:
-            # Se o CPF não existe localmente, fazer a requisição à API externa
-            headers = {
-                'Authorization': f'Bearer {BEARER_TOKEN}',
-            }
-            response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
+            password = form.cleaned_data['password']
             
-        
-         
+            if not cpf:
+                messages.error(request, 'CPF é obrigatório.')
+                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'CPF é obrigatório.'})
+
+            
+            # Tenta encontrar o usuário localmente profisorio
+            personal_data = get_object_or_404(DadoPessoal, cpf=cpf)
+            if personal_data and password:
+                if personal_data.usuario.check_password(password):
+                    usuario = personal_data.usuario
+                    auth_login(request, usuario)
+                    return redirect('home')
+                else:
+                    messages.error(request, 'Senha incorreta.')
+                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Senha incorreta.'})
+            elif not personal_data and password:
+                messages.error(request, 'Usuário não encontrado.')
+                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Usuário não encontrado.'})    
+                
+
+
+            # Se o CPF não existe localmente, ou se existe e precisa atualizar
+            headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
+            response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
+
             if response.status_code == 200:
                 external_data = response.json()
 
                 if external_data['record_count'] == 0:
                     messages.error(request, 'Usuário não encontrado na API externa.')
-                    return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Usuário não encontrado na API externa.'})
+                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Usuário não encontrado na API externa.'})
 
-                # Acessa o primeiro registro da lista "response"
+                # Acessa o primeiro registro ativo da lista "response"
                 for user_data in external_data['response']:
-                    if user_data.get('SITUACAO') == 'Ativo': break
+                    if user_data.get('SITUACAO') == 'Ativo':
+                        break
 
                 # Extrai os dados do usuário
                 matricula = user_data.get('MATRICULA')
                 nome_completo = user_data.get('NOME')
                 nome_social = user_data.get('NOME_SOCIAL')
-                cpf = user_data.get('CPF')
                 unit = user_data.get('UNIDADE')
                 entry_date = user_data.get('DT_ENTRADA')
                 nome_classificacao = user_data.get('CLASSIFICACAO')
-                gratuitous = user_data.get('GRATUIDADE') == 'S'  # Converte 'S' ou 'N' para booleano
+                gratuitous = user_data.get('GRATUIDADE') == 'S'
+                email = user_data.get('EMAIL')
+                foto = user_data.get('FOTO')
 
-                # Busca ou cria uma classificação com base no nome retornado
+                # Atualiza ou cria uma classificação com base no nome retornado
                 classification, created = Classificacao.objects.get_or_create(nome=nome_classificacao)
 
-                # Cria um novo usuário localmente
-                usuario = User.objects.create(
-                    username=cpf,
-                    password=make_password(password),  # Criptografa a senha
-                )
-                personal_data = DadoPessoal.objects.create(
-                    usuario=usuario,
-                    nome_completo=nome_completo,
-                    nome_social=nome_social,
-                    cpf=cpf,
-                    matricula=matricula,
-                    data_entrada=entry_date,
-                    unidade=unit,
-                    credito=0.0,  # Inicialmente, crédito zero
-                    gratuito=gratuitous,
-                )
-                personal_data.classificacoes.add(classification)
+                try:
+                    personal_data = DadoPessoal.objects.get(cpf=cpf)
+                    usuario = personal_data.usuario
+                    usuario.email = email
+                    usuario.save()
+                    
+                    personal_data.nome_completo = nome_completo
+                    personal_data.nome_social = nome_social
+                    personal_data.matricula = matricula
+                    personal_data.data_entrada = entry_date
+                    personal_data.unidade = unit
+                    personal_data.gratuito = gratuitous
+                    personal_data.classificacoes.set([classification])
+                    personal_data.foto = foto
+                    personal_data.save()
+                    
+
+                except DadoPessoal.DoesNotExist:
+                    # Cria um novo usuário localmente se não existir
+                    usuario = User.objects.create(
+                        username=nome_completo,
+                        password=make_password(None),  # Usuário sem senha
+                        email=email,
+                    )
+                    personal_data = DadoPessoal.objects.create(
+                        usuario=usuario,
+                        nome_completo=nome_completo,
+                        nome_social=nome_social,
+                        cpf=cpf,
+                        matricula=matricula,
+                        data_entrada=entry_date,
+                        unidade=unit,
+                        credito=0.0,  # Inicialmente, crédito zero
+                        foto=foto,
+                        gratuito=gratuitous,
+                    )
+                    personal_data.classificacoes.add(classification)
+
+                # Autentica o usuário
                 auth_login(request, usuario)
                 return redirect('home')  # Redireciona para a página inicial após sucesso
 
             else:
                 messages.error(request, 'Erro na API externa.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'error_message': 'Erro na API externa.'})
+                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Erro na API externa.'})
 
-    return render(request, 'ETicketApp/pages/user/login.html')
+    else:
+        form = LoginForm()
+
+    return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
 
 

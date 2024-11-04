@@ -16,10 +16,12 @@
 #exampleModalLabel{
     color: #F5FAFF;
 }
+
 h2{
     color: #0C4CA4;
-    padding: 15px;
+    padding-top: 15px;
 }
+
 #salvar{
     background-color: #35A40E;
 }
@@ -339,6 +341,7 @@ div.card-body p.refeicoes{
   font-size: 18px;
 }
 
-#container-informes {
-    margin: 20px 20px 20px 270px;
-}
+.container-informacao{
+  margin: 0 5% 0 5%;
+}      
+

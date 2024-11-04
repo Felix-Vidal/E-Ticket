@@ -1,4 +1,6 @@
-import uuid
+import random
+import string
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from .enums import TipoRefeicaoEnum, MetodoPagamentoEnum
@@ -24,7 +26,8 @@ class DadoPessoal(models.Model):
     unidade = models.CharField(max_length=255)
     credito = models.DecimalField(max_digits=10, decimal_places=2)
     gratuito = models.BooleanField(default=False)
-    ativo = models.BooleanField(default=True)  # Define um valor padrão para 'ativo'
+    ativo = models.BooleanField(default=True)
+    foto = models.TextField(blank=True, null=True) 
 
     def __str__(self):
         return self.nome_completo
@@ -42,7 +45,6 @@ class Credito(models.Model):
         return f"{self.usuario} - {self.valor} ({self.metodo_pagamento})"
 
 class TicketUnico(models.Model):
-    
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     metodo_pagamento = models.CharField(max_length=15, choices=MetodoPagamentoEnum.choices())  
     data_compra = models.DateField(auto_now_add=True)
@@ -50,16 +52,38 @@ class TicketUnico(models.Model):
     tipo_refeicao = models.CharField(max_length=15, choices=TipoRefeicaoEnum.choices())
     classificacao = models.ForeignKey(Classificacao, on_delete=models.CASCADE)
     valido = models.BooleanField(default=True)
-    codigo = models.CharField(max_length=36, unique=True, blank=True)
-    
+    codigo = models.CharField(max_length=8, unique=True, blank=True)
+
     def save(self, *args, **kwargs):
-        if not self.codigo:  # Gera o código apenas uma vez, no momento da criação
-            self.codigo = str(uuid.uuid4())
-        super(TicketUnico, self).save(*args, **kwargs)
+            if not self.codigo:
+                self.codigo = self.gerar_codigo_unico()
+            super().save(*args, **kwargs)
+
+    def gerar_codigo_unico(self):
+        # Gera um sufixo baseado na data e hora atual
+        datetime_suffix = datetime.now().strftime('%y%m%d%H%M%S')  # YYMMDDHHMMSS
+
+        # Tenta usar o sufixo de data e hora como código inicial
+        codigo = datetime_suffix
+        
+        # Verifica se o código já existe
+        if not TicketUnico.objects.filter(codigo=codigo).exists():
+            return codigo  # Retorna se único
+        
+        # Se existir, gera um código curto de 8 caracteres
+        caracteres = string.ascii_uppercase + string.digits
+        base_codigo = ''.join(random.choices(caracteres, k=8))
+        codigo_final = f"{codigo}{base_codigo}"
+
+        while TicketUnico.objects.filter(codigo=codigo_final).exists():
+            base_codigo = ''.join(random.choices(caracteres, k=8))
+            codigo_final = f"{codigo}{base_codigo}"
+
+        return codigo_final
 
     def __str__(self):
         return f"Ticket: {self.valor} - {self.metodo_pagamento} - {self.tipo_refeicao} - Válido: {self.valido} - Código: {self.codigo}"
-    
+        
 class Cardapio(models.Model):
     
     tipo_refeicao = models.CharField(max_length=15, choices=TipoRefeicaoEnum.choices())
@@ -87,9 +111,9 @@ class Refeicao(models.Model):
         return f"Refeição no dia {self.data} às {self.hora} - Valor: {self.valor}"
     
 class Informacao(models.Model):
-    titulo = models.CharField(max_length=255)   # Campo 'titulo' como String
-    conteudo = models.TextField()               # Campo 'conteudo' como String (text)
-    data_publicacao = models.DateTimeField(auto_now_add=True)  # Data e hora de publicação
+    titulo = models.CharField(max_length=255)   
+    conteudo = models.TextField()               
+    data_publicacao = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.titulo

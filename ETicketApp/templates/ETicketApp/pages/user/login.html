@@ -11,17 +11,16 @@
             <form id="login-form" method="POST" action="{% url 'login' %}">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="cpf">CPF</label>
-                    <input type="number" id="cpf" name="cpf" required>
+                    {{ form.cpf.label_tag }}
+                    {{ form.cpf }}
                 </div>
                 <div class="input-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" required>
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
                 </div>
                 <button type="submit" class="login-button">Logar</button>
                 <a type="submit" href="{% url 'menuExterno' %}" class="externo" style="margin-top: 1em; color:#000;">Sou um usuário externo</a>
             </form>
-            <div id="error-message" style="color: red; display: none;"></div>
         </div>
     </div>
 
