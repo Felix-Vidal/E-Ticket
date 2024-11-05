@@ -62,7 +62,7 @@ class TicketUnico(models.Model):
 
     def gerar_codigo_unico(self):
         # Gera um sufixo baseado na data e hora atual
-        datetime_suffix = datetime.now().strftime('%y%m%d%H%M%S')  # YYMMDDHHMMSS
+        datetime_suffix = 'Ticket:' + datetime.now().strftime('%y%m%d%H%M%S')
 
         # Tenta usar o sufixo de data e hora como código inicial
         codigo = datetime_suffix
