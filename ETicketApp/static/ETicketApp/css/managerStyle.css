@@ -911,3 +911,98 @@ div#classificacao-container {
     color: #fff;
 }
 
+/* informações */
+#container-informacoes{
+    margin-left: 25%;
+}
+
+/* informacoes-form */
+#container-informes {
+    margin-left: 15%;
+    width: 70%; /* Define a largura do container */
+}
+
+.informes-title {
+    margin-top: 5%;
+    text-align: center; 
+}
+
+#form-informes {
+    margin-top: 0; 
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem; 
+    margin-top: 1rem;
+}
+
+/* Listar-tickets */
+#container-gerar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    text-align: center;
+}
+
+#container-gerar h1 {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+#ticket-tabela {
+    width: 100%;
+    margin: auto;
+    border-collapse: collapse; 
+}
+
+#ticket-tabela th, #ticket-tabela td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #dddddd;
+}
+
+#ticket-tabela th {
+    background-color: #0C4CA4;
+    color: white;
+}
+
+#ticket-tabela tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.button-gerar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.button-gerar .btn-gerar {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button-gerar .btn-gerar:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    #container-gerar{
+        margin-left: 100%;
+    }
+    .button-gerar {
+        justify-content: center; 
+    }
+    #ticket-tabela {
+        overflow-x: auto; 
+    }
+}

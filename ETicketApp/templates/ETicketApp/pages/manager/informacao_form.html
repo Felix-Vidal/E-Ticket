@@ -1,21 +1,27 @@
 {% extends "global/base_manager.html" %}
 
-
 {% block title %}{% endblock title %}
 
 {% block content %}
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 {% include 'ETicketApp/partials/manager/alerta.html' %}
 
-<div id="container-informes">
-    <h2>{% if informacao %}Editar informação: {{ informacao.titulo }}{% else %}Adicionar Novo informação{% endif %}</h2>
-    
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">{% if informacao %}Atualizar{% else %}Salvar{% endif %}</button>
-        <a href="{% url 'informacao_manage' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+<div class='container'>
+    <h2 class="informes-title">{% if informacao %}Editar informação: {{ informacao.titulo }}{% else %}Adicionar Nova informação{% endif %}</h2>
+    <div id="container-informes">
+        
+        
+        <form method="post" id="form-informes">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">{% if informacao %}Atualizar{% else %}Salvar{% endif %}</button>
+                <a href="{% url 'informacao_manage' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
 </div>
-    
+
 {% endblock content %}

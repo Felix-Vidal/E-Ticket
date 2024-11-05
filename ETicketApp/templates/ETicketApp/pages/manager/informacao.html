@@ -6,15 +6,18 @@
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 {% include 'ETicketApp/partials/manager/alerta.html' %}
 
-<div id="container-informes">
+<div class='conatiner'>
+<div id="container-informacoes" class="container mt-4 d-flex flex-column align-items-start">
 
-    <h2>Gerenciamento de informações</h2>
+    <h2 class="text-center mb-4">Gerenciamento de informações</h2>
     
     <!-- Botão para adicionar novo info -->
-    <a href="{% url 'adicionar_informacao' %}" class="btn btn-primary mb-3">Adicionar Novo informação</a>
-    
-    <table class="table table-striped">
-        <thead>
+    <div class="text-center">
+    <a href="{% url 'adicionar_informacao' %}" class="btn btn-primary mb-4">Adicionar Novo informação</a>
+    </div>
+    <div class="table-responsive">
+    <table id="classificacao-tabela" class="table table-bordered table-hover text-center table-sm">
+        <thead class="thead-dark">
             <tr>
                 <th>ID</th>
                 <th>Título</th>
@@ -30,14 +33,14 @@
                 <td>{{ info.titulo }}</td>
                 <td>{{ info.conteudo|truncatewords:10 }}</td>
                 <td>{{ info.data_publicacao }}</td>
-                <td>
+                <td class="d-flex justify-content-center">
                     <!-- Botão para editar -->
-                    <a href="{% url 'editar_informacao' info.id %}">Editar</a>
+                    <a href="{% url 'editar_informacao' info.id %}" class="btn btn-success btn-sm mx-1">Editar</a>
                     
                     <!-- Botão para deletar -->
-                    <form action="{% url 'deletar_informacao' info.id %}" method="post">
+                    <form action="{% url 'deletar_informacao' info.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" onclick="return confirm('Tem certeza que deseja deletar este info?');">Deletar</button>
+                        <button type="submit" onclick="return confirm('Tem certeza que deseja deletar este info?');" class="btn btn-danger btn-sm mx-1">Deletar</button>
                     </form>
                 </td>
             </tr>
@@ -48,6 +51,8 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
+</div>
 </div>
     
 {% endblock content %}

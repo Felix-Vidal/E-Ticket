@@ -7,9 +7,9 @@
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 {% include 'ETicketApp/partials/manager/alerta.html' %}
 
-<body id="container-informes">
+<body id="container-gerar">
     <h1>Tickets Únicos Criados</h1>
-    <table class="table table-striped">
+    <table id='ticket-tabela' class="table table-bordered table-hover text-center table-sm" >
         <thead>
             <tr>
                 <th>QR Code</th>
@@ -39,6 +39,8 @@
         </tbody>
     </table>
 
-    <a href="{% url 'gerar_ticket_unico' %}">Gerar Mais Tickets</a>
+    <div class='button-gerar'>
+    <a href="{% url 'gerar_ticket_unico' %}" class='btn-gerar btn-primary'>Gerar Mais Tickets</a>
+    </div>
 
 {% endblock content %}
