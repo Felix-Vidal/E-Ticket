@@ -106,10 +106,11 @@ class Refeicao(models.Model):
     data = models.DateField()
     hora = models.TimeField()
     menu = models.ForeignKey(Cardapio, on_delete=models.SET_NULL, null=True, blank=True)
+    tipo_refeicao = models.CharField(max_length=15, choices=TipoRefeicaoEnum.choices(), null=True, blank=True)
     ticket_unico = models.ForeignKey(TicketUnico, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"Refeição no dia {self.data} às {self.hora} - Valor: {self.valor}"
+        return f"Refeição no dia {self.data} às {self.hora} - Tipo: {self.tipo_refeicao} - Valor: {self.valor}"
     
 class Informacao(models.Model):
     titulo = models.CharField(max_length=255)   

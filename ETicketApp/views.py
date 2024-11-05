@@ -355,7 +355,7 @@ def validar (request):
     return render(request, 'ETicketApp/pages/manager/validar.html')
 
 @user_passes_test(is_superuser)
-def validarUsuario(request):  
+def mostrar_usuario(request):  
     if request.method == 'POST':
         codigo = request.POST.get('matricula')  # Pode ser matrícula (numérica) ou código do ticket (UUID)
 
@@ -369,16 +369,21 @@ def validarUsuario(request):
                 dados_pessoais = None
         else:
             dados_pessoais = None
-
+            
+        classificacao = dados_pessoais.classificacoes.order_by('prioridade').first()
         # Identifica o tipo de refeição com base no horário atual
         current_hour = datetime.now().hour
         if 6 <= current_hour < 10:
             tipo_refeicao = "CAFE_DA_MANHA"
+            valor = classificacao.valor_cafe_manha
         elif 10 <= current_hour < 17:
             tipo_refeicao = "ALMOCO"
-        else:
+            valor = classificacao.valor_almoco
+        elif 17 <= current_hour < 19:
             tipo_refeicao = "JANTAR"
+            valor = classificacao.valor_jantar
         nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
+    
 
         # Se dados_pessoais não existe, tenta buscar como TicketUnico
         if not dados_pessoais:
@@ -396,6 +401,7 @@ def validarUsuario(request):
                             gratuito=False,
                             data=datetime.now().date(),
                             hora=datetime.now().time(),
+                            tipo_refeicao=tipo_refeicao,
                             menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first(),
                             ticket_unico=ticket
                         )
@@ -423,6 +429,7 @@ def validarUsuario(request):
                 'unidade': dados_pessoais.unidade,
                 'classificacoes': classificacoes,
                 'tipo_refeicao': nome_refeicao,
+                'valor': valor,
             }
             return render(request, 'ETicketApp/pages/manager/validarUsuario.html', context)
 
@@ -434,10 +441,22 @@ def validar_usuario(request):
         matricula = request.POST.get('matricula')
         tipo_refeicao = request.POST.get('tipo_refeicao')
         
+        
+        
+        
 
         try:
             # Busca o usuário pela matrícula
-            dados_pessoais = DadoPessoal.objects.get(matricula=matricula)
+            dados_pessoais = DadoPessoal.objects.get(matricula=matricula)\
+                
+            if dados_pessoais and Refeicao.objects.filter(usuario=dados_pessoais.usuario, data=date.today(), tipo_refeicao=tipo_refeicao).exists():
+                messages.error(request, f'{tipo_refeicao} já foi registrado para hoje.')
+                print(f'Debug: {tipo_refeicao} já registrado para {dados_pessoais.usuario} na data {date.today()}')
+                return redirect('validar')
+            
+            print(f'Debug: {tipo_refeicao} não registrado para {dados_pessoais.usuario} na data {date.today()}')
+            refeicao = Refeicao.objects.filter(usuario=dados_pessoais.usuario, data=date.today(), tipo_refeicao=tipo_refeicao).first()
+            print(refeicao)
 
             # Se o usuário for gratuito, não deduz crédito
             if dados_pessoais.gratuito:
@@ -450,7 +469,8 @@ def validar_usuario(request):
                     gratuito=True,
                     data=datetime.now().date(),
                     hora=datetime.now().time(),
-                    menu=None  # Ou substitua isso com o cardápio adequado
+                    tipo_refeicao=tipo_refeicao,
+                    menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first(),
                 )
 
                 return redirect('validar')  # Redireciona para /manage/validar/
@@ -486,6 +506,7 @@ def validar_usuario(request):
                     gratuito=False,
                     data=datetime.now().date(),
                     hora=datetime.now().time(),
+                    tipo_refeicao=tipo_refeicao,
                     menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first()
                 )
 

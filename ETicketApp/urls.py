@@ -22,7 +22,7 @@ urlpatterns = [
     path('manage/', dashboard, name='manage'), # home
     
     path('manage/validar/', validar, name='validar'),
-    path('manage/validarUsuario/', validarUsuario, name='validarUsuario'),
+    path('manage/mostrar_usuario/', mostrar_usuario, name='mostrar_usuario'),
     path('manage/validar_usuario/', validar_usuario, name='validar_usuario'),
     
     path('manage/ticketUnico/', ticketUnico, name='ticketUnico'),

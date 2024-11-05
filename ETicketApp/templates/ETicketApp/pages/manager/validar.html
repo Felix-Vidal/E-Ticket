@@ -11,7 +11,7 @@
         <!-- Elemento onde a câmera vai exibir a imagem -->
         <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
             
-        <form id="codigo-form" method="POST" action="{% url 'validarUsuario' %}">
+        <form id="codigo-form" method="POST" action="{% url 'mostrar_usuario' %}">
             {% csrf_token %}
             
             <!-- Input manual -->
