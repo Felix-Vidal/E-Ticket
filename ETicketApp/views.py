@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 
+from django.db.models import Sum
+
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
@@ -56,7 +58,7 @@ def aumentar_credito(request):
         # metodo_pagamento = request.POST.get('metodo_pagamento')  # Adicione o método de pagamento no formulário
         
         # Gera um método de pagamento aleatório
-        metodo_pagamento = random.choice([MetodoPagamentoEnum.PIX.value, MetodoPagamentoEnum.DINHEIRO.value, MetodoPagamentoEnum.CARTAO.value])
+        metodo_pagamento = random.choice([MetodoPagamentoEnum.PIX.value, MetodoPagamentoEnum.DINHEIRO.value, MetodoPagamentoEnum.CARTAO.value]) 
         
         if valor and metodo_pagamento:
             try:
@@ -64,26 +66,38 @@ def aumentar_credito(request):
                 
                 # Verifica se o valor é positivo
                 if valor_decimal <= 0:
-                    messages.error(request, 'O valor deve ser positivo.')  # Mensagem de erro se o valor for negativo ou zero
+                    messages.error(request, 'O valor deve ser positivo.')
                     return redirect('home')
                 
                 personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
-            
+                
+                # Busca a classificação com o maior peso (prioridade) do usuário
+                classificacao_prioritaria = personal_data.classificacoes.order_by('prioridade').first()
+                
+                if classificacao_prioritaria:
+                    limite_credito = classificacao_prioritaria.limite_credito
+                    
+                    # Verifica se a adição do valor ultrapassa o limite de crédito
+                    if personal_data.credito + valor_decimal > limite_credito:
+                        messages.error(request, f"O limite de crédito de R${limite_credito} será excedido.")
+                        return redirect('home')
+                
+                # Adiciona o valor ao crédito do usuário
                 personal_data.credito += valor_decimal
                 personal_data.save()
 
-
+                # Cria o registro de crédito
                 Credito.objects.create(
                     usuario=request.user,
                     valor=valor_decimal,
                     metodo_pagamento=metodo_pagamento
                 )
                 
-                messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
-                return redirect('home')  # Redireciona para a página inicial
+                messages.success(request, 'Crédito aumentado com sucesso!')
+                return redirect('home')
             except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
-                messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  # Mensagem de erro
-                return redirect('home')  # Volta para a mesma página
+                messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')
+                return redirect('home')
     return redirect('home')
 
 @login_required
@@ -848,4 +862,3 @@ def deletar_informacao(request, id):
         informacao.delete()
         messages.success(request, "informacao deletado com sucesso!")
         return redirect('informacao_manage')
-    return render(request, 'ETicketApp/pages/manager/deletar_informe.html', {'informacao': informacao})

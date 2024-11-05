@@ -23,7 +23,7 @@ def create_default_users(apps, schema_editor):
             'data_entrada': '2024-01-01',
             'unidade': 'bacharelado em sistemas de informação',
             'credito': 20.00,
-            'grupo': 'ADM',  # Ensure this group exists
+            'grupo': '',
         },
         {
             'username': '22233344455', 

@@ -45,6 +45,13 @@
                     <div class="text-danger">{{ form.prioridade.errors }}</div>
                 {% endif %}
             </div>
+            <div class="form-group">
+                <label for="{{ form.limite_credito.id_for_label }}">Limite de Credito:</label>
+                {{ form.limite_credito }}
+                {% if form.limite_credito.errors %}
+                    <div class="text-danger">{{ form.limite_credito.errors }}</div>
+                {% endif %}
+            </div>
 
             <div class="d-flex justify-content-between mt-4 div-f">
                 <a href="{% url 'classificacao' %}" class="btn btn-secondary btn-classificacao-voltar">Voltar</a>
