@@ -17,13 +17,13 @@ def create_default_users(apps, schema_editor):
         {
             'username': '00011122233', 
             'classificacao': 'Discente', 
-            'nome_completo': 'usuario final Exemplo',
+            'nome_completo': 'Ana Banana',
             'matricula': '2023001',
             'cpf': '00011122233',
             'data_entrada': '2024-01-01',
-            'unidade': 'bacharelado em sistemas de informação',
-            'credito': 20.00,
-            'grupo': '',
+            'unidade': 'Bacharelado em Sistemas de Informação',
+            'credito': 0.00,
+            'grupo': 'ADM',  # Ensure this group exists
         },
         {
             'username': '22233344455', 
