@@ -1,0 +1,29 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}Login |{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+<body class='login'>
+    <div class="login-container">
+        <div class="login-box">
+            <img src='../../../static/ETicketApp/img/ETICKET.png' alt="Logo" class="login-logo">
+            <form id="login-form" method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="input-group">
+                    {{ form.cpf.label_tag }}
+                    {{ form.cpf }}
+                </div>
+                <div class="input-group">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                </div>
+                <button type="submit" class="login-button">Logar</button>
+                <a type="submit" href="{% url 'menuExterno' %}" class="externo" style="margin-top: 1em; color:#000;">Sou um usuário externo</a>
+            </form>
+        </div>
+    </div>
+
+
+</body>
+{% endblock content %}

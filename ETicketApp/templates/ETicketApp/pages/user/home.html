@@ -1,0 +1,10 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}Home |{% endblock title %}
+
+{% block content %}
+    {% include 'ETicketApp/partials/user/header.html' %}
+    {% include 'ETicketApp/partials/user/alerta.html' %}
+    {% include 'ETicketApp/partials/user/qrcode.html' %}
+    {% include 'ETicketApp/partials/user/btn_informacao.html' %}
+{% endblock content %}

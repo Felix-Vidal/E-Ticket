@@ -1,0 +1,60 @@
+{% extends "global/base_user.html" %}
+
+{% block title %}Perfil |{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/user/header.html' %}
+{% include 'ETicketApp/partials/user/alerta.html' %}
+
+<div class="container d-flex align-items-center justify-content-center">  
+    <div class="col-md-12 col-12 bg-light p-2 rounded shadow"> <!-- Contêiner para centralizar -->
+        <div class="profile-container text-center">
+            <div class="user-info mb-4">
+                <img src="data:image/jpeg;base64,{{ foto }}" alt="{{ nome }}"  class="user-photo rounded-circle" style="width: 150px;">
+                <div class="user-details">
+                    <h1 class="user-name h4">{{ nome_completo }}</h1>
+                    <p class="user-matricula text-muted">Matrícula: {{ matricula }}</p>
+                </div>
+            </div>
+            
+            <div class="user-fields mb-4">
+                <div class="field mb-2">
+                    <label class="fw-bold">CPF:</label>
+                    <p>{{ cpf }}</p>
+                </div>
+                <div class="field mb-2">
+                    <label class="fw-bold">Campo:</label>
+                    <p>Universidade Federal do Acre</p>
+                </div>
+                <div class="field mb-2">
+                    <label class="fw-bold">Unidade:</label>
+                    <p>{{ unidade }}</p>
+                </div>
+            </div>
+
+            <!-- Tabela para exibir as classificações -->
+            <div class="user-classifications">
+                   <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome da Classificação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classificacao in classificacoes %}
+                        <tr id="clas-nome">
+                            <td>{{ classificacao.nome }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td>Nenhuma classificação encontrada.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

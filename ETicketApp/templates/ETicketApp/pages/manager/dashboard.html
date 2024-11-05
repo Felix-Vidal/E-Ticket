@@ -1,0 +1,52 @@
+{% extends "global/base_manager.html" %}
+{% include 'manager/pages/validar.html' %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+ 
+
+<div id="cards-dash" class="content" style="margin-left: 10%; transition: margin-left 0.s ease; margin-top:10%">
+    <div id="cards-dash"   class="container-fluid d-flex justify-content-center align-items-center flex-wrap" style="margin-top: 5%;">
+        <a href="{% url 'validar' %}" style="text-decoration: none; margin: 10px;"> 
+            <div id="card01" class="card mb-3" style="border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin: 10px;"> 
+                <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
+                    <i id="icone-vali" style="font-size: 89px ;" class="fa-solid fa-qrcode"></i>
+                </div>
+                <div class="card-body text-center">
+                    <p id="valida-tex" class="card-text">Validar Ticket</p>
+                </div>
+            </div>
+        </a>
+        
+        
+        
+    
+        <!-- Card 2 -->
+        <a href="{% url 'vender' %}" style="text-decoration: none; margin: 10px;">
+            <div id="card02" class="card mb-3" style="border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin: 10px;">
+                <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
+                    <i style="font-size: 80px;" class="fa-solid fa-ticket"></i>
+                </div>
+                <div class="card-body text-center">
+                    <p id="vende-text" style="">Vender Ticket</p>
+                </div>
+            </div>
+        </a>
+    
+        <!-- Card 3 -->
+        <a href="{% url 'cardapio' %}" style="text-decoration: none; margin: 10px;">
+            <div id="card03" class="card mb-3" style="border-radius: 20px; background-color: #0C4CA4; color: #ffffff; margin: 10px;">
+                <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
+                    <i style="font-size: 80px;" class="fa-solid fa-bowl-food"></i>
+                </div>
+                <div class="card-body text-center">
+                    <p id="cardapio-text" style=""> Criar Cardápio</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% include 'ETicketApp/partials/manager/btn_informacao.html' %}
+{% endblock content %}

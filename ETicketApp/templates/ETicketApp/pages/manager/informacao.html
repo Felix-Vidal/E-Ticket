@@ -1,0 +1,58 @@
+{% extends "global/base_manager.html" %}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<div class='conatiner'>
+<div id="container-informacoes" class="container mt-4 d-flex flex-column align-items-start">
+
+    <h2 class="text-center mb-4">Gerenciamento de informações</h2>
+    
+    <!-- Botão para adicionar novo info -->
+    <div class="text-center">
+    <a href="{% url 'adicionar_informacao' %}" class="btn btn-primary mb-4">Adicionar Novo informação</a>
+    </div>
+    <div class="table-responsive">
+    <table id="classificacao-tabela" class="table table-bordered table-hover text-center table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Conteúdo</th>
+                <th>Data de Publicação</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for info in informacao %}
+            <tr>
+                <td>{{ info.id }}</td>
+                <td>{{ info.titulo }}</td>
+                <td>{{ info.conteudo|truncatewords:10 }}</td>
+                <td>{{ info.data_publicacao }}</td>
+                <td class="d-flex justify-content-center">
+                    <!-- Botão para editar -->
+                    <a href="{% url 'editar_informacao' info.id %}" class="btn btn-success btn-sm mx-1">Editar</a>
+                    
+                    <!-- Botão para deletar -->
+                    <form action="{% url 'deletar_informacao' info.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Tem certeza que deseja deletar este info?');" class="btn btn-danger btn-sm mx-1">Deletar</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Nenhum info encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+</div>
+    
+{% endblock content %}

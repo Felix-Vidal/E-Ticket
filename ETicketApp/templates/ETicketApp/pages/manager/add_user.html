@@ -1,0 +1,51 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<div class="container" style="margin-left: 5%;">  
+    <div class="row justify-content-center" style="margin-top: 8%; margin-left: 5%;"> 
+        <div id="Conteudo-total"> 
+            <div class="row justify-content-center"> 
+                
+                <div class="col-8 col-md-8 d-flex flex-column align-items-center"> 
+                    <h1 id="usuarios-lista">Usuários</h1>
+
+                    <form method="POST" action="{% url 'gerenciar_usuario' %}">
+                        {% csrf_token %}
+                        <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
+                            <div class="search-container">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <input id="usuarios" name="cpf" value="{{usuario.username}}" class="form-control" required>
+                            </div>
+                            <div class="col-12 col-md-4 d-flex flex-column align-items-start">
+                                <label for="papel" class="form-label">Papel</label>
+                                <select id="selecao" name="papel" class="form-select" aria-label="Default select example" required>
+                                    <option disabled>Tipo de Usuário</option>
+                                    <option value="1">ADM</option>
+                                    <option value="2">Colaborador</option>
+                                    <option value="3" selected>Bolsista</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-10 col-md-12 d-flex flex-column align-items-start mx-3 mb-3">
+                            <div class="d-flex flex-column flex-md-row justify-content-between w-100 mt-3">
+                                <a href="{% url 'usuarios' %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 20px; width: 120px;">
+                                    <i class="fa-solid fa-arrow-left"></i> Voltar 
+                                </a>
+                             
+                                <button class="btn btn-success" style="font-size: 20px; background-color: #35A40E; width: 120px;" type="submit">
+                                    Salvar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

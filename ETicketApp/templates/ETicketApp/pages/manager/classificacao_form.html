@@ -1,0 +1,64 @@
+{% extends 'global/base_manager.html' %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<div class="container">
+    <div class="container-classificacao ">
+        <h1>{% if form.instance.pk %}Editar{% else %}Adicionar{% endif %} Classificação</h1>
+
+        <form method="post" id="form-classificacao">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.nome.id_for_label }}">Nome:</label>
+                {{ form.nome }}
+                {% if form.nome.errors %}
+                    <div class="text-danger">{{ form.nome.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.valor_cafe_manha.id_for_label }}">Valor Café da Manhã:</label>
+                {{ form.valor_cafe_manha }}
+                {% if form.valor_cafe_manha.errors %}
+                    <div class="text-danger">{{ form.valor_cafe_manha.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.valor_almoco.id_for_label }}">Valor Almoço:</label>
+                {{ form.valor_almoco }}
+                {% if form.valor_almoco.errors %}
+                    <div class="text-danger">{{ form.valor_almoco.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.valor_jantar.id_for_label }}">Valor Jantar:</label>
+                {{ form.valor_jantar }}
+                {% if form.valor_jantar.errors %}
+                    <div class="text-danger">{{ form.valor_jantar.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.prioridade.id_for_label }}">Prioridade:</label>
+                {{ form.prioridade }}
+                {% if form.prioridade.errors %}
+                    <div class="text-danger">{{ form.prioridade.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.limite_credito.id_for_label }}">Limite de Credito:</label>
+                {{ form.limite_credito }}
+                {% if form.limite_credito.errors %}
+                    <div class="text-danger">{{ form.limite_credito.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between mt-4 div-f">
+                <a href="{% url 'classificacao' %}" class="btn btn-secondary btn-classificacao-voltar">Voltar</a>
+                <button type="submit" class="btn btn-success btn-classificacao-salvar">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
