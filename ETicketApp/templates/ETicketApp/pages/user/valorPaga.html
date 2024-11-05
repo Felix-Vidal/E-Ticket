@@ -11,8 +11,8 @@
                 {% csrf_token %} <!-- CSRF token dentro do form -->
 
                 <div class="mb-3">
-                    <label id="valor" for="valorInput" class="form-label">Valor R$:</label>
-                    <input type="text" class="form-control" id="valorInput" name="valor" placeholder="00,00" required>
+                    <label for="valor" class="form-label">Valor R$:</label>
+                    <input type="number" class="form-control" id="valor" name="valor" placeholder="00.00" required>
                 </div>
                 
                 <!-- Botão de envio do formulário -->

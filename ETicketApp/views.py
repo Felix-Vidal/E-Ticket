@@ -88,7 +88,13 @@ def aumentar_credito(request):
 
 @login_required
 def pagamento(request):
-    return render(request,'ETicketApp/pages/user/pagamento.html')
+    if request.method == "POST":
+        valor = request.POST.get('valor')
+        print(valor)
+        context = {
+            'valor': valor
+        }
+        return render(request,'ETicketApp/pages/user/pagamento.html', context)
 
 @login_required
 def menu(request):
@@ -161,13 +167,12 @@ def login(request):
         if form.is_valid():
             cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
             password = form.cleaned_data['password']
-            
+
             if not cpf:
                 messages.error(request, 'CPF é obrigatório.')
                 return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'CPF é obrigatório.'})
 
-            
-            # Tenta encontrar o usuário localmente profisorio
+            # Tenta encontrar o usuário localmente
             personal_data = get_object_or_404(DadoPessoal, cpf=cpf)
             if personal_data and password:
                 if personal_data.usuario.check_password(password):
@@ -179,25 +184,32 @@ def login(request):
                     return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Senha incorreta.'})
             elif not personal_data and password:
                 messages.error(request, 'Usuário não encontrado.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Usuário não encontrado.'})    
-                
+                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Usuário não encontrado.'})
 
-
-            # Se o CPF não existe localmente, ou se existe e precisa atualizar
+            # Consulta a API externa
             headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
             response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
 
             if response.status_code == 200:
                 external_data = response.json()
+                
+                classifications = []
 
-                if external_data['record_count'] == 0:
-                    messages.error(request, 'Usuário não encontrado na API externa.')
-                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Usuário não encontrado na API externa.'})
+                user_data = None
+                max_weight = 0
 
-                # Acessa o primeiro registro ativo da lista "response"
-                for user_data in external_data['response']:
-                    if user_data.get('SITUACAO') == 'Ativo':
-                        break
+                for data in external_data['response']:
+                    if data.get('SITUACAO') == 'Ativo':
+                        classification_name = data.get('CLASSIFICACAO')
+                        classification, created = Classificacao.objects.get_or_create(nome=classification_name, defaults={'peso': 5})
+                        if classification.peso > max_weight:
+                            max_weight = classification.peso
+                            classifications.append(classification)
+                            user_data = data
+
+                if user_data is None:
+                    messages.error(request, 'Nenhum usuário ativo encontrado.')
+                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Nenhum usuário ativo encontrado.'})
 
                 # Extrai os dados do usuário
                 matricula = user_data.get('MATRICULA')
@@ -205,30 +217,26 @@ def login(request):
                 nome_social = user_data.get('NOME_SOCIAL')
                 unit = user_data.get('UNIDADE')
                 entry_date = user_data.get('DT_ENTRADA')
-                nome_classificacao = user_data.get('CLASSIFICACAO')
                 gratuitous = user_data.get('GRATUIDADE') == 'S'
                 email = user_data.get('EMAIL')
                 foto = user_data.get('FOTO')
 
-                # Atualiza ou cria uma classificação com base no nome retornado
-                classification, created = Classificacao.objects.get_or_create(nome=nome_classificacao)
-
+                # Atualiza ou cria um novo usuário localmente
                 try:
                     personal_data = DadoPessoal.objects.get(cpf=cpf)
                     usuario = personal_data.usuario
                     usuario.email = email
                     usuario.save()
-                    
+
                     personal_data.nome_completo = nome_completo
                     personal_data.nome_social = nome_social
                     personal_data.matricula = matricula
                     personal_data.data_entrada = entry_date
                     personal_data.unidade = unit
                     personal_data.gratuito = gratuitous
-                    personal_data.classificacoes.set([classification])
+                    personal_data.classificacoes = classifications
                     personal_data.foto = foto
                     personal_data.save()
-                    
 
                 except DadoPessoal.DoesNotExist:
                     # Cria um novo usuário localmente se não existir
@@ -245,11 +253,11 @@ def login(request):
                         matricula=matricula,
                         data_entrada=entry_date,
                         unidade=unit,
-                        credito=0.0,  # Inicialmente, crédito zero
+                        credito=0.0,
+                        classificacoes = classifications,
                         foto=foto,
                         gratuito=gratuitous,
                     )
-                    personal_data.classificacoes.add(classification)
 
                 # Autentica o usuário
                 auth_login(request, usuario)

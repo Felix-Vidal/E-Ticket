@@ -16,8 +16,16 @@
         <div id="button-copy" class="d-flex justify-content-center">
             <button type="button" class="btn btn-primary btn-lg">Copiar</button>
         </div>
-        
-        <div class="modal-footer"></div>
+        <form method="POST" action="{% url 'aumentar-credito' %}">
+          {% csrf_token %}
+              <div class="modal-footer">
+              <div class="modal-footer">
+                <input type="hidden" name="valor" value="{{ valor }}">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <!-- Botão de submissão do formulário -->
+                <button type="submit" id="confirma" class="btn btn-success">Confirmar</button>
+            </div>
+        </form>
       </div>
     </div>
   </div>

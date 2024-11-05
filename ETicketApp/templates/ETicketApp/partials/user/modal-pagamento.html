@@ -7,10 +7,11 @@
                 <button id="close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{% url 'aumentar-credito' %}"> <!-- Form com POST e CSRF -->
+                <form method="POST" action="{% url 'aumentar-credito' %}">
                     {% csrf_token %}
                     <div class="container-fluid">
                         <div class="col-md-12">
+                            <input type="hidden" name="valor" value="{{ valor }}">
                             <h2>Dados do Cartão</h2>
                             <div class="col-md-12">
                                 <label>Número do Cartão:<span class="mandatory">*</span></label>
@@ -18,7 +19,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label>Data de validade <span class="mandatory">*</span></label>
-                                <input type="text" placeholder="MM/YY" minlength="4" maxlength="4" class="form-control" name="validade_cartao" required>
+                                <input type="text" placeholder="MM/YY" minlength="4" maxlength="5" class="form-control" name="validade_cartao" required>
                             </div>
                             <div class="col-md-12">
                                 <label>CVV <span class="mandatory">*</span></label>
@@ -34,13 +35,13 @@
                             </div>
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <!-- Botão de submissão do formulário -->
-                <a href="{% url 'home' %}" type="submit" id="confirma" class="btn btn-success">Confirmar</a>
-            </div>
+                
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="confirma" class="btn btn-success">Confirmar</button>
+                    </div>
                 </form>
+            </div>
         </div>
     </div>
 </div>
