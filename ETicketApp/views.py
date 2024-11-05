@@ -569,9 +569,12 @@ def usuarioCompra (request):
                 'unidade': dados_pessoais.unidade,
             }
             return render(request, 'ETicketApp/pages/manager/usuarioCompra.html', context)
-        print(request.POST.get('valor'))
         if request.POST.get('valor'):
             valor = request.POST.get('valor')
+            # metodo_pagamento = request.POST.get('metodo_pagamento')  # Adicione o método de pagamento no formulário
+        
+            # Gera um método de pagamento aleatório
+            metodo_pagamento = random.choice([MetodoPagamentoEnum.PIX.value, MetodoPagamentoEnum.DINHEIRO.value, MetodoPagamentoEnum.CARTAO.value]) 
             if valor:         
                 try:
                     valor_decimal = Decimal(valor)
@@ -581,8 +584,27 @@ def usuarioCompra (request):
                         return redirect('vender')
                     
                     personal_data = get_object_or_404(DadoPessoal, usuario=request.user)
+                    
+                                    # Busca a classificação com o maior peso (prioridade) do usuário
+                    classificacao_prioritaria = personal_data.classificacoes.order_by('prioridade').first()
+                    
+                    if classificacao_prioritaria:
+                        limite_credito = classificacao_prioritaria.limite_credito
+                        
+                        # Verifica se a adição do valor ultrapassa o limite de crédito
+                        if personal_data.credito + valor_decimal > limite_credito:
+                            messages.error(request, f"O limite de crédito de R${limite_credito} será excedido.")
+                            return redirect('vender')
+                    
                     personal_data.credito += valor_decimal
                     personal_data.save()
+                    
+                                    # Cria o registro de crédito
+                    Credito.objects.create(
+                        usuario=request.user,
+                        valor=valor_decimal,
+                        metodo_pagamento=metodo_pagamento
+                    )
                     messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
                     return redirect('vender')  # Redireciona para a página inicial
                 except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
