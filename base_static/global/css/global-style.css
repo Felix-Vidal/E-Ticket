@@ -1,0 +1,20 @@
+    /* Estilos para o botão flutuante informacao*/
+    .btn-flutuante {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 50px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+      }
+    
+      .btn-flutuante:hover {
+        transform: scale(1.1);
+        background-color: #0056b3;
+      }

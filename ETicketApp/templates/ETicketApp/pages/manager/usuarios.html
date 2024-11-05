@@ -1,0 +1,76 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<div id="container-maior" class="container">
+    <div id="container-menor" class="row justify-content-center">
+        <div id="Conteudo-total">
+            <div class="row justify-content-center">
+                <div class="col-8 col-md-8 d-flex flex-column align-items-center">
+                    <h1 id="usuarios-lista">Usuários</h1>
+                    <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
+                        <div class="search-container">
+                            <input id="usuarios" class="form-control" placeholder="Pesquisar..">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <div class="col-12 col-md-4 d-flex flex-column align-items-start">
+                            <select id="selecao" class="form-select" aria-label="Default select example">
+                                <option selected>Tipo de Usuário</option>
+                                <option value="1">ADM</option>
+                                <option value="2">Colaborador</option>
+                                <option value="3">Bolsista</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tabela-user" class="col-12 col-md-12 d-flex flex-column align-items-center">
+                        <table id="tabela-texto" class="table table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col">Grupo(s)</th>
+                                    <th scope="col">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for usuario in usuarios %}
+                                <tr>
+                                    <td>
+                                        <!-- Acessa o nome completo diretamente através do relacionamento OneToOneField -->
+                                        {{ usuario.dadopessoal.nome_completo }}
+                                    </td>
+                                    <td>
+                                        <!-- Acessa os grupos do usuário -->
+                                        {% for grupo in usuario.groups.all %}
+                                            {{ grupo.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary me-2">
+                                            <i class="fa-solid fa-edit"></i> Editar
+                                        </a>
+                                        <a href="{% url 'excluir_usuario' usuario.id %}" class="btn btn-sm btn-danger">
+                                            <i class="fa-solid fa-trash"></i> Retirar cargo
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-10 col-md-12 d-flex flex-column align-items-start mx-3 mb-3">
+                        <div class="d-flex flex-column flex-md-row justify-content-between w-100 mt-3 btns">
+                            <a id="texto-volta" href="{% url 'relatorio' %}" class="btn btn-secondary mb-2 mb-md-0">
+                                <i class="fa-solid fa-arrow-left"></i> Voltar
+                            </a>
+                            <a id="texto-add" href="{% url 'adicionarUsuario' %}" class="btn btn-success" type="submit">Adicionar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,53 @@
+{% extends 'global/base_manager.html' %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<div id="container-informes-listar">
+
+    <h1 class="text-center mb-4" id="title">Listagem de Cardápios</h1>
+    
+    <!-- Botão para adicionar um novo cardápio -->
+<a href="{% url 'adicionar_cardapio' %}" id="btn-add-cardapio" class="btn btn-primary mb-4  ">Adicionar Novo Cardápio</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Tipo de Refeição</th>
+            <th>Menu</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if cardapios %}
+        {% for cardapio in cardapios %}
+        <tr>
+            <td>
+                    <h6>{{ cardapio.data|date:"d M Y" }}</h6>
+                </td>
+                <td>
+                    <h6>{{ cardapio.get_tipo_refeicao_display }}</h6>
+                </td>
+                <td>
+                    <h6>{{ cardapio.menu }}</h6>
+                </td>
+                <td>
+                    <!-- Botões de Editar e Excluir -->
+                    <a href="{% url 'editar_cardapio' cardapio.id %}" >Editar</a>
+                    <a href="{% url 'excluir_cardapio' cardapio.id %}" 
+                       onclick="return confirm('Tem certeza que deseja excluir este cardápio?');">Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="4">Nenhum cardápio disponível.</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "global/base_manager.html" %}
+
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<body id="container-gerar">
+    <h1>Tickets Únicos Criados</h1>
+    <table id='ticket-tabela' class="table table-bordered table-hover text-center table-sm" >
+        <thead>
+            <tr>
+                <th>QR Code</th>
+                <th>Valor</th>
+                <th>Forma de Pagamento</th>
+                <th>Tipo de Refeição</th>
+                <th>Classificação</th>
+                <th>Data de Compra</th>
+                <th>Hora de Compra</th>
+                <th>Válido</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <tr>
+                    <td><img src="{% url 'gerar_qrcode' ticket.id %}" alt="QR Code"></td>
+                    <td>{{ ticket.valor }}</td>
+                    <td>{{ ticket.metodo_pagamento }}</td>
+                    <td>{{ ticket.tipo_refeicao }}</td>
+                    <td>{{ ticket.classificacao.nome }}</td>
+                    <td>{{ ticket.data_compra }}</td>
+                    <td>{{ ticket.hora_compra }}</td>
+                    <td>{{ ticket.valido }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class='button-gerar'>
+    <a href="{% url 'gerar_ticket_unico' %}" class='btn-gerar btn-primary'>Gerar Mais Tickets</a>
+    </div>
+
+{% endblock content %}

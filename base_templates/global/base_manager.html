@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+    <head>
+        {% include 'ETicketApp/partials/manager/head.html' %}
+        <title>{% block title %}{% endblock title %}E-ticket</title>
+    </head>
+    
+
+    <body>
+        <main class="main-content-container">
+            {% block content %}{% endblock content %}
+        </main>
+    </body>
+
+    <link rel="script" href="{% static "global/js/index.js" %}">
+    
+</html>
