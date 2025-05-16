@@ -178,112 +178,113 @@ BEARER_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzZWNyZXQiOiJROVlweEFMTndsRzJWbXlibTJWak4
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        if form.is_valid():
-            cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
-            password = form.cleaned_data['password']
+        if not form.is_valid():
+            return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
-            if not cpf:
-                messages.error(request, 'CPF é obrigatório.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'CPF é obrigatório.'})
+        cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
+        password = form.cleaned_data['password']
 
-            # Tenta encontrar o usuário localmente
-            personal_data = get_object_or_404(DadoPessoal, cpf=cpf)
-            if personal_data and password:
-                if personal_data.usuario.check_password(password):
-                    usuario = personal_data.usuario
-                    auth_login(request, usuario)
-                    return redirect('home')
-                else:
-                    messages.error(request, 'Senha incorreta.')
-                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Senha incorreta.'})
-            elif not personal_data and password:
-                messages.error(request, 'Usuário não encontrado.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Usuário não encontrado.'})
+        if not cpf:
+            messages.error(request, 'CPF é obrigatório.')
+            return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
-            # Consulta a API externa
-            headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
-            response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
-
-            if response.status_code == 200:
-                external_data = response.json()
-                
-                classifications = []
-
-                user_data = None
-                max_weight = 0
-
-                for data in external_data['response']:
-                    if data.get('SITUACAO') == 'Ativo':
-                        classification_name = data.get('CLASSIFICACAO')
-                        classification, created = Classificacao.objects.get_or_create(nome=classification_name, defaults={'peso': 5})
-                        if classification.peso > max_weight:
-                            max_weight = classification.peso
-                            classifications.append(classification)
-                            user_data = data
-
-                if user_data is None:
-                    messages.error(request, 'Nenhum usuário ativo encontrado.')
-                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Nenhum usuário ativo encontrado.'})
-
-                # Extrai os dados do usuário
-                matricula = user_data.get('MATRICULA')
-                nome_completo = user_data.get('NOME')
-                nome_social = user_data.get('NOME_SOCIAL')
-                unit = user_data.get('UNIDADE')
-                entry_date = user_data.get('DT_ENTRADA')
-                gratuitous = user_data.get('GRATUIDADE') == 'S'
-                email = user_data.get('EMAIL')
-                foto = user_data.get('FOTO')
-
-                # Atualiza ou cria um novo usuário localmente
-                try:
-                    personal_data = DadoPessoal.objects.get(cpf=cpf)
-                    usuario = personal_data.usuario
-                    usuario.email = email
-                    usuario.save()
-
-                    personal_data.nome_completo = nome_completo
-                    personal_data.nome_social = nome_social
-                    personal_data.matricula = matricula
-                    personal_data.data_entrada = entry_date
-                    personal_data.unidade = unit
-                    personal_data.gratuito = gratuitous
-                    personal_data.classificacoes = classifications
-                    personal_data.foto = foto
-                    personal_data.save()
-
-                except DadoPessoal.DoesNotExist:
-                    # Cria um novo usuário localmente se não existir
-                    usuario = User.objects.create(
-                        username=nome_completo,
-                        password=make_password(None),  # Usuário sem senha
-                        email=email,
-                    )
-                    personal_data = DadoPessoal.objects.create(
-                        usuario=usuario,
-                        nome_completo=nome_completo,
-                        nome_social=nome_social,
-                        cpf=cpf,
-                        matricula=matricula,
-                        data_entrada=entry_date,
-                        unidade=unit,
-                        credito=0.0,
-                        classificacoes = classifications,
-                        foto=foto,
-                        gratuito=gratuitous,
-                    )
-
-                # Autentica o usuário
-                auth_login(request, usuario)
-                return redirect('home')  # Redireciona para a página inicial após sucesso
-
+        # Verifica usuário local
+        personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
+        if personal_data and password:
+            if personal_data.usuario.check_password(password):
+                auth_login(request, personal_data.usuario)
+                return redirect('home')
             else:
-                messages.error(request, 'Erro na API externa.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Erro na API externa.'})
+                messages.error(request, 'Senha incorreta.')
+                return render(request, 'ETicketApp/pages/user/login.html', {
+                    'form': form, 'error_message': 'Senha incorreta.'
+                })
 
-    else:
-        form = LoginForm()
+        # Se não encontrar localmente, consulta API externa
+        headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
+        response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
 
+        if response.status_code != 200:
+            messages.error(request, 'Erro na API externa.')
+            return render(request, 'ETicketApp/pages/user/login.html', {
+                'form': form, 'error_message': 'Erro na API externa.'
+            })
+
+        api_data = response.json()
+        user_data = None
+        classifications = []
+        max_weight = -1
+
+        for data in api_data.get('response', []):
+            if data.get('SITUACAO') == 'Ativo':
+                classification_name = data.get('CLASSIFICACAO')
+                classificacao, _ = Classificacao.objects.get_or_create(nome=classification_name)
+                if classificacao.prioridade > max_weight:
+                    user_data = data
+                    max_weight = classificacao.prioridade
+                    classifications = [classificacao]
+
+        if not user_data:
+            messages.error(request, 'Nenhum usuário ativo encontrado.')
+            return render(request, 'ETicketApp/pages/user/login.html', {
+                'form': form, 'error_message': 'Nenhum usuário ativo encontrado.'
+            })
+
+        # Extrai dados do usuário
+        nome_completo = user_data.get('NOME')
+        nome_social = user_data.get('NOME_SOCIAL')
+        email = user_data.get('EMAIL')
+        foto = user_data.get('FOTO')
+        matricula = user_data.get('MATRICULA')
+        unidade = user_data.get('UNIDADE')
+        data_entrada = user_data.get('DT_ENTRADA')
+        gratuito = user_data.get('GRATUIDADE') == 'S'
+
+        # Atualiza ou cria usuário local
+        usuario = None
+        try:
+            personal_data = DadoPessoal.objects.get(cpf=cpf)
+            usuario = personal_data.usuario
+            usuario.email = email
+            usuario.save()
+
+            personal_data.nome_completo = nome_completo
+            personal_data.nome_social = nome_social
+            personal_data.matricula = matricula
+            personal_data.data_entrada = data_entrada
+            personal_data.unidade = unidade
+            personal_data.gratuito = gratuito
+            personal_data.foto = foto
+            personal_data.save()
+
+        except DadoPessoal.DoesNotExist:
+            usuario = User.objects.create(
+                username=nome_completo,
+                password=make_password(None),
+                email=email,
+            )
+            personal_data = DadoPessoal.objects.create(
+                usuario=usuario,
+                nome_completo=nome_completo,
+                nome_social=nome_social,
+                cpf=cpf,
+                matricula=matricula,
+                data_entrada=data_entrada,
+                unidade=unidade,
+                credito=0.0,
+                foto=foto,
+                gratuito=gratuito,
+            )
+
+        # Define classificações (ManyToMany)
+        personal_data.classificacoes.set(classifications)
+
+        # Autentica o usuário
+        auth_login(request, usuario)
+        return redirect('home')
+
+    # GET request
+    form = LoginForm()
     return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
 
