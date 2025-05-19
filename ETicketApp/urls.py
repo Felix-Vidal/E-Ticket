@@ -9,6 +9,7 @@ urlpatterns = [
     path('menu/', menu, name='menu'),
     path('perfil/', perfil, name='perfil'),
     path('login/', login, name='login'),
+    
     path('historico/', historico, name='historico'),
     path('historico/refeicoes/', historico_refeicoes, name='historico_refeicoes'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),  
