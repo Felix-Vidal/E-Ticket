@@ -184,53 +184,57 @@ def login(request):
         cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
         password = form.cleaned_data['password']
 
+        # Validação de campos obrigatórios
         if not cpf:
             messages.error(request, 'CPF é obrigatório.')
             return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
+        if not password:
+            messages.error(request, 'Senha é obrigatória.')
+            return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
-        # Verifica usuário local
-        personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
-        if personal_data and password:
-            if personal_data.usuario.check_password(password):
-                auth_login(request, personal_data.usuario)
-                return redirect('home')
-            else:
-                messages.error(request, 'Senha incorreta.')
-                return render(request, 'ETicketApp/pages/user/login.html', {
-                    'form': form, 'error_message': 'Senha incorreta.'
-                })
-
-        # Se não encontrar localmente, consulta API externa
+        # Consulta API externa
         headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
-        response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
-
-        if response.status_code != 200:
-            messages.error(request, 'Erro na API externa.')
+        try:
+            response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
+            response.raise_for_status() 
+        except requests.exceptions.RequestException as e:
+            messages.error(request, f'Erro ao conectar à API externa: {e}')
             return render(request, 'ETicketApp/pages/user/login.html', {
                 'form': form, 'error_message': 'Erro na API externa.'
             })
-
+        
         api_data = response.json()
-        user_data = None
-        classifications = []
-        max_weight = -1
+        active_users_data = [data for data in api_data.get('response', []) if data.get('SITUACAO') == 'Ativo']
 
-        for data in api_data.get('response', []):
-            if data.get('SITUACAO') == 'Ativo':
-                classification_name = data.get('CLASSIFICACAO')
-                classificacao, _ = Classificacao.objects.get_or_create(nome=classification_name)
-                if classificacao.prioridade > max_weight:
-                    user_data = data
-                    max_weight = classificacao.prioridade
-                    classifications = [classificacao]
-
-        if not user_data:
+        if not active_users_data:
             messages.error(request, 'Nenhum usuário ativo encontrado.')
             return render(request, 'ETicketApp/pages/user/login.html', {
-                'form': form, 'error_message': 'Nenhum usuário ativo encontrado.'
+                'form': form, 'error_message': 'Nenhum usuário ativo encontrado na API.'
             })
 
-        # Extrai dados do usuário
+        user_data = None
+        classifications = []
+        max_priority = -1
+
+        for data in active_users_data:
+            classification_name = data.get('CLASSIFICACAO')
+            if classification_name:
+                classificacao, _ = Classificacao.objects.get_or_create(nome=classification_name)
+                if classificacao.prioridade > max_priority:
+                    user_data = data
+                    max_priority = classificacao.prioridade
+                    classifications = [classificacao]
+                elif classificacao.prioridade == max_priority:
+                    classifications.append(classificacao)
+
+
+        if not user_data:
+            messages.error(request, 'Nenhum usuário ativo com classificação válida encontrado.')
+            return render(request, 'ETicketApp/pages/user/login.html', {
+                'form': form, 'error_message': 'Nenhum usuário ativo com classificação válida encontrado.'
+            })
+
+        # Extrai dados do usuário da API
         nome_completo = user_data.get('NOME')
         nome_social = user_data.get('NOME_SOCIAL')
         email = user_data.get('EMAIL')
@@ -240,10 +244,16 @@ def login(request):
         data_entrada = user_data.get('DT_ENTRADA')
         gratuito = user_data.get('GRATUIDADE') == 'S'
 
-        # Atualiza ou cria usuário local
-        usuario = None
-        try:
-            personal_data = DadoPessoal.objects.get(cpf=cpf)
+        personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
+        
+        if personal_data:
+            if not personal_data.usuario.check_password(password):
+                messages.error(request, 'Senha incorreta.')
+                return render(request, 'ETicketApp/pages/user/login.html', {
+                    'form': form, 'error_message': 'Senha incorreta.'
+                })
+            
+            # Atualiza dados do usuário existente
             usuario = personal_data.usuario
             usuario.email = email
             usuario.save()
@@ -255,12 +265,14 @@ def login(request):
             personal_data.unidade = unidade
             personal_data.gratuito = gratuito
             personal_data.foto = foto
+            personal_data.classificacoes.set(classifications) # Atualiza classificações
             personal_data.save()
 
-        except DadoPessoal.DoesNotExist:
+        else:
+            # Cria novo usuário
             usuario = User.objects.create(
                 username=nome_completo,
-                password=make_password(None),
+                password=make_password(password), # Use a senha fornecida para o novo usuário
                 email=email,
             )
             personal_data = DadoPessoal.objects.create(
@@ -275,9 +287,7 @@ def login(request):
                 foto=foto,
                 gratuito=gratuito,
             )
-
-        # Define classificações (ManyToMany)
-        personal_data.classificacoes.set(classifications)
+            personal_data.classificacoes.set(classifications) # Define classificações para o novo usuário
 
         # Autentica o usuário
         auth_login(request, usuario)
