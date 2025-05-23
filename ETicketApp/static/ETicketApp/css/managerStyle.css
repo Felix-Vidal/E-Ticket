@@ -60,6 +60,8 @@ banner{
     border-radius: 0 2.8125em 2.8125em 0;
 }
 
+
+
 /*Validar Usuário*/
 
 #container-chefe{
@@ -707,7 +709,7 @@ textarea {
  
 /* classificação */
 div#classificacao-container {
-    max-width: 900px;
+    max-width: 70em;
     margin-left: 15%;
     margin-right: 5%;
     margin-top: 3%;
@@ -753,6 +755,20 @@ div#classificacao-container {
 
 #classificacao-tabela tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+#form-classificacao div.form-group{
+    margin: 1em 3em;
+}
+
+#form-classificacao div.div-f a{
+    min-width: 8em;
+    margin-left: 9.5em;
+}
+
+#form-classificacao div.div-f button{
+    min-width: 8em;
+    margin-right: 9.5em;
 }
 
 .classificacao-acao-button {
@@ -914,6 +930,10 @@ div#classificacao-container {
 /* informações */
 #container-informacoes{
     margin-left: 25%;
+}
+
+#classificacao-tabela{
+    min-width: 60em;
 }
 
 /* informacoes-form */

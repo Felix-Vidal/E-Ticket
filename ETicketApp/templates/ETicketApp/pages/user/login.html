@@ -1,4 +1,7 @@
 {% extends "global/base_user.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'ETicketApp/css/login.css' %}">
+
 
 {% block title %}Login |{% endblock title %}
 
@@ -19,7 +22,7 @@
                     {{ form.password }}
                 </div>
                 <button type="submit" class="login-button">Logar</button>
-                <a type="submit" href="{% url 'menuExterno' %}" class="externo" style="margin-top: 1em; color:#000;">Sou um usuário externo</a>
+                <a type="submit" href="{% url 'menuExterno' %}" class="externo" >Sou um usuário externo</a>
             </form>
         </div>
     </div>
