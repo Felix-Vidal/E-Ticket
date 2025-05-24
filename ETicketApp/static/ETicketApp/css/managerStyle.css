@@ -108,8 +108,9 @@ banner{
 
 }
 
-#form-venda{
+#form-venda-unico{
     margin-top:4%;
+    margin-left: 5em;
 
 }
 #input-email, #select-unico,#select-pagamento, #cafee,#jantar-label,#almoco-label,#refeicao-label{
@@ -119,6 +120,8 @@ banner{
 #titulo-gera{
     margin-bottom: 40px;
     text-align: center;
+    margin-top: 0.8em;
+    margin-left: 5em;
 }
 #select-unico,#select-pagamento{
     background-color: #e4f2f7;
@@ -254,7 +257,13 @@ banner{
 #top{
     margin-top: 5%; 
 }
-@media (max-width: 450em) {
+.botoes-acoes{
+    margin-left: -3em;
+}
+@media (max-width: 450px) {
+    .botoes-acoes{
+        margin-left: 0.1em;
+    }
     #top{
         width: 80%; 
         margin-left:20% ;
@@ -269,11 +278,18 @@ banner{
         
        
     }
-    #form-venda{
-        width: 65%;
-        margin-left: 15%;
+    .form-vendas{
+        width: 17em;
+        margin-left: 16%;
+       
     
     }
+    #titulo-gera{
+        margin-left: 0.1em;
+        margin-top: 2em;
+    }
+ 
+  
     #volta{
         width: 120px;
         font-size: 15px;
@@ -459,8 +475,9 @@ banner{
         margin-left: 10px;
     }
 
-    #container-informes {
-        margin-left: 100px;
+   .cardapio_adm {
+        margin-left: 5%;
+
     }
 }
 
@@ -477,7 +494,7 @@ banner{
     flex-grow: 1; 
 }
 
-.sidebar {
+.sidebar_cor {
     width: 250px; 
     flex-shrink: 0; 
     background-color: #f0f4ff; 
@@ -551,7 +568,7 @@ banner{
 
   @media (max-width: 768px) {
     .container-relatorio {
-        margin-left: 90px; 
+        margin-left: -12em; 
         width: calc(100% - 90px); 
     }
 
@@ -559,6 +576,16 @@ banner{
         display: block;
         margin-bottom: 1em;
     }
+ 
+    .sidebar_cor {
+        background-color: transparent;
+    }
+    .section-validacao,.section-refeicoes, .section-compra {
+        margin-left: 2em;
+    }
+    .btn-gerar-relatorio{
+        margin-right:6.2em;
+   }
 
 }
 
@@ -623,6 +650,7 @@ textarea {
         margin-left: 90px;
         width: calc(100% - 90px);
     }
+    
 }
 /*usuarios*/
 #container-maior{
@@ -849,62 +877,62 @@ div#classificacao-container {
 
 
 /* add cardapio */
-#container-informes {
+.cardapio_adm {
     display: flex;
     justify-content: center;
     align-items: flex-start;
 }
 
-#container-informes .container {
+.cardapio_adm .container {
     width: 100%;
     max-width: 600px;
 }
 
-#container-informes h1 {
+.cardapio_adm h1 {
     text-align: center;
     margin-bottom: 20px;
 }
 
-#container-informes .form-group {
+.cardapio_adm .form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
 }
 
-#container-informes .form-group label {
+.cardapio_adm .form-group label {
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-#container-informes .form-group input,
-#container-informes .form-group select {
+.cardapio_adm .form-group input,
+.cardapio_adm .form-group select {
     width: 100%;
     padding: 8px;
     font-size: 16px;
 }
 
-#container-informes form {
+.cardapio_adm form {
     display: flex;
     flex-direction: column;
 }
 
-#container-informes form .btn {
+.cardapio_adm form .btn {
     padding: 8px 16px;
     font-size: 16px;
     border-radius: 4px;
 }
 
-#container-informes form .button-group {
+.cardapio_adm form .button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-#container-informes form .btn-success {
+.cardapio_adm form .btn-success {
     align-self: flex-end;
 }
 
-#container-informes form #cancelamento {
+.cardapio_adm form #cancelamento {
     background-color: #6c757d; /* Cinza padrão */
     color: #fff;
     border: 1px solid #6c757d;
@@ -915,17 +943,24 @@ div#classificacao-container {
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    width: 17%;
-    margin-top: -7%;
+    width: 6em;
+    margin-top: -2.5em;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 
 }
 
-#container-informes form #cancelamento:hover {
+.cardapio_adm form #cancelamento:hover {
     background-color: #5a6268; /* Cinza mais escuro para o efeito hover */
     border-color: #545b62;
     color: #fff;
 }
+@media (max-width: 768px) {
+    .cardapio_adm {
+        margin-left: 25%;
+    }
+
+}
+
 
 /* informações */
 #container-informacoes{
