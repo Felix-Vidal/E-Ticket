@@ -80,6 +80,7 @@ banner{
 #nome-aluno{
     width: 100%
 }
+
 #input-saldo,#input-matricula{
     width: 100%;
 }
@@ -244,7 +245,8 @@ banner{
     flex-direction: column; 
     justify-content: center; 
     align-items: center; 
-}
+} 
+
 #volta-geral{
     font-size: 20px; 
     width: 150px;
@@ -260,10 +262,44 @@ banner{
 .botoes-acoes{
     margin-left: -3em;
 }
+.titulo-tabela-cardapio th{
+background-color: #0C4CA4;
+color: #ffffff;
+}
+#btn-add-cardapio{
+    background-color: #0C4CA4;
+    height: 3em;
+    width: 14em;
+}
+#btn-add-cardapio i{
+    margin-top: 0.7em;
+
+}
+#container-informes-listar{
+    margin-top: 5em;
+    margin-left: 8em;
+
+}
+
 @media (max-width: 450px) {
+    .container-validacao{
+        margin-left: 2em;
+    }
+    #titulo-add-classificacao{
+        font-size: 2em;
+    }
+    #container-informes-listar{
+        margin-left: 5em;
+    
+    }
+    .voltar-calssificacao-add{
+        margin-left: -15em;
+    }
+
     .botoes-acoes{
         margin-left: 0.1em;
     }
+    
     #top{
         width: 80%; 
         margin-left:20% ;
@@ -274,7 +310,7 @@ banner{
     }
 
     #conteudo{
-        margin-left: 5%;
+        margin-left: 15%;
         
        
     }
@@ -311,7 +347,7 @@ banner{
         margin-top: 20px;
     }
     #titulo-compra{
-        margin-left:47%;
+        margin-left:0.6em;
         margin-top: 25%;
     }
     #user-compra-perfil{
@@ -389,6 +425,7 @@ banner{
         border: none
         
     }
+    
 
 
 
@@ -650,7 +687,6 @@ textarea {
         margin-left: 90px;
         width: calc(100% - 90px);
     }
-    
 }
 /*usuarios*/
 #container-maior{
@@ -870,8 +906,9 @@ div#classificacao-container {
     float: left; 
 }
 
-#container-informes-listar {
-    margin: 20px 20px 20px 270px;
+.tabela-cardapio1 {
+    margin-left: 18em;
+    
     
 }
 

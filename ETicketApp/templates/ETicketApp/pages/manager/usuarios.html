@@ -48,10 +48,10 @@
                                     </td>
                                     <td>
                                         <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary me-2">
-                                            <i class="fa-solid fa-edit"></i> Editar
+                                            <i class="fa-solid fa-edit"></i>
                                         </a>
                                         <a href="{% url 'excluir_usuario' usuario.id %}" class="btn btn-sm btn-danger">
-                                            <i class="fa-solid fa-trash"></i> Retirar cargo
+                                            <i class="fa-solid fa-trash"></i> 
                                         </a>
                                     </td>
                                 </tr>
@@ -60,12 +60,12 @@
                         </table>
                     </div>
 
-                    <div class="col-10 col-md-12 d-flex flex-column align-items-start mx-3 mb-3">
-                        <div class="d-flex flex-column flex-md-row justify-content-between w-100 mt-3 btns">
+                    <div class="col-12 d-flex justify-content-center mb-3">
+                        <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center w-100 mt-3 gap-2">
                             <a id="texto-volta" href="{% url 'relatorio' %}" class="btn btn-secondary mb-2 mb-md-0">
                                 <i class="fa-solid fa-arrow-left"></i> Voltar
-                            </a>
-                            <a id="texto-add" href="{% url 'adicionarUsuario' %}" class="btn btn-success" type="submit">Adicionar</a>
+                                <a id="texto-add" href="{% url 'adicionarUsuario' %}" class="btn btn-success"> Adicionar
+                                </a>
                         </div>
                     </div>
                 </div>
