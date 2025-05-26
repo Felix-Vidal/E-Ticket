@@ -188,9 +188,9 @@ def login(request):
         if not cpf:
             messages.error(request, 'CPF é obrigatório.')
             return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
-        if not password:
-            messages.error(request, 'Senha é obrigatória.')
-            return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
+        # if not password:
+        #     messages.error(request, 'Senha é obrigatória.')
+        #     return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
         # Consulta API externa
         headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
@@ -247,11 +247,11 @@ def login(request):
         personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
         
         if personal_data:
-            if not personal_data.usuario.check_password(password):
-                messages.error(request, 'Senha incorreta.')
-                return render(request, 'ETicketApp/pages/user/login.html', {
-                    'form': form, 'error_message': 'Senha incorreta.'
-                })
+            # if not personal_data.usuario.check_password(password):
+            #     messages.error(request, 'CPF ou Senha incorreta.')
+            #     return render(request, 'ETicketApp/pages/user/login.html', {
+            #         'form': form, 'error_message': 'CPF ou Senha incorreta.'
+            #     })
             
             # Atualiza dados do usuário existente
             usuario = personal_data.usuario
@@ -272,7 +272,7 @@ def login(request):
             # Cria novo usuário
             usuario = User.objects.create(
                 username=nome_completo,
-                password=make_password(password), # Use a senha fornecida para o novo usuário
+                # password=make_password(password), # Use a senha fornecida para o novo usuário
                 email=email,
             )
             personal_data = DadoPessoal.objects.create(
@@ -287,7 +287,7 @@ def login(request):
                 foto=foto,
                 gratuito=gratuito,
             )
-            personal_data.classificacoes.set(classifications) # Define classificações para o novo usuário
+            personal_data.classificacoes.set(classifications)
 
         # Autentica o usuário
         auth_login(request, usuario)
