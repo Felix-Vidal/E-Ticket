@@ -198,7 +198,7 @@ def login(request):
             response = requests.post(settings.UFAC_API_URL, json={"cpf": cpf}, headers=headers)
             response.raise_for_status() 
         except requests.exceptions.RequestException as e:
-            messages.error(request, f'Erro ao conectar à API externa: {e}')
+            messages.error(request, f'Erro ao conectar')
             return render(request, 'ETicketApp/pages/user/login.html', {
                 'form': form, 'error_message': 'Erro na API externa.'
             })
