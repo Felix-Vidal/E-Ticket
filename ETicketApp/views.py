@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 
@@ -24,6 +25,7 @@ from io import BytesIO
 
 from decimal import Decimal
 import random
+
 
 # Create your views here.
 # ----------- usuario final ------------
@@ -173,8 +175,6 @@ def salvar_foto(foto_base64, usuario):
     usuario.save()
 
 # Defina a URL da API externa
-UFAC_API_URL = "https://sistemas.ufac.br/api/csi/usuarios-ru/"
-BEARER_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzZWNyZXQiOiJROVlweEFMTndsRzJWbXlibTJWak4wY2dEcFhLRTMiLCJ0b2tlbiI6ImxFa2tBQTlhbTVianFwWTlzMWpLQzJOeXU1SWh5b01LTVBOS1huajFkRTNFRUNUcDQ1dmYzSmNOQ0pzQiIsInVzZXJuYW1lIjoiYWx1bm9zLXNpLWFwcC1ydSIsInBhc3N3b3JkIjoiUTlZcHhBTE53bEcyVm15Ym0yVmpOMGNnRHBYS0UzIiwiaWR1c2VyIjoiNSJ9.qZXjStlIV6g7BOiMSYg53oP4waIqkDnc63Ku10zpT3k"
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -193,9 +193,9 @@ def login(request):
         #     return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
         # Consulta API externa
-        headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
+        headers = {'Authorization': f'Bearer {settings.BEARER_TOKEN}'}
         try:
-            response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
+            response = requests.post(settings.UFAC_API_URL, json={"cpf": cpf}, headers=headers)
             response.raise_for_status() 
         except requests.exceptions.RequestException as e:
             messages.error(request, f'Erro ao conectar à API externa: {e}')
