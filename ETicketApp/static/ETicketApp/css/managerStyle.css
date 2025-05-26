@@ -549,7 +549,7 @@ color: #ffffff;
 
   .form-group {
     display: inline-block;
-    margin-right: 1em;
+    margin-right: -2em;
   }
 
   .form-group label {
@@ -807,7 +807,7 @@ div#classificacao-container {
 }
 
 #classificacao-tabela th, #classificacao-tabela td {
-    padding: 10px;
+    padding: 0;
     text-align: center;
     border: 1px solid #dddddd;
 }
@@ -911,6 +911,27 @@ div#classificacao-container {
     
     
 }
+
+/* Aplica estilo para telas pequenas */
+@media (max-width: 768px) {
+    .acoes-classificacao {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0 1rem; /* adiciona margem interna para evitar encostar nas bordas */
+        margin: 0;
+        
+        margin-left: -9em;
+    }
+
+    .acoes-classificacao a,
+    .acoes-classificacao button {
+        flex: 1;                /* os botões ocupam espaço igual */
+        max-width: 40%;         /* evita ultrapassar 100% somando com o gap */
+    }
+}
+
+
 
 
 /* add cardapio */
@@ -1016,11 +1037,13 @@ div#classificacao-container {
 
 .informes-title {
     margin-top: 5%;
+    margin-left: 20%;
     text-align: center; 
 }
 
 #form-informes {
     margin-top: 0; 
+    padding: 15%;
 }
 
 .button-group {
