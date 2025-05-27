@@ -647,24 +647,50 @@ def usuarioCompra (request):
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
 @user_passes_test(is_superuser)
-def usuarios (request):
-    usuarios = User.objects.filter(groups__isnull=False).distinct()
+def listar_usuarios_view(request):
+    base_query_set = User.objects.select_related('dadopessoal').prefetch_related('groups')
 
+    search_query = request.GET.get('q', None)
+    tipo_usuario_filter = request.GET.get('tipo_usuario', None)
 
-    # Passar os dados para o template
-    context = {
-        'usuarios': usuarios
+    if search_query:
+        users_after_text_search = base_query_set.filter(
+            Q(username__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(dadopessoal__nome_completo__icontains=search_query) | 
+            Q(dadopessoal__cpf__icontains=search_query)             
+        ).distinct()
+    else:
+        users_after_text_search = base_query_set.all()
+
+    group_map = {
+        '1': 'ADM',
+        '2': 'Colaborador',
+        '3': 'Bolsista',
     }
-    return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
-@user_passes_test(is_superuser)
-def listar_usuarios_grupo(request):
-    grupo_colaboradores = Group.objects.get(name="Colaboradores")  # Nome do grupo
-    usuarios = grupo_colaboradores.user_set.all()  # Todos os usuários no grupo
+    final_users_list = users_after_text_search
 
-    # Passar os usuários para o template
+    if tipo_usuario_filter: 
+        if tipo_usuario_filter in group_map:
+            group_name_to_filter = group_map[tipo_usuario_filter]
+            try:
+                target_group = Group.objects.get(name=group_name_to_filter)
+                final_users_list = users_after_text_search.filter(groups=target_group)
+            except Group.DoesNotExist:
+                final_users_list = users_after_text_search.none() 
+        else:
+            final_users_list = users_after_text_search.filter(groups__isnull=False).distinct()
+            
+    else: 
+        final_users_list = users_after_text_search.filter(groups__isnull=False).distinct()
+
+    final_users_list = final_users_list.order_by('username')
+
     context = {
-        'usuarios': usuarios,
+        'usuarios': final_users_list,
     }
     return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 

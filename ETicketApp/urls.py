@@ -40,7 +40,7 @@ urlpatterns = [
     path('manage/vendaUnico/', vendaUnico, name='vendaUnico'), 
     path('manage/usuarioCompra/', usuarioCompra, name='usuarioCompra'),
     
-    path('manage/usuarios/', usuarios, name='usuarios'),
+    path('manage/usuarios/', listar_usuarios_view, name='usuarios'),
     path('manage/add_papel/', add_papel_usuario, name='add_papel_usuario') ,
     path('manage/usuarios/excluir_papel/<int:id>/', excluir_papel_usuario, name='excluir_papel_usuario'),
     path('manage/usuarios/buscar_gerenciar/', buscar_selecionar_usuario, name='buscar_selecionar_usuario'),
