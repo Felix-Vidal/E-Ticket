@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 
@@ -27,6 +26,7 @@ from io import BytesIO
 from decimal import Decimal
 import random
 
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 # ----------- usuario final ------------
@@ -185,57 +185,53 @@ def login(request):
         cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
         password = form.cleaned_data['password']
 
-        # Validação de campos obrigatórios
         if not cpf:
             messages.error(request, 'CPF é obrigatório.')
             return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
-        # if not password:
-        #     messages.error(request, 'Senha é obrigatória.')
-        #     return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
-        # Consulta API externa
-        headers = {'Authorization': f'Bearer {settings.BEARER_TOKEN}'}
-        try:
-            response = requests.post(settings.UFAC_API_URL, json={"cpf": cpf}, headers=headers)
-            response.raise_for_status() 
-        except requests.exceptions.RequestException as e:
-            messages.error(request, f'Erro ao conectar')
+        # Verifica usuário local
+        personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
+        if personal_data and password:
+            if personal_data.usuario.check_password(password):
+                auth_login(request, personal_data.usuario)
+                return redirect('home')
+            else:
+                messages.error(request, 'Senha incorreta.')
+                return render(request, 'ETicketApp/pages/user/login.html', {
+                    'form': form, 'error_message': 'Senha incorreta.'
+                })
+
+        # Se não encontrar localmente, consulta API externa
+        headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
+        response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
+
+        if response.status_code != 200:
+            messages.error(request, 'Erro na API externa.')
             return render(request, 'ETicketApp/pages/user/login.html', {
                 'form': form, 'error_message': 'Erro na API externa.'
             })
-        
+
         api_data = response.json()
-        active_users_data = [data for data in api_data.get('response', []) if data.get('SITUACAO') == 'Ativo']
-
-        if not active_users_data:
-            messages.error(request, 'Nenhum usuário ativo encontrado.')
-            return render(request, 'ETicketApp/pages/user/login.html', {
-                'form': form, 'error_message': 'Nenhum usuário ativo encontrado na API.'
-            })
-
         user_data = None
         classifications = []
-        max_priority = -1
+        max_weight = -1
 
-        for data in active_users_data:
-            classification_name = data.get('CLASSIFICACAO')
-            if classification_name:
+        for data in api_data.get('response', []):
+            if data.get('SITUACAO') == 'Ativo':
+                classification_name = data.get('CLASSIFICACAO')
                 classificacao, _ = Classificacao.objects.get_or_create(nome=classification_name)
-                if classificacao.prioridade > max_priority:
+                if classificacao.prioridade > max_weight:
                     user_data = data
-                    max_priority = classificacao.prioridade
+                    max_weight = classificacao.prioridade
                     classifications = [classificacao]
-                elif classificacao.prioridade == max_priority:
-                    classifications.append(classificacao)
-
 
         if not user_data:
-            messages.error(request, 'Nenhum usuário ativo com classificação válida encontrado.')
+            messages.error(request, 'Nenhum usuário ativo encontrado.')
             return render(request, 'ETicketApp/pages/user/login.html', {
-                'form': form, 'error_message': 'Nenhum usuário ativo com classificação válida encontrado.'
+                'form': form, 'error_message': 'Nenhum usuário ativo encontrado.'
             })
 
-        # Extrai dados do usuário da API
+        # Extrai dados do usuário
         nome_completo = user_data.get('NOME')
         nome_social = user_data.get('NOME_SOCIAL')
         email = user_data.get('EMAIL')
@@ -245,16 +241,10 @@ def login(request):
         data_entrada = user_data.get('DT_ENTRADA')
         gratuito = user_data.get('GRATUIDADE') == 'S'
 
-        personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
-        
-        if personal_data:
-            # if not personal_data.usuario.check_password(password):
-            #     messages.error(request, 'CPF ou Senha incorreta.')
-            #     return render(request, 'ETicketApp/pages/user/login.html', {
-            #         'form': form, 'error_message': 'CPF ou Senha incorreta.'
-            #     })
-            
-            # Atualiza dados do usuário existente
+        # Atualiza ou cria usuário local
+        usuario = None
+        try:
+            personal_data = DadoPessoal.objects.get(cpf=cpf)
             usuario = personal_data.usuario
             usuario.email = email
             usuario.save()
@@ -266,14 +256,12 @@ def login(request):
             personal_data.unidade = unidade
             personal_data.gratuito = gratuito
             personal_data.foto = foto
-            personal_data.classificacoes.set(classifications) # Atualiza classificações
             personal_data.save()
 
-        else:
-            # Cria novo usuário
+        except DadoPessoal.DoesNotExist:
             usuario = User.objects.create(
                 username=nome_completo,
-                # password=make_password(password), # Use a senha fornecida para o novo usuário
+                password=make_password(None),
                 email=email,
             )
             personal_data = DadoPessoal.objects.create(
@@ -288,7 +276,9 @@ def login(request):
                 foto=foto,
                 gratuito=gratuito,
             )
-            personal_data.classificacoes.set(classifications)
+
+        # Define classificações (ManyToMany)
+        personal_data.classificacoes.set(classifications)
 
         # Autentica o usuário
         auth_login(request, usuario)
@@ -976,3 +966,12 @@ def deletar_informacao(request, id):
         informacao.delete()
         messages.success(request, "informacao deletado com sucesso!")
         return redirect('informacao_manage')
+    
+# @permission_required('app_label.codename a ser colocado', raise_exception=True)
+def permissoes(request):
+    groups = Group.objects.all()
+
+    context = {
+        'groups': groups,
+    }
+    return render(request, 'ETicketApp/pages/manager/permissoes.html', context)
