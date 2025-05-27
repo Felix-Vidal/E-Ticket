@@ -31,7 +31,7 @@ class CardapioForm(forms.ModelForm):
         widgets = {
             'tipo_refeicao': forms.Select(attrs={'class': 'form-control'}),
             'menu': forms.Textarea(attrs={'class': 'form-control'}),
-            'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'data': forms.DateInput(attrs={'type': 'date'},format='%Y-%m-%d'),
         }
         
 class InformacaoForm(forms.ModelForm):

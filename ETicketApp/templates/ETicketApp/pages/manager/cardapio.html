@@ -32,7 +32,7 @@
                             {% if cardapios %}
                                 {% for cardapio in cardapios %}
                                 <tr>
-                                    <td><small>{{ cardapio.data|date:"d M Y" }}</small></td>
+                                    <td><small>{{ cardapio.data|date:"d/m/Y" }}</small></td>
                                     <td><small>{{ cardapio.get_tipo_refeicao_display }}</small></td>
                                     <td class="text-break"><small>{{ cardapio.menu }}</small></td>
                                     <td>
