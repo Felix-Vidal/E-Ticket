@@ -1,0 +1,74 @@
+{% extends "global/base_manager.html" %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+<div class="container" style="margin-left: 5%;">
+    <div class="row justify-content-center" style="margin-top: 8%; margin-left: 5%;">
+        <div id="Conteudo-total" class="col-11 col-md-10"> <div class="row justify-content-center">
+                <div class="col-12 d-flex flex-column align-items-center">
+                    <h1 id="usuarios-lista">{{ page_title|default:"Buscar Usuários" }}</h1>
+
+                    <form method="GET" action="{% url 'buscar_selecionar_usuario' %}" class="col-12 mb-4">
+                        <div class="d-flex flex-column flex-md-row col-12 align-items-end mx-auto mb-3" style="max-width: 700px;">
+                            <div class="search-container flex-grow-1 me-md-3 mb-3 mb-md-0">
+                                <label for="search_query" class="form-label">Buscar por Nome, CPF ou Unidade</label>
+                                <input id="search_query" name="search_query" value="{{ search_term|default:'' }}" class="form-control" placeholder="Digite o termo de busca...">
+                            </div>
+                            <div class="col-12 col-md-auto">
+                                <button class="btn btn-primary w-100" type="submit">
+                                    <i class="fa-solid fa-search"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% if search_term and users_found_with_dados is not None %}
+                        <hr class="my-4">
+                        <h2 id="resultados-busca">Resultados da Busca</h2>
+                        {% if users_found_with_dados %}
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome Completo</th>
+                                            <th>CPF</th>
+                                            <th>Unidade</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for dp in users_found_with_dados %}
+                                        <tr>
+                                            <td>{{ dp.nome_completo|default:"N/A" }}</td>
+                                            <td>{{ dp.cpf|default:"N/A" }}</td>
+                                            <td>{{ dp.unidade|default:"N/A" }}</td>
+                                            <td>
+                                                <a href="{% url 'editar_papel_usuario' dp.usuario.id %}" class="btn btn-sm btn-info">
+                                                    <i class="fa-solid fa-user-pen"></i> Gerenciar Papel
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <p>Nenhum usuário encontrado para "<strong>{{ search_term }}</strong>".</p>
+                        {% endif %}
+                    {% elif search_term %}
+                         <p>Inicie uma busca para ver os resultados.</p>
+                    {% endif %}
+                    
+                    <div class="col-10 col-md-12 d-flex justify-content-start mx-3 mt-4">
+                         <a href="{% url 'usuarios' %}" class="btn btn-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Voltar para Lista de Usuários
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

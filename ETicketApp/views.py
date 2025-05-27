@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 
-from django.db.models import Sum
+from django.db.models import Q
 
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
+
 from django import template
 from .forms import *
 from .models import *
@@ -636,88 +637,146 @@ def usuarioCompra (request):
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
 @user_passes_test(is_superuser)
-def usuarios (request):
-    usuarios = User.objects.filter(groups__isnull=False).distinct()
+def listar_usuarios_view(request):
+    base_query_set = User.objects.select_related('dadopessoal').prefetch_related('groups')
 
+    search_query = request.GET.get('q', None)
+    tipo_usuario_filter = request.GET.get('tipo_usuario', None)
 
-    # Passar os dados para o template
+    if search_query:
+        users_after_text_search = base_query_set.filter(
+            Q(username__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(dadopessoal__nome_completo__icontains=search_query) | 
+            Q(dadopessoal__cpf__icontains=search_query)             
+        ).distinct()
+    else:
+        users_after_text_search = base_query_set.all()
+
+    group_map = {
+        '1': 'ADM',
+        '2': 'Colaborador',
+        '3': 'Bolsista',
+    }
+
+    final_users_list = users_after_text_search
+
+    if tipo_usuario_filter: 
+        if tipo_usuario_filter in group_map:
+            group_name_to_filter = group_map[tipo_usuario_filter]
+            try:
+                target_group = Group.objects.get(name=group_name_to_filter)
+                final_users_list = users_after_text_search.filter(groups=target_group)
+            except Group.DoesNotExist:
+                final_users_list = users_after_text_search.none() 
+        else:
+            final_users_list = users_after_text_search.filter(groups__isnull=False).distinct()
+            
+    else: 
+        final_users_list = users_after_text_search.filter(groups__isnull=False).distinct()
+
+    final_users_list = final_users_list.order_by('username')
+
     context = {
-        'usuarios': usuarios
+        'usuarios': final_users_list,
     }
     return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
 @user_passes_test(is_superuser)
-def listar_usuarios_grupo(request):
-    grupo_colaboradores = Group.objects.get(name="Colaboradores")  # Nome do grupo
-    usuarios = grupo_colaboradores.user_set.all()  # Todos os usuários no grupo
-
-    # Passar os usuários para o template
-    context = {
-        'usuarios': usuarios,
-    }
-    return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
-
-@user_passes_test(is_superuser)
-def add_usuario (request):
+def add_papel_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
 
 @user_passes_test(is_superuser)
-def gerenciar_usuario(request):
-    if request.method == 'POST':
-        cpf = request.POST.get('cpf')  # O nome do campo de input no template
-        papel = request.POST.get('papel')  # O ID do papel selecionado
+def buscar_selecionar_usuario(request):
+    
+    search_term = request.GET.get('search_query', '')
+    users_found_with_dados = None 
+
+    if search_term:
+        users_found_with_dados = DadoPessoal.objects.filter(
+            Q(nome_completo__icontains=search_term) |
+            Q(cpf__icontains=search_term) |         
+            Q(unidade__icontains=search_term) |
+            Q(usuario__username__icontains=search_term)
+        ).select_related('usuario').distinct()
         
-        # Mapeamento de papéis
-        papeis_dict = {
-            '1': 'ADM',
-            '2': 'Colaborador',
-            '3': 'Bolsista'
-        }
+        if not users_found_with_dados:
+            messages.info(request, 'Nenhum usuário encontrado com os critérios fornecidos.')
+            
+    print(f"Debug: search_term={search_term}, users_found_with_dados={users_found_with_dados}")
 
-        try:
-            user = User.objects.get(username=cpf)
-            print(papel, papeis_dict)
-            # Verifica se o papel é válido
-            if papel in papeis_dict:
-                # Remove o usuário de todos os grupos primeiro
-                user.groups.clear()
-
-                # Adicionar o usuário ao grupo selecionado
-                grupo = Group.objects.get(name=papeis_dict[papel])
-                print(grupo)
-                user.groups.add(grupo)
-
-                messages.success(request, f'{user.username} foi adicionado ao grupo {grupo.name} com sucesso.')
-            else:
-                messages.error(request, 'Papel inválido.')
-        
-        except User.DoesNotExist:
-            messages.error(request, 'Usuário não encontrado.')
-
-        return redirect('usuarios')  # Redireciona após a operação
+    context = {
+        'users_found_with_dados': users_found_with_dados,
+        'search_term': search_term,
+        'page_title': 'Buscar e Gerenciar Usuários'
+    }
+    # This template will display the search form and results
+    return render(request, 'ETicketApp/pages/manager/buscar_selecionar_usuario.html', context)
 
 @user_passes_test(is_superuser)
-def editar_usuario(request, id):
-    usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
-    
+def editar_papel_usuario(request, id): # Your existing view, slightly adapted
+    usuario = get_object_or_404(User, id=id)
+    try:
+        dadopessoal = usuario.dadopessoal # Access DadoPessoal via the related name
+    except DadoPessoal.DoesNotExist:
+        dadopessoal = None
+        messages.warning(request, f'Dados pessoais não encontrados para o usuário {usuario.username}.')
+
+    # Mapeamento de papéis (valores do select para nomes de Grupos)
+    papeis_map = {
+        '1': 'ADM',
+        '2': 'Colaborador',
+        '3': 'Bolsista'
+    }
+    # Para popular o select no template
+    papeis_options = [
+        {'value': '1', 'name': 'ADM'},
+        {'value': '2', 'name': 'Colaborador'},
+        {'value': '3', 'name': 'Bolsista'}
+    ]
+
+    current_group_value = None
+    if usuario.groups.exists():
+        current_user_group_name = usuario.groups.first().name
+        for p_opt in papeis_options:
+            if p_opt['name'] == current_user_group_name:
+                current_group_value = p_opt['value']
+                break
+
     if request.method == 'POST':
-        novo_grupo_id = request.POST.get('papel')  # Obtém o ID do novo grupo do form
-        grupo = get_object_or_404(Group, id=novo_grupo_id)  # Busca o grupo pelo ID
+        novo_papel_value = request.POST.get('papel') # e.g., '1', '2', '3'
         
-        # Remove o usuário de todos os grupos atuais
-        usuario.groups.clear()
+        if novo_papel_value in papeis_map:
+            nome_grupo = papeis_map[novo_papel_value]
+            try:
+                grupo = Group.objects.get(name=nome_grupo)
+                usuario.groups.clear()  # Remove de todos os grupos atuais
+                usuario.groups.add(grupo) # Adiciona ao novo grupo
+                messages.success(request, f'O papel do usuário {usuario.username} foi atualizado para {grupo.name} com sucesso!')
+            except Group.DoesNotExist:
+                messages.error(request, f'O grupo "{nome_grupo}" não existe. Verifique se os grupos ADM, Colaborador, Bolsista existem.')
+            except Exception as e:
+                messages.error(request, f'Ocorreu um erro ao atualizar o papel: {e}')
+        else:
+            messages.error(request, 'Papel inválido selecionado.')
         
-        # Adiciona o usuário ao novo grupo
-        usuario.groups.add(grupo)
-        
-        messages.success(request, 'Grupo do usuário atualizado com sucesso!')
-        return redirect('usuarios')  # Redireciona para a página de lista de usuários
-    
-    grupos = Group.objects.all()  # Busca todos os grupos disponíveis
-    return render(request, 'ETicketApp/pages/manager/add_user.html', {'usuario': usuario, 'grupos': grupos})
+        # Redirect back to the search page or a user list page
+        return redirect('buscar_selecionar_usuario') # Use the name of your search URL
+
+    context = {
+        'usuario': usuario,
+        'dadopessoal': dadopessoal,
+        'papeis_options': papeis_options,
+        'current_group_value': current_group_value,
+        'page_title': f'Editar Papel de {usuario.username}'
+    }
+    # This template will show user details and the form to assign/change role
+    return render(request, 'ETicketApp/pages/manager/definir_papel_usuario.html', context)
 
 @user_passes_test(is_superuser)
-def excluir_usuario(request, id):
+def excluir_papel_usuario(request, id):
     usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
     
     # Remove o usuário de todos os grupos

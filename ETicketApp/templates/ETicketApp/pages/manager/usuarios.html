@@ -8,64 +8,84 @@
     <div id="container-menor" class="row justify-content-center">
         <div id="Conteudo-total">
             <div class="row justify-content-center">
-                <div class="col-8 col-md-8 d-flex flex-column align-items-center">
-                    <h1 id="usuarios-lista">Usuários</h1>
-                    <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-3 mb-3">
-                        <div class="search-container">
-                            <input id="usuarios" class="form-control" placeholder="Pesquisar..">
-                            <i class="fa-solid fa-magnifying-glass"></i>
+                <div class="col-11 col-md-10 d-flex flex-column align-items-center"> 
+                    <h1 id="usuarios-lista">Usuários e Seus Papéis</h1>
+
+                
+                    <form method="GET" action="." class="col-12 mb-4"> 
+                        <div class="row align-items-end gx-2 gy-2"> 
+                            <div class="col-md-5">
+                                <label for="q_search" class="form-label">Pesquisar por Nome/CPF:</label>
+                                <input id="q_search" name="q" class="form-control" placeholder="Digite nome, CPF, username..." value="{{ request.GET.q|default:'' }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tipo_usuario_filter" class="form-label">Filtrar por Papel:</label>
+                                <select id="tipo_usuario_filter" name="tipo_usuario" class="form-select">
+                                    <option value="" {% if not request.GET.tipo_usuario %}selected{% endif %}>Todos os Papéis</option>
+                                    <option value="1" {% if request.GET.tipo_usuario == "1" %}selected{% endif %}>ADM</option>
+                                    <option value="2" {% if request.GET.tipo_usuario == "2" %}selected{% endif %}>Colaborador</option>
+                                    <option value="3" {% if request.GET.tipo_usuario == "3" %}selected{% endif %}>Bolsista</option>
+                                    <option value="SEM_GRUPO" {% if request.GET.tipo_usuario == "SEM_GRUPO" %}selected{% endif %}>Sem Papel Definido</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa-solid fa-filter"></i> Filtrar
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-4 d-flex flex-column align-items-start">
-                            <select id="selecao" class="form-select" aria-label="Default select example">
-                                <option selected>Tipo de Usuário</option>
-                                <option value="1">ADM</option>
-                                <option value="2">Colaborador</option>
-                                <option value="3">Bolsista</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="tabela-user" class="col-12 col-md-12 d-flex flex-column align-items-center">
+                    </form>
+
+                    <div id="tabela-user" class="col-12 table-responsive">
                         <table id="tabela-texto" class="table table-hover text-center">
                             <thead>
                                 <tr>
-                                    <th scope="col">Nome</th>
-                                    <th scope="col">Grupo(s)</th>
+                                    <th scope="col">Nome Completo</th>
+                                    <th scope="col">CPF</th>
+                                    <th scope="col">Papel(s) / Grupo(s)</th>
                                     <th scope="col">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for usuario in usuarios %}
+                                {% for usuario_item in usuarios %} 
                                 <tr>
                                     <td>
-                                        <!-- Acessa o nome completo diretamente através do relacionamento OneToOneField -->
-                                        {{ usuario.dadopessoal.nome_completo }}
+                                        {{ usuario_item.dadopessoal.nome_completo|default:usuario_item.get_full_name|default:"N/A" }}
                                     </td>
                                     <td>
-                                        <!-- Acessa os grupos do usuário -->
-                                        {% for grupo in usuario.groups.all %}
+                                        {{ usuario_item.dadopessoal.cpf|default:"N/A" }}
+                                    </td>
+                                    <td>
+                                        {% for grupo in usuario_item.groups.all %}
                                             {{ grupo.name }}{% if not forloop.last %}, {% endif %}
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-sm btn-primary me-2">
+                                        <a href="{% url 'editar_papel_usuario' usuario_item.id %}" class="btn btn-sm btn-primary me-1" title="Editar Papel">
                                             <i class="fa-solid fa-edit"></i>
                                         </a>
-                                        <a href="{% url 'excluir_usuario' usuario.id %}" class="btn btn-sm btn-danger">
-                                            <i class="fa-solid fa-trash"></i> 
+                                        <a href="{% url 'excluir_papel_usuario' usuario_item.id %}" class="btn btn-sm btn-danger" title="Remover Papel/Usuário">
+                                            <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Nenhum usuário encontrado com os filtros aplicados.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="col-12 d-flex justify-content-center mb-3">
-                        <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-between align-items-center w-100 mt-3 gap-2">
+                    <div class="col-12 d-flex justify-content-center mb-3 mt-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center w-100 gap-2">
                             <a id="texto-volta" href="{% url 'relatorio' %}" class="btn btn-secondary mb-2 mb-md-0">
                                 <i class="fa-solid fa-arrow-left"></i> Voltar
-                                <a id="texto-add" href="{% url 'adicionarUsuario' %}" class="btn btn-success"> Adicionar
-                                </a>
+                            </a>
+                            <a id="texto-add" href="{% url 'buscar_selecionar_usuario' %}" class="btn btn-success">
+                                <i class="fa-solid fa-user-plus"></i> Adicionar
+                            </a>
                         </div>
                     </div>
                 </div>
