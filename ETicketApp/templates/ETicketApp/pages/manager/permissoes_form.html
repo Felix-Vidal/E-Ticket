@@ -1,0 +1,30 @@
+{% extends "global/base_manager.html" %}
+{% include 'manager/pages/validar.html' %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+<div class="container">
+<div id="classificacao-container" class="container mt-4" > 
+    <body>
+        <h1>Criar Grupo de Permissões</h1>
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Criar Grupo</button>
+        </form>
+
+    </body>
+</div>
+</div>
+{% include 'ETicketApp/partials/manager/btn_informacao.html' %}
+{% endblock content %}

@@ -1,6 +1,6 @@
 from django import forms
 from .models import *
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 
 class LoginForm(forms.Form):
     cpf = forms.CharField(
@@ -42,10 +42,17 @@ class InformacaoForm(forms.ModelForm):
         fields = ['titulo', 'conteudo']
 
 class GroupForm(forms.ModelForm):
-
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label='Permissões'
+    )
     class Meta:
         model = Group
-        fields = '__all__'
+        fields = ['name', 'permissions']
+
+
 
     # bolsista so valida ticket e criar cardapio, adicionar informes
     # colaborador tem todas do bolsista + vender ticket, relatorio, gerenciar usuarios 

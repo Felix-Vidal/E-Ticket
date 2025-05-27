@@ -62,6 +62,8 @@ urlpatterns = [
     path('manage/informes/deletar/<int:id>/', deletar_informacao, name='deletar_informacao'),
     
     path('manage/permissoes/', permissoes, name='permissoes'),
-
+    path('manage/permissoes/adicionar/', adicionar_permissoes, name='adicionar_permissoes'),
+    path('manage/permissoes/editar/<int:id>/', editar_permissoes, name='editar_permissoes'),
+    path('manage/permissoes/deletar/<int:id>/', deletar_permissoes, name='deletar_permissoes'),
 
 ]

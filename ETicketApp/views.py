@@ -974,3 +974,49 @@ def permissoes(request):
         'groups': groups,
     }
     return render(request, 'ETicketApp/pages/manager/permissoes.html', context)
+
+def adicionar_permissoes(request):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cadastro Realizado com Sucesso!')
+            return redirect('permissoes') 
+        else:
+            print(request.error)
+            messages.error(request, 'Não Foi Possivel Cadastrar o Grupo de Permissões')
+    else:
+        form = GroupForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'ETicketApp/pages/manager/permissoes_form.html', context)
+
+def editar_permissoes(request, id):
+    grupo = get_object_or_404(Group, id=id)
+    if request.method == 'POST':
+        form = GroupForm(request.POST, instance=grupo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Grupo Atualizado com Sucesso!')
+            return redirect('permissoes')
+        else:
+            print(request.error())
+            messages.error(request, "Não foi possivel Editar esse Grupo!")
+    else:
+        form = GroupForm(instance=grupo)
+    context = {
+        'form': form,
+    }
+    return render(request, 'ETicketApp/pages/manager/permissoes_form.html', context)
+
+def deletar_permissoes(request, id):
+    form = get_object_or_404(Group, id=id)
+    form.delete()
+    messages.success(request, 'Grupo Deletado com Sucesso!')
+    return redirect('permissoes')
+    # context = {
+    #     'form': form,
+    # }
+    # return render(request, 'ETicketApp/pages/manager/permissoes.html', context)
