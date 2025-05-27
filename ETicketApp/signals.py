@@ -14,7 +14,7 @@ def add_permissions(sender, **kwargs):
     grant_all_permissions_to_manager()
     
     grupos_permissoes = {
-        "Bolsistas": [
+        "Bolsista": [
             ("auth", "user", ["view"]),
             ("eticketapp", "dadopessoal", ["view"]),
             ("eticketapp", "refeicao", ["add"]),
