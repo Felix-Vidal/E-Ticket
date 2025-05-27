@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 
@@ -7,6 +8,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
+
 
 from django import template
 from .forms import *
@@ -189,21 +191,20 @@ def login(request):
             messages.error(request, 'CPF é obrigatório.')
             return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
-        # Verifica usuário local
-        personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
-        if personal_data and password:
-            if personal_data.usuario.check_password(password):
-                auth_login(request, personal_data.usuario)
-                return redirect('home')
-            else:
-                messages.error(request, 'Senha incorreta.')
-                return render(request, 'ETicketApp/pages/user/login.html', {
-                    'form': form, 'error_message': 'Senha incorreta.'
-                })
+        # personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
+        # if personal_data and password:
+        #     if personal_data.usuario.check_password(password):
+        #         auth_login(request, personal_data.usuario)
+        #         return redirect('home')
+        #     else:
+        #         messages.error(request, 'Senha incorreta.')
+        #         return render(request, 'ETicketApp/pages/user/login.html', {
+        #             'form': form, 'error_message': 'Senha incorreta.'
+        #         })
 
         # Se não encontrar localmente, consulta API externa
-        headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
-        response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
+        headers = {'Authorization': f'Bearer {settings.BEARER_TOKEN}'}
+        response = requests.post(settings.UFAC_API_URL, json={"cpf": cpf}, headers=headers)
 
         if response.status_code != 200:
             messages.error(request, 'Erro na API externa.')
