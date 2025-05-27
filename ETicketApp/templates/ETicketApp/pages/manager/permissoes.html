@@ -1,0 +1,41 @@
+{% extends "global/base_manager.html" %}
+{% include 'manager/pages/validar.html' %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+ 
+<div class="container">
+<div id="classificacao-container" class="container mt-4" > 
+    <div class="table-responsive">
+        <table id="classificacao-tabela" class="table table-bordered table-hover text-center table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for perm in groups %}
+                <tr>
+                    <td>{{ perm.id }}</td>
+                    <td>{{ perm.name }}</td>
+                    <td class="d-flex justify-content-center">
+                        {% comment %}
+                        <a href="{% url 'classificacao_edit' classificacao.id %}" class="btn btn-sm btn-primary btn-sm mx-1"><i class="fa-solid fa-edit"></i></a>
+                        <form action="{% url 'classificacao_delete' classificacao.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Tem certeza que deseja excluir esta classificação?');"> <i class="fa-solid fa-trash"></i></button>
+                        </form>
+                        {% endcomment %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{% include 'ETicketApp/partials/manager/btn_informacao.html' %}
+{% endblock content %}

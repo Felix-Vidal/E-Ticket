@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from django.contrib.auth.models import Group
 
 class LoginForm(forms.Form):
     cpf = forms.CharField(
@@ -11,6 +12,7 @@ class LoginForm(forms.Form):
         })
     )
     password = forms.CharField(label="Senha", widget=forms.PasswordInput())
+
 class ClassificacaoForm(forms.ModelForm):
     class Meta:
         model = Classificacao
@@ -22,8 +24,8 @@ class ClassificacaoForm(forms.ModelForm):
             'valor_jantar': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Valor Jantar'}),
             'limite_credito': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'limite_credito'}),
             'prioridade': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Prioridade'}),
-        }
-        
+        }        
+
 class CardapioForm(forms.ModelForm):
     class Meta:
         model = Cardapio
@@ -32,9 +34,19 @@ class CardapioForm(forms.ModelForm):
             'tipo_refeicao': forms.Select(attrs={'class': 'form-control'}),
             'menu': forms.Textarea(attrs={'class': 'form-control'}),
             'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-        }
-        
+        }      
+
 class InformacaoForm(forms.ModelForm):
     class Meta:
         model = Informacao
         fields = ['titulo', 'conteudo']
+
+class GroupForm(forms.ModelForm):
+
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+    # bolsista so valida ticket e criar cardapio, adicionar informes
+    # colaborador tem todas do bolsista + vender ticket, relatorio, gerenciar usuarios 
+    # adm faz tudo
