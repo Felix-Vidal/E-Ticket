@@ -370,7 +370,7 @@ def validar (request):
 def mostrar_usuario(request):  
     if request.method == 'POST':
         codigo = request.POST.get('matricula')  # Pode ser matrícula (numérica) ou código do ticket (UUID)
-
+        
         # Verifica se o código é numérico para tentar buscar DadoPessoal
         if codigo.isdigit():
             try:
@@ -382,19 +382,20 @@ def mostrar_usuario(request):
         else:
             dados_pessoais = None
             
-        classificacao = dados_pessoais.classificacoes.order_by('prioridade').first()
-        # Identifica o tipo de refeição com base no horário atual
-        current_hour = datetime.now().hour
-        if 6 <= current_hour < 10:
-            tipo_refeicao = "CAFE_DA_MANHA"
-            valor = classificacao.valor_cafe_manha
-        elif 10 <= current_hour < 17:
-            tipo_refeicao = "ALMOCO"
-            valor = classificacao.valor_almoco
-        elif 17 <= current_hour < 19:
-            tipo_refeicao = "JANTAR"
-            valor = classificacao.valor_jantar
-        nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
+        if dados_pessoais:    
+            classificacao = dados_pessoais.classificacoes.order_by('prioridade').first()
+            # Identifica o tipo de refeição com base no horário atual
+            current_hour = datetime.now().hour
+            if 6 <= current_hour < 10:
+                tipo_refeicao = "CAFE_DA_MANHA"
+                valor = classificacao.valor_cafe_manha
+            elif 10 <= current_hour < 17:
+                tipo_refeicao = "ALMOCO"
+                valor = classificacao.valor_almoco
+            elif 17 <= current_hour < 19:
+                tipo_refeicao = "JANTAR"
+                valor = classificacao.valor_jantar
+            nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
     
 
         # Se dados_pessoais não existe, tenta buscar como TicketUnico
