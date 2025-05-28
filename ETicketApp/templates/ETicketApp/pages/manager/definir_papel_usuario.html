@@ -27,8 +27,8 @@
                         <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-auto mb-3 justify-content-center" style="max-width: 500px;">
                             <div class="col-12 d-flex flex-column align-items-start">
                                 <label for="papel" class="form-label">Papel</label>
-                                <select id="selecao" name="papel" class="form-select" aria-label="Selecione o papel do usuário" required>
-                                    <option value="" disabled {% if not current_group_value %}selected{% endif %}>Selecione um Tipo de Usuário</option>
+                                <select id="selecao" name="papel" class="form-select" aria-label="Default select example" required>
+                                    <option value="" {% if not current_group_value %}selected{% endif %}>-- Nenhum Papel / Remover Papel --</option> {# Opção para remover de grupos #}
                                     {% for papel_opt in papeis_options %}
                                         <option value="{{ papel_opt.value }}" {% if papel_opt.value == current_group_value %}selected{% endif %}>
                                             {{ papel_opt.name }}

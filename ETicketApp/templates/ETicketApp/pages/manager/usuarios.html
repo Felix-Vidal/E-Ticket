@@ -21,13 +21,17 @@
                             <div class="col-md-4">
                                 <label for="tipo_usuario_filter" class="form-label">Filtrar por Papel:</label>
                                 <select id="tipo_usuario_filter" name="tipo_usuario" class="form-select">
-                                    <option value="" {% if not request.GET.tipo_usuario %}selected{% endif %}>Todos os Papéis</option>
-                                    <option value="1" {% if request.GET.tipo_usuario == "1" %}selected{% endif %}>ADM</option>
-                                    <option value="2" {% if request.GET.tipo_usuario == "2" %}selected{% endif %}>Colaborador</option>
-                                    <option value="3" {% if request.GET.tipo_usuario == "3" %}selected{% endif %}>Bolsista</option>
-                                    <option value="SEM_GRUPO" {% if request.GET.tipo_usuario == "SEM_GRUPO" %}selected{% endif %}>Sem Papel Definido</option>
+                                    <option value="" {% if not request.GET.tipo_usuario %}selected{% endif %}>
+                                        Todos os Papéis (com papel)
+                                    </option>
+                                    {% for grupo_opt in todos_os_grupos_para_filtro %}
+                                        <option value="{{ grupo_opt.id }}" {% if request.GET.tipo_usuario == grupo_opt.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ grupo_opt.name }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                             </div>
+
                             <div class="col-md-3 d-flex align-items-end">
                                 <button type="submit" class="btn btn-primary w-100">
                                     <i class="fa-solid fa-filter"></i> Filtrar
