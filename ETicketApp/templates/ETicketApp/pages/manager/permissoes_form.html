@@ -19,31 +19,33 @@
       {% endif %}
   
       <form method="post" id="permissoes-form">
-        {% csrf_token %}
-        <div class="permissoes-field">
-          {{ form.name.label_tag }} {{ form.name }}
-        </div>
-  
-        <div class="permissoes-group-title"></div>
-  
-        {% regroup form.permissions by choice_label|cut:" |"|cut:"Can"|cut:"add"|cut:"change"|cut:"delete"|cut:"view"|cut:" " as permissoes_grouped %}
-  
-        {% for group in permissoes_grouped %}
-          <div class="permissoes-bloco">
-            <div class="permissoes-bloco-titulo">
-              {{ group.grouper|capfirst }}
-            </div>
-            {% for checkbox in group.list %}
-              <label class="permissoes-checkbox">
-                {{ checkbox.tag }} {{ checkbox.choice_label }}
-              </label>
-            {% endfor %}
+          {% csrf_token %}
+          <div class="permissoes-field">
+              {{ form.name.label_tag }} {{ form.name }}
           </div>
-        {% endfor %}
-  
-        <div class="permissoes-actions">
-          <button type="submit" class="permissoes-button">Criar Grupo</button>
-        </div>
+          <br>
+
+          {# Agrupa a lista processada pela 'chave_agrupamento' que definimos na view #}
+          {% regroup permissions_processadas by chave_agrupamento as permissoes_agrupadas %}
+
+          {% for grupo in permissoes_agrupadas %}
+          <div class="permissoes-bloco">
+              <div class="permissoes-bloco-titulo">
+                  {# 'grupo.grouper' será a 'chave_agrupamento' (ex: "user"), |title capitaliza para "User" ou "Blog Post" #}
+                  {{ grupo.grouper|title }} 
+              </div>
+              {% for item_permissao in grupo.list %} {# item_permissao é um dos dicionários da lista 'permissions_processadas' #}
+              <label class="permissoes-checkbox" for="{{ item_permissao.widget.id_for_label }}">
+                  {{ item_permissao.widget.tag }} {# Renderiza o <input type="checkbox"...> #}
+                  {{ item_permissao.label_original }} {# Exibe o label completo da permissão #}
+              </label>
+              {% endfor %}
+          </div>
+          {% endfor %}
+
+          <div class="permissoes-actions">
+              <button type="submit" class="permissoes-button">Criar Grupo</button>
+          </div>
       </form>
     </div>
   </div>

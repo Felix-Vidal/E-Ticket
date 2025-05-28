@@ -616,7 +616,6 @@ def usuarioCompra (request):
                     if classificacao_prioritaria:
                         limite_credito = classificacao_prioritaria.limite_credito
                         
-                        # Verifica se a adição do valor ultrapassa o limite de crédito
                         if personal_data.credito + valor_decimal > limite_credito:
                             messages.error(request, f"O limite de crédito de R${limite_credito} será excedido.")
                             return redirect('vender')
@@ -624,17 +623,17 @@ def usuarioCompra (request):
                     personal_data.credito += valor_decimal
                     personal_data.save()
                     
-                                    # Cria o registro de crédito
+                
                     Credito.objects.create(
                         usuario=request.user,
                         valor=valor_decimal,
                         metodo_pagamento=metodo_pagamento
                     )
-                    messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
-                    return redirect('vender')  # Redireciona para a página inicial
+                    messages.success(request, 'Crédito aumentado com sucesso!') 
+                    return redirect('vender')  
                 except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
-                    messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  # Mensagem de erro
-                    return redirect('vender')  # Volta para a mesma página
+                    messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  
+                    return redirect('vender') 
             
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
@@ -961,10 +960,43 @@ def deletar_informacao(request, id):
         messages.success(request, "informacao deletado com sucesso!")
         return redirect('informacao_manage')
     
-# @permission_required('app_label.codename a ser colocado', raise_exception=True)
+def _preprocessar_permissoes_para_template(form_group):
+    """
+    Prepara as permissões do formulário para serem agrupadas corretamente no template.
+    """
+    permissions_para_template = []
+    if 'permissions' in form_group.fields and hasattr(form_group['permissions'], '__iter__'):
+        for bound_widget_choice in form_group['permissions']:
+            choice_label_original = bound_widget_choice.choice_label
+            chave_de_agrupamento = ""
+            partes = str(choice_label_original).split(' | ')
+
+            if len(partes) == 3:  # Formato: "app_label | model_name | permission_name"
+                chave_de_agrupamento = partes[1].strip()  # Pega "model_name"
+            elif len(partes) == 1: # Formato: "Can add User Profile"
+                label_apenas = partes[0].strip()
+                prefixos_acao = ["Can add ", "Can change ", "Can delete ", "Can view "]
+                nome_objeto = label_apenas
+                # Tenta remover prefixos (case-insensitive)
+                for prefixo in prefixos_acao:
+                    if nome_objeto.lower().startswith(prefixo.lower()):
+                        nome_objeto = nome_objeto[len(prefixo):]
+                        break
+                chave_de_agrupamento = nome_objeto.strip()
+            else: # Fallback
+                chave_de_agrupamento = partes[0].strip() if partes else choice_label_original
+            
+            permissions_para_template.append({
+                'widget': bound_widget_choice,
+                'label_original': choice_label_original,
+                'chave_agrupamento': chave_de_agrupamento.lower(), # Usar minúsculas para agrupar, |title no template
+            })
+    return permissions_para_template
+
+
+
 def permissoes(request):
     groups = Group.objects.all()
-
     context = {
         'groups': groups,
     }
@@ -975,16 +1007,19 @@ def adicionar_permissoes(request):
         form = GroupForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Cadastro Realizado com Sucesso!')
+            messages.success(request, 'Grupo de Permissões Cadastrado com Sucesso!')
             return redirect('permissoes') 
         else:
-            print(request.error)
-            messages.error(request, 'Não Foi Possivel Cadastrar o Grupo de Permissões')
+
+            messages.error(request, 'Não Foi Possível Cadastrar o Grupo de Permissões. Verifique os erros abaixo.')
+            permissions_processadas = _preprocessar_permissoes_para_template(form)
     else:
         form = GroupForm()
+        permissions_processadas = _preprocessar_permissoes_para_template(form)
 
     context = {
         'form': form,
+        'permissions_processadas': permissions_processadas, 
     }
     return render(request, 'ETicketApp/pages/manager/permissoes_form.html', context)
 
@@ -994,24 +1029,26 @@ def editar_permissoes(request, id):
         form = GroupForm(request.POST, instance=grupo)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Grupo Atualizado com Sucesso!')
+            messages.success(request, 'Grupo de Permissões Atualizado com Sucesso!')
             return redirect('permissoes')
         else:
-            print(request.error())
-            messages.error(request, "Não foi possivel Editar esse Grupo!")
+            # print(form.errors) # Para debug
+            messages.error(request, "Não foi possível Editar esse Grupo. Verifique os erros abaixo.")
+            # Se o formulário for inválido, precisamos reprocessar as permissões para exibição
+            permissions_processadas = _preprocessar_permissoes_para_template(form)
     else:
         form = GroupForm(instance=grupo)
+        permissions_processadas = _preprocessar_permissoes_para_template(form)
+        
     context = {
         'form': form,
+        'grupo': grupo, # Pode ser útil ter o objeto grupo no contexto também
+        'permissions_processadas': permissions_processadas, # Adicionado ao contexto
     }
     return render(request, 'ETicketApp/pages/manager/permissoes_form.html', context)
 
 def deletar_permissoes(request, id):
-    form = get_object_or_404(Group, id=id)
-    form.delete()
+    grupo_para_deletar = get_object_or_404(Group, id=id)
+    grupo_para_deletar.delete()
     messages.success(request, 'Grupo Deletado com Sucesso!')
     return redirect('permissoes')
-    # context = {
-    #     'form': form,
-    # }
-    # return render(request, 'ETicketApp/pages/manager/permissoes.html', context)
