@@ -912,13 +912,13 @@ div#classificacao-container {
     
 }
 
-/* Aplica estilo para telas pequenas */
+
 @media (max-width: 768px) {
     .acoes-classificacao {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        padding: 0 1rem; /* adiciona margem interna para evitar encostar nas bordas */
+        padding: 0 1rem; 
         margin: 0;
         
         margin-left: -9em;
@@ -926,12 +926,117 @@ div#classificacao-container {
 
     .acoes-classificacao a,
     .acoes-classificacao button {
-        flex: 1;                /* os botões ocupam espaço igual */
-        max-width: 40%;         /* evita ultrapassar 100% somando com o gap */
+        flex: 1;                
+        max-width: 40%;         
     }
 }
 
+/* Permissões */
+#permissoes-lista {
+    margin: 5% 30%;
+}
 
+#permissoes-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    margin-left: 15em;
+  }
+  
+  #permissoes-title {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  #permissoes-form p {
+    background-color: #f3f9ff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid #dce7f3;
+    transition: 0.3s;
+  }
+  
+  #permissoes-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  #permissoes-form input[type="text"],
+  #permissoes-form input[type="number"],
+  #permissoes-form input[type="email"],
+  #permissoes-form input[type="password"],
+  #permissoes-form select,
+  #permissoes-form textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  
+  .permissoes-actions {
+    text-align: right;
+    margin-top: 1.5rem;
+  }
+  
+  .permissoes-button {
+    background-color: #1a73e8;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .permissoes-button:hover {
+    background-color: #1666c1;
+  }
+  
+  #permissoes-messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .permissoes-message {
+    background-color: #ffdddd;
+    color: #a33;
+    padding: 0.7rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+
+  .permissoes-bloco {
+    background-color: #f9fbfe;
+    border: 1px solid #dce7f3;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .permissoes-bloco-titulo {
+    font-weight: bold;
+    color: #1a73e8;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid #dce7f3;
+    padding-bottom: 0.3rem;
+  }
+  
+  .permissoes-checkbox {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
 
 
 /* add cardapio */
