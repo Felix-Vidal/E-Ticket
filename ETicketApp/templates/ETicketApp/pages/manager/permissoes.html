@@ -26,13 +26,19 @@
                     <td>{{ perm.id }}</td>
                     <td>{{ perm.name }}</td>
                     <td class="d-flex justify-content-center">
+                        {% if perm.id > 1 %}
                         <a href="{% url 'editar_permissoes' perm.id %}" class="btn btn-sm btn-primary btn-sm mx-1"><i class="fa-solid fa-edit"></i></a>
+                        {% endif %}
                         {% comment %}
                         {% endcomment %}
+                        {% comment  %}
+                        {% endcomment %}
+                        {% if perm.id > 3 %}
                         <form action="{% url 'deletar_permissoes' perm.id %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Tem certeza que deseja excluir este Grupo?');"> <i class="fa-solid fa-trash"></i></button>
                         </form>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

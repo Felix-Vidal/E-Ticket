@@ -11,26 +11,35 @@
                     <i class="fa-solid fa-house"></i>
                     <span class="nav_name">Inicio</span>
                 </a>
-
+                {% comment  %}
+                {% if perms.ETicketApp.view_relatorio %} 
                 <a href="{% url 'relatorio' %}" id="laws" class="nav_link" routerLinkActive="active">
                     <i class="fa-regular fa-folder"></i>
                     <span class="nav_name">Relatório</span>
                 </a>
-
+                {% endif %}
+                {% endcomment %}
+                
+                {% if perms.auth.view_user %} 
                 <a href="{% url 'usuarios' %}" id="users" class="nav_link" routerLinkActive="active">
                     <i class="fa-solid fa-users"></i>
                     <span class="nav_name">Usuários</span>
                 </a>
+                {% endif %}
 
+                {% if perms.ETicketApp.view_classificacao %} 
                 <a href="{% url 'classificacao' %}" id="users" class="nav_link" routerLinkActive="active">
                     <i class="fa-solid fa-tags"></i>
                     <span class="nav_name">Classificação</span>
                 </a>
-
+                {% endif %}                
+                
+                {% if perms.auth.view_permition and perms.auth.view_group %} 
                 <a href="{% url 'permissoes' %}" id="users" class="nav_link" routerLinkActive="active">
                     <i class="fa-solid fa-shield-halved"></i>
                     <span class="nav_name">Permissões</span>
                 </a>
+                {% endif %}
 
                 <a href="{% url 'home' %}" id="users" class="nav_link" routerLinkActive="active">
                     <i class="fa-solid fa-circle-arrow-left"></i>

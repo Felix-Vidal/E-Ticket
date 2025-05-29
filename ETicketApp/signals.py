@@ -28,8 +28,8 @@ def add_permissions(sender, **kwargs):
             ("eticketapp", "refeicao", ["add"]),
             ("eticketapp", "cardapio", ["add", "change", "delete", "view"]),
             ("eticketapp", "credito", ["view","change"]), 
-            ("eticketapp", "classificação", ["add", "change", "delete", "view"]), 
-            ("eticketapp", "ticketunico", ["add"]), 
+            ("eticketapp", "classificação", ["add", "change", "view"]), 
+            ("eticketapp", "ticketunico", ["view","add"]), 
         ],
     }
 
