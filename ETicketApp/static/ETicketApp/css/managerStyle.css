@@ -60,6 +60,8 @@ banner{
     border-radius: 0 2.8125em 2.8125em 0;
 }
 
+
+
 /*Validar Usuário*/
 
 #container-chefe{
@@ -78,6 +80,7 @@ banner{
 #nome-aluno{
     width: 100%
 }
+
 #input-saldo,#input-matricula{
     width: 100%;
 }
@@ -106,8 +109,9 @@ banner{
 
 }
 
-#form-venda{
+#form-venda-unico{
     margin-top:4%;
+    margin-left: 5em;
 
 }
 #input-email, #select-unico,#select-pagamento, #cafee,#jantar-label,#almoco-label,#refeicao-label{
@@ -117,6 +121,8 @@ banner{
 #titulo-gera{
     margin-bottom: 40px;
     text-align: center;
+    margin-top: 0.8em;
+    margin-left: 5em;
 }
 #select-unico,#select-pagamento{
     background-color: #e4f2f7;
@@ -239,7 +245,8 @@ banner{
     flex-direction: column; 
     justify-content: center; 
     align-items: center; 
-}
+} 
+
 #volta-geral{
     font-size: 20px; 
     width: 150px;
@@ -252,7 +259,47 @@ banner{
 #top{
     margin-top: 5%; 
 }
-@media (max-width: 450em) {
+.botoes-acoes{
+    margin-left: -3em;
+}
+.titulo-tabela-cardapio th{
+background-color: #0C4CA4;
+color: #ffffff;
+}
+#btn-add-cardapio{
+    background-color: #0C4CA4;
+    height: 3em;
+    width: 14em;
+}
+#btn-add-cardapio i{
+    margin-top: 0.7em;
+
+}
+#container-informes-listar{
+    margin-top: 5em;
+    margin-left: 8em;
+
+}
+
+@media (max-width: 450px) {
+    .container-validacao{
+        margin-left: 2em;
+    }
+    #titulo-add-classificacao{
+        font-size: 2em;
+    }
+    #container-informes-listar{
+        margin-left: 5em;
+    
+    }
+    .voltar-calssificacao-add{
+        margin-left: -15em;
+    }
+
+    .botoes-acoes{
+        margin-left: 0.1em;
+    }
+    
     #top{
         width: 80%; 
         margin-left:20% ;
@@ -263,15 +310,22 @@ banner{
     }
 
     #conteudo{
-        margin-left: 5%;
+        margin-left: 15%;
         
        
     }
-    #form-venda{
-        width: 65%;
-        margin-left: 15%;
+    .form-vendas{
+        width: 17em;
+        margin-left: 16%;
+       
     
     }
+    #titulo-gera{
+        margin-left: 0.1em;
+        margin-top: 2em;
+    }
+ 
+  
     #volta{
         width: 120px;
         font-size: 15px;
@@ -293,7 +347,7 @@ banner{
         margin-top: 20px;
     }
     #titulo-compra{
-        margin-left:47%;
+        margin-left:0.6em;
         margin-top: 25%;
     }
     #user-compra-perfil{
@@ -371,6 +425,7 @@ banner{
         border: none
         
     }
+    
 
 
 
@@ -457,8 +512,9 @@ banner{
         margin-left: 10px;
     }
 
-    #container-informes {
-        margin-left: 100px;
+   .cardapio_adm {
+        margin-left: 5%;
+
     }
 }
 
@@ -475,7 +531,7 @@ banner{
     flex-grow: 1; 
 }
 
-.sidebar {
+.sidebar_cor {
     width: 250px; 
     flex-shrink: 0; 
     background-color: #f0f4ff; 
@@ -493,7 +549,7 @@ banner{
 
   .form-group {
     display: inline-block;
-    margin-right: 1em;
+    margin-right: -2em;
   }
 
   .form-group label {
@@ -549,7 +605,7 @@ banner{
 
   @media (max-width: 768px) {
     .container-relatorio {
-        margin-left: 90px; 
+        margin-left: -12em; 
         width: calc(100% - 90px); 
     }
 
@@ -557,6 +613,16 @@ banner{
         display: block;
         margin-bottom: 1em;
     }
+ 
+    .sidebar_cor {
+        background-color: transparent;
+    }
+    .section-validacao,.section-refeicoes, .section-compra {
+        margin-left: 2em;
+    }
+    .btn-gerar-relatorio{
+        margin-right:6.2em;
+   }
 
 }
 
@@ -707,7 +773,7 @@ textarea {
  
 /* classificação */
 div#classificacao-container {
-    max-width: 900px;
+    max-width: 70em;
     margin-left: 15%;
     margin-right: 5%;
     margin-top: 3%;
@@ -741,7 +807,7 @@ div#classificacao-container {
 }
 
 #classificacao-tabela th, #classificacao-tabela td {
-    padding: 10px;
+    padding: 0;
     text-align: center;
     border: 1px solid #dddddd;
 }
@@ -753,6 +819,20 @@ div#classificacao-container {
 
 #classificacao-tabela tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+#form-classificacao div.form-group{
+    margin: 1em 3em;
+}
+
+#form-classificacao div.div-f a{
+    min-width: 8em;
+    margin-left: 9.5em;
+}
+
+#form-classificacao div.div-f button{
+    min-width: 8em;
+    margin-right: 9.5em;
 }
 
 .classificacao-acao-button {
@@ -826,69 +906,196 @@ div#classificacao-container {
     float: left; 
 }
 
-#container-informes-listar {
-    margin: 20px 20px 20px 270px;
+.tabela-cardapio1 {
+    margin-left: 18em;
+    
     
 }
 
 
+@media (max-width: 768px) {
+    .acoes-classificacao {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0 1rem; 
+        margin: 0;
+        
+        margin-left: -9em;
+    }
+
+    .acoes-classificacao a,
+    .acoes-classificacao button {
+        flex: 1;                
+        max-width: 40%;         
+    }
+}
+
+/* Permissões */
+#permissoes-lista {
+    margin: 5% 30%;
+}
+
+#permissoes-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    margin-left: 15em;
+  }
+  
+  #permissoes-title {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  #permissoes-form p {
+    background-color: #f3f9ff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid #dce7f3;
+    transition: 0.3s;
+  }
+  
+  #permissoes-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  #permissoes-form input[type="text"],
+  #permissoes-form input[type="number"],
+  #permissoes-form input[type="email"],
+  #permissoes-form input[type="password"],
+  #permissoes-form select,
+  #permissoes-form textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }
+  
+  .permissoes-actions {
+    text-align: right;
+    margin-top: 1.5rem;
+  }
+  
+  .permissoes-button {
+    background-color: #1a73e8;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .permissoes-button:hover {
+    background-color: #1666c1;
+  }
+  
+  #permissoes-messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .permissoes-message {
+    background-color: #ffdddd;
+    color: #a33;
+    padding: 0.7rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+
+  .permissoes-bloco {
+    background-color: #f9fbfe;
+    border: 1px solid #dce7f3;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .permissoes-bloco-titulo {
+    font-weight: bold;
+    color: #1a73e8;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid #dce7f3;
+    padding-bottom: 0.3rem;
+  }
+  
+  .permissoes-checkbox {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+
+
 /* add cardapio */
-#container-informes {
+.cardapio_adm {
     display: flex;
     justify-content: center;
     align-items: flex-start;
 }
 
-#container-informes .container {
+.cardapio_adm .container {
     width: 100%;
     max-width: 600px;
 }
 
-#container-informes h1 {
+.cardapio_adm h1 {
     text-align: center;
     margin-bottom: 20px;
 }
 
-#container-informes .form-group {
+.cardapio_adm .form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
 }
 
-#container-informes .form-group label {
+.cardapio_adm .form-group label {
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-#container-informes .form-group input,
-#container-informes .form-group select {
+.cardapio_adm .form-group input,
+.cardapio_adm .form-group select {
     width: 100%;
     padding: 8px;
     font-size: 16px;
 }
 
-#container-informes form {
+.cardapio_adm form {
     display: flex;
     flex-direction: column;
 }
 
-#container-informes form .btn {
+.cardapio_adm form .btn {
     padding: 8px 16px;
     font-size: 16px;
     border-radius: 4px;
 }
 
-#container-informes form .button-group {
+.cardapio_adm form .button-group {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-#container-informes form .btn-success {
+.cardapio_adm form .btn-success {
     align-self: flex-end;
 }
 
-#container-informes form #cancelamento {
+.cardapio_adm form #cancelamento {
     background-color: #6c757d; /* Cinza padrão */
     color: #fff;
     border: 1px solid #6c757d;
@@ -899,21 +1106,32 @@ div#classificacao-container {
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    width: 17%;
-    margin-top: -7%;
+    width: 6em;
+    margin-top: -2.5em;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 
 }
 
-#container-informes form #cancelamento:hover {
+.cardapio_adm form #cancelamento:hover {
     background-color: #5a6268; /* Cinza mais escuro para o efeito hover */
     border-color: #545b62;
     color: #fff;
 }
+@media (max-width: 768px) {
+    .cardapio_adm {
+        margin-left: 25%;
+    }
+
+}
+
 
 /* informações */
 #container-informacoes{
     margin-left: 25%;
+}
+
+#classificacao-tabela{
+    min-width: 60em;
 }
 
 /* informacoes-form */
@@ -924,11 +1142,13 @@ div#classificacao-container {
 
 .informes-title {
     margin-top: 5%;
+    margin-left: 20%;
     text-align: center; 
 }
 
 #form-informes {
     margin-top: 0; 
+    padding: 15%;
 }
 
 .button-group {

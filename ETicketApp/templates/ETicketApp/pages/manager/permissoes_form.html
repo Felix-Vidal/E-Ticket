@@ -1,0 +1,55 @@
+{% extends "global/base_manager.html" %}
+{% include 'manager/pages/validar.html' %}
+
+{% block content %}
+{% include 'ETicketApp/partials/manager/sideBar.html' %}
+{% include 'ETicketApp/partials/manager/alerta.html' %}
+
+
+<div class="container">
+    <div id="permissoes-container" class="permissoes-box">
+      <h1 id="permissoes-title">Criar Grupo de Permissões</h1>
+  
+      {% if messages %}
+        <ul id="permissoes-messages">
+          {% for message in messages %}
+            <li class="permissoes-message">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+  
+      <form method="post" id="permissoes-form">
+          {% csrf_token %}
+          <div class="permissoes-field">
+              {{ form.name.label_tag }} {{ form.name }}
+          </div>
+          <br>
+
+          {# Agrupa a lista processada pela 'chave_agrupamento' que definimos na view #}
+          {% regroup permissions_processadas by chave_agrupamento as permissoes_agrupadas %}
+
+          {% for grupo in permissoes_agrupadas %}
+          <div class="permissoes-bloco">
+              <div class="permissoes-bloco-titulo">
+                  {# 'grupo.grouper' será a 'chave_agrupamento' (ex: "user"), |title capitaliza para "User" ou "Blog Post" #}
+                  {{ grupo.grouper|title }} 
+              </div>
+              {% for item_permissao in grupo.list %} {# item_permissao é um dos dicionários da lista 'permissions_processadas' #}
+              <label class="permissoes-checkbox" for="{{ item_permissao.widget.id_for_label }}">
+                  {{ item_permissao.widget.tag }} {# Renderiza o <input type="checkbox"...> #}
+                  {{ item_permissao.label_original }} {# Exibe o label completo da permissão #}
+              </label>
+              {% endfor %}
+          </div>
+          {% endfor %}
+
+          <div class="permissoes-actions">
+              <button type="submit" class="permissoes-button">Criar Grupo</button>
+          </div>
+      </form>
+    </div>
+  </div>
+  
+{% include 'ETicketApp/partials/manager/btn_informacao.html' %}
+{% endblock content %}
+

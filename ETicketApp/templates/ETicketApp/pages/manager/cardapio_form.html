@@ -3,11 +3,10 @@
 {% block content %}
 {% include 'ETicketApp/partials/manager/sideBar.html' %}
 {% include 'ETicketApp/partials/manager/alerta.html' %}
-<div id="container-informes">
+<div class="cardapio_adm">
     <div class="container mt-5">
         <h1>{% if form.instance.pk %}Editar Cardápio{% else %}Adicionar Cardápio{% endif %}</h1>
         
-        <!-- Formulário para Adicionar ou Editar Cardápio -->
         <form method="POST">
             {% csrf_token %}
             <div class="form-group">
@@ -21,7 +20,7 @@
             </div>
 
             <div class="form-group">
-                <label for="data">Data</label>
+                <label for="{{ data }}">Data</label> {# Boa prática usar id_for_label #}
                 {{ form.data }}
             </div>
 

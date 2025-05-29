@@ -30,8 +30,8 @@
                     <h6>Método de Pagamento: {{ credito.get_metodo_pagamento_display }}</h6>
                 </th>
                 <td>
-                    <h6>{{ credito.data|date:"d M" }}</h6>
-                    <h6>{{ credito.hora|time:"H:i" }}</h6>
+                    <h6>Data: {{ credito.data|date:"d/m/Y" }}</h6>
+                    <h6>Hora: {{ credito.hora|time:"H:i" }}</h6>
                 </td>
             </tr>
             {% empty %}

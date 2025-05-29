@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 
-from django.db.models import Sum
+from django.db.models import Q
 
 from django.contrib.auth.decorators import user_passes_test, login_required 
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User, Group
+
+
 from django import template
 from .forms import *
 from .models import *
@@ -24,6 +27,8 @@ from io import BytesIO
 
 from decimal import Decimal
 import random
+
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 # ----------- usuario final ------------
@@ -173,117 +178,115 @@ def salvar_foto(foto_base64, usuario):
     usuario.save()
 
 # Defina a URL da API externa
-UFAC_API_URL = "https://sistemas.ufac.br/api/csi/usuarios-ru/"
-BEARER_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzZWNyZXQiOiJROVlweEFMTndsRzJWbXlibTJWak4wY2dEcFhLRTMiLCJ0b2tlbiI6ImxFa2tBQTlhbTVianFwWTlzMWpLQzJOeXU1SWh5b01LTVBOS1huajFkRTNFRUNUcDQ1dmYzSmNOQ0pzQiIsInVzZXJuYW1lIjoiYWx1bm9zLXNpLWFwcC1ydSIsInBhc3N3b3JkIjoiUTlZcHhBTE53bEcyVm15Ym0yVmpOMGNnRHBYS0UzIiwiaWR1c2VyIjoiNSJ9.qZXjStlIV6g7BOiMSYg53oP4waIqkDnc63Ku10zpT3k"
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        if form.is_valid():
-            cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
-            password = form.cleaned_data['password']
+        if not form.is_valid():
+            return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
-            if not cpf:
-                messages.error(request, 'CPF é obrigatório.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'CPF é obrigatório.'})
+        cpf = form.cleaned_data['cpf'].replace(".", "").replace("-", "")
+        password = form.cleaned_data['password']
 
-            # Tenta encontrar o usuário localmente
-            personal_data = get_object_or_404(DadoPessoal, cpf=cpf)
-            if personal_data and password:
-                if personal_data.usuario.check_password(password):
-                    usuario = personal_data.usuario
-                    auth_login(request, usuario)
-                    return redirect('home')
-                else:
-                    messages.error(request, 'Senha incorreta.')
-                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Senha incorreta.'})
-            elif not personal_data and password:
-                messages.error(request, 'Usuário não encontrado.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Usuário não encontrado.'})
+        if not cpf:
+            messages.error(request, 'CPF é obrigatório.')
+            return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
-            # Consulta a API externa
-            headers = {'Authorization': f'Bearer {BEARER_TOKEN}'}
-            response = requests.post(UFAC_API_URL, json={"cpf": cpf}, headers=headers)
+        # personal_data = DadoPessoal.objects.filter(cpf=cpf).first()
+        # if personal_data and password:
+        #     if personal_data.usuario.check_password(password):
+        #         auth_login(request, personal_data.usuario)
+        #         return redirect('home')
+        #     else:
+        #         messages.error(request, 'Senha incorreta.')
+        #         return render(request, 'ETicketApp/pages/user/login.html', {
+        #             'form': form, 'error_message': 'Senha incorreta.'
+        #         })
 
-            if response.status_code == 200:
-                external_data = response.json()
-                
-                classifications = []
+        # Se não encontrar localmente, consulta API externa
+        headers = {'Authorization': f'Bearer {settings.BEARER_TOKEN}'}
+        response = requests.post(settings.UFAC_API_URL, json={"cpf": cpf}, headers=headers)
 
-                user_data = None
-                max_weight = 0
+        if response.status_code != 200:
+            messages.error(request, 'Erro na API externa.')
+            return render(request, 'ETicketApp/pages/user/login.html', {
+                'form': form, 'error_message': 'Erro na API externa.'
+            })
 
-                for data in external_data['response']:
-                    if data.get('SITUACAO') == 'Ativo':
-                        classification_name = data.get('CLASSIFICACAO')
-                        classification, created = Classificacao.objects.get_or_create(nome=classification_name, defaults={'peso': 5})
-                        if classification.peso > max_weight:
-                            max_weight = classification.peso
-                            classifications.append(classification)
-                            user_data = data
+        api_data = response.json()
+        user_data = None
+        classifications = []
+        max_weight = -1
 
-                if user_data is None:
-                    messages.error(request, 'Nenhum usuário ativo encontrado.')
-                    return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Nenhum usuário ativo encontrado.'})
+        for data in api_data.get('response', []):
+            if data.get('SITUACAO') == 'Ativo':
+                classification_name = data.get('CLASSIFICACAO')
+                classificacao, _ = Classificacao.objects.get_or_create(nome=classification_name)
+                if classificacao.prioridade > max_weight:
+                    user_data = data
+                    max_weight = classificacao.prioridade
+                    classifications = [classificacao]
 
-                # Extrai os dados do usuário
-                matricula = user_data.get('MATRICULA')
-                nome_completo = user_data.get('NOME')
-                nome_social = user_data.get('NOME_SOCIAL')
-                unit = user_data.get('UNIDADE')
-                entry_date = user_data.get('DT_ENTRADA')
-                gratuitous = user_data.get('GRATUIDADE') == 'S'
-                email = user_data.get('EMAIL')
-                foto = user_data.get('FOTO')
+        if not user_data:
+            messages.error(request, 'Nenhum usuário ativo encontrado.')
+            return render(request, 'ETicketApp/pages/user/login.html', {
+                'form': form, 'error_message': 'Nenhum usuário ativo encontrado.'
+            })
 
-                # Atualiza ou cria um novo usuário localmente
-                try:
-                    personal_data = DadoPessoal.objects.get(cpf=cpf)
-                    usuario = personal_data.usuario
-                    usuario.email = email
-                    usuario.save()
+        # Extrai dados do usuário
+        nome_completo = user_data.get('NOME')
+        nome_social = user_data.get('NOME_SOCIAL')
+        email = user_data.get('EMAIL')
+        foto = user_data.get('FOTO')
+        matricula = user_data.get('MATRICULA')
+        unidade = user_data.get('UNIDADE')
+        data_entrada = user_data.get('DT_ENTRADA')
+        gratuito = user_data.get('GRATUIDADE') == 'S'
 
-                    personal_data.nome_completo = nome_completo
-                    personal_data.nome_social = nome_social
-                    personal_data.matricula = matricula
-                    personal_data.data_entrada = entry_date
-                    personal_data.unidade = unit
-                    personal_data.gratuito = gratuitous
-                    personal_data.classificacoes = classifications
-                    personal_data.foto = foto
-                    personal_data.save()
+        # Atualiza ou cria usuário local
+        usuario = None
+        try:
+            personal_data = DadoPessoal.objects.get(cpf=cpf)
+            usuario = personal_data.usuario
+            usuario.email = email
+            usuario.save()
 
-                except DadoPessoal.DoesNotExist:
-                    # Cria um novo usuário localmente se não existir
-                    usuario = User.objects.create(
-                        username=nome_completo,
-                        password=make_password(None),  # Usuário sem senha
-                        email=email,
-                    )
-                    personal_data = DadoPessoal.objects.create(
-                        usuario=usuario,
-                        nome_completo=nome_completo,
-                        nome_social=nome_social,
-                        cpf=cpf,
-                        matricula=matricula,
-                        data_entrada=entry_date,
-                        unidade=unit,
-                        credito=0.0,
-                        classificacoes = classifications,
-                        foto=foto,
-                        gratuito=gratuitous,
-                    )
+            personal_data.nome_completo = nome_completo
+            personal_data.nome_social = nome_social
+            personal_data.matricula = matricula
+            personal_data.data_entrada = data_entrada
+            personal_data.unidade = unidade
+            personal_data.gratuito = gratuito
+            personal_data.foto = foto
+            personal_data.save()
 
-                # Autentica o usuário
-                auth_login(request, usuario)
-                return redirect('home')  # Redireciona para a página inicial após sucesso
+        except DadoPessoal.DoesNotExist:
+            usuario = User.objects.create(
+                username=nome_completo,
+                password=make_password(None),
+                email=email,
+            )
+            personal_data = DadoPessoal.objects.create(
+                usuario=usuario,
+                nome_completo=nome_completo,
+                nome_social=nome_social,
+                cpf=cpf,
+                matricula=matricula,
+                data_entrada=data_entrada,
+                unidade=unidade,
+                credito=0.0,
+                foto=foto,
+                gratuito=gratuito,
+            )
 
-            else:
-                messages.error(request, 'Erro na API externa.')
-                return render(request, 'ETicketApp/pages/user/login.html', {'form': form, 'error_message': 'Erro na API externa.'})
+        # Define classificações (ManyToMany)
+        personal_data.classificacoes.set(classifications)
 
-    else:
-        form = LoginForm()
+        # Autentica o usuário
+        auth_login(request, usuario)
+        return redirect('home')
 
+    # GET request
+    form = LoginForm()
     return render(request, 'ETicketApp/pages/user/login.html', {'form': form})
 
 
@@ -355,10 +358,10 @@ def validar (request):
     return render(request, 'ETicketApp/pages/manager/validar.html')
 
 @user_passes_test(is_superuser)
-def validarUsuario(request):  
+def mostrar_usuario(request):  
     if request.method == 'POST':
         codigo = request.POST.get('matricula')  # Pode ser matrícula (numérica) ou código do ticket (UUID)
-
+        
         # Verifica se o código é numérico para tentar buscar DadoPessoal
         if codigo.isdigit():
             try:
@@ -369,16 +372,22 @@ def validarUsuario(request):
                 dados_pessoais = None
         else:
             dados_pessoais = None
-
-        # Identifica o tipo de refeição com base no horário atual
-        current_hour = datetime.now().hour
-        if 6 <= current_hour < 10:
-            tipo_refeicao = "CAFE_DA_MANHA"
-        elif 10 <= current_hour < 17:
-            tipo_refeicao = "ALMOCO"
-        else:
-            tipo_refeicao = "JANTAR"
-        nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
+            
+        if dados_pessoais:    
+            classificacao = dados_pessoais.classificacoes.order_by('prioridade').first()
+            # Identifica o tipo de refeição com base no horário atual
+            current_hour = datetime.now().hour
+            if 6 <= current_hour < 10:
+                tipo_refeicao = "CAFE_DA_MANHA"
+                valor = classificacao.valor_cafe_manha
+            elif 10 <= current_hour < 17:
+                tipo_refeicao = "ALMOCO"
+                valor = classificacao.valor_almoco
+            elif 17 <= current_hour < 19:
+                tipo_refeicao = "JANTAR"
+                valor = classificacao.valor_jantar
+            nome_refeicao = TipoRefeicaoEnum.get_name_by_value(tipo_refeicao)
+    
 
         # Se dados_pessoais não existe, tenta buscar como TicketUnico
         if not dados_pessoais:
@@ -396,6 +405,7 @@ def validarUsuario(request):
                             gratuito=False,
                             data=datetime.now().date(),
                             hora=datetime.now().time(),
+                            tipo_refeicao=tipo_refeicao,
                             menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first(),
                             ticket_unico=ticket
                         )
@@ -423,6 +433,7 @@ def validarUsuario(request):
                 'unidade': dados_pessoais.unidade,
                 'classificacoes': classificacoes,
                 'tipo_refeicao': nome_refeicao,
+                'valor': valor,
             }
             return render(request, 'ETicketApp/pages/manager/validarUsuario.html', context)
 
@@ -434,10 +445,22 @@ def validar_usuario(request):
         matricula = request.POST.get('matricula')
         tipo_refeicao = request.POST.get('tipo_refeicao')
         
+        
+        
+        
 
         try:
             # Busca o usuário pela matrícula
-            dados_pessoais = DadoPessoal.objects.get(matricula=matricula)
+            dados_pessoais = DadoPessoal.objects.get(matricula=matricula)\
+                
+            if dados_pessoais and Refeicao.objects.filter(usuario=dados_pessoais.usuario, data=date.today(), tipo_refeicao=tipo_refeicao).exists():
+                messages.error(request, f'{tipo_refeicao} já foi registrado para hoje.')
+                print(f'Debug: {tipo_refeicao} já registrado para {dados_pessoais.usuario} na data {date.today()}')
+                return redirect('validar')
+            
+            print(f'Debug: {tipo_refeicao} não registrado para {dados_pessoais.usuario} na data {date.today()}')
+            refeicao = Refeicao.objects.filter(usuario=dados_pessoais.usuario, data=date.today(), tipo_refeicao=tipo_refeicao).first()
+            print(refeicao)
 
             # Se o usuário for gratuito, não deduz crédito
             if dados_pessoais.gratuito:
@@ -450,7 +473,8 @@ def validar_usuario(request):
                     gratuito=True,
                     data=datetime.now().date(),
                     hora=datetime.now().time(),
-                    menu=None  # Ou substitua isso com o cardápio adequado
+                    tipo_refeicao=tipo_refeicao,
+                    menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first(),
                 )
 
                 return redirect('validar')  # Redireciona para /manage/validar/
@@ -486,6 +510,7 @@ def validar_usuario(request):
                     gratuito=False,
                     data=datetime.now().date(),
                     hora=datetime.now().time(),
+                    tipo_refeicao=tipo_refeicao,
                     menu=Cardapio.objects.filter(data=datetime.now().date(), tipo_refeicao=tipo_refeicao).first()
                 )
 
@@ -591,7 +616,6 @@ def usuarioCompra (request):
                     if classificacao_prioritaria:
                         limite_credito = classificacao_prioritaria.limite_credito
                         
-                        # Verifica se a adição do valor ultrapassa o limite de crédito
                         if personal_data.credito + valor_decimal > limite_credito:
                             messages.error(request, f"O limite de crédito de R${limite_credito} será excedido.")
                             return redirect('vender')
@@ -599,103 +623,154 @@ def usuarioCompra (request):
                     personal_data.credito += valor_decimal
                     personal_data.save()
                     
-                                    # Cria o registro de crédito
+                
                     Credito.objects.create(
                         usuario=request.user,
                         valor=valor_decimal,
                         metodo_pagamento=metodo_pagamento
                     )
-                    messages.success(request, 'Crédito aumentado com sucesso!')  # Mensagem de sucesso
-                    return redirect('vender')  # Redireciona para a página inicial
+                    messages.success(request, 'Crédito aumentado com sucesso!') 
+                    return redirect('vender')  
                 except (DadoPessoal.DoesNotExist, Decimal.InvalidOperation):
-                    messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  # Mensagem de erro
-                    return redirect('vender')  # Volta para a mesma página
+                    messages.error(request, 'Falha ao aumentar crédito. Verifique o valor e tente novamente.')  
+                    return redirect('vender') 
             
     return render(request, 'ETicketApp/pages/manager/usuarioCompra.html')
 
 @user_passes_test(is_superuser)
-def usuarios (request):
-    usuarios = User.objects.filter(groups__isnull=False).distinct()
+def listar_usuarios_view(request):
+    base_query_set = User.objects.select_related('dadopessoal').prefetch_related('groups')
+
+    search_query = request.GET.get('q', None)
+    tipo_usuario_filter_id_str = request.GET.get('tipo_usuario', None)
+
+    todos_os_grupos_para_filtro = Group.objects.all().order_by('name')
+
+    if search_query:
+        users_after_text_search = base_query_set.filter(
+            Q(username__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(dadopessoal__nome_completo__icontains=search_query) | 
+            Q(dadopessoal__cpf__icontains=search_query)             
+        ).distinct()
+    else:
+        users_after_text_search = base_query_set.all()
 
 
-    # Passar os dados para o template
+    final_users_list = users_after_text_search 
+
+    if tipo_usuario_filter_id_str: 
+        try:
+            group_id_para_filtrar = int(tipo_usuario_filter_id_str)
+            final_users_list = users_after_text_search.filter(groups__id=group_id_para_filtrar)
+        except ValueError:
+            final_users_list = users_after_text_search.none() 
+    else: 
+
+        final_users_list = users_after_text_search.filter(groups__isnull=False).distinct()
+
+    final_users_list = final_users_list.order_by('username')
+
     context = {
-        'usuarios': usuarios
+        'usuarios': final_users_list,
+        'todos_os_grupos_para_filtro': todos_os_grupos_para_filtro,
     }
     return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
 
 @user_passes_test(is_superuser)
-def listar_usuarios_grupo(request):
-    grupo_colaboradores = Group.objects.get(name="Colaboradores")  # Nome do grupo
-    usuarios = grupo_colaboradores.user_set.all()  # Todos os usuários no grupo
-
-    # Passar os usuários para o template
-    context = {
-        'usuarios': usuarios,
-    }
-    return render(request, 'ETicketApp/pages/manager/usuarios.html', context)
-
-@user_passes_test(is_superuser)
-def add_usuario (request):
+def add_papel_usuario (request):
     return render(request, 'ETicketApp/pages/manager/add_user.html')
 
 @user_passes_test(is_superuser)
-def gerenciar_usuario(request):
-    if request.method == 'POST':
-        cpf = request.POST.get('cpf')  # O nome do campo de input no template
-        papel = request.POST.get('papel')  # O ID do papel selecionado
+def buscar_selecionar_usuario(request):
+    
+    search_term = request.GET.get('search_query', '')
+    users_found_with_dados = None 
+
+    if search_term:
+        users_found_with_dados = DadoPessoal.objects.filter(
+            Q(nome_completo__icontains=search_term) |
+            Q(cpf__icontains=search_term) |         
+            Q(unidade__icontains=search_term) |
+            Q(usuario__username__icontains=search_term)
+        ).select_related('usuario').distinct()
         
-        # Mapeamento de papéis
-        papeis_dict = {
-            '1': 'ADM',
-            '2': 'Colaborador',
-            '3': 'Bolsista'
-        }
+        if not users_found_with_dados:
+            messages.info(request, 'Nenhum usuário encontrado com os critérios fornecidos.')
+            
+    print(f"Debug: search_term={search_term}, users_found_with_dados={users_found_with_dados}")
 
-        try:
-            user = User.objects.get(username=cpf)
-            print(papel, papeis_dict)
-            # Verifica se o papel é válido
-            if papel in papeis_dict:
-                # Remove o usuário de todos os grupos primeiro
-                user.groups.clear()
+    context = {
+        'users_found_with_dados': users_found_with_dados,
+        'search_term': search_term,
+        'page_title': 'Buscar e Gerenciar Usuários'
+    }
+    # This template will display the search form and results
+    return render(request, 'ETicketApp/pages/manager/buscar_selecionar_usuario.html', context)
 
-                # Adicionar o usuário ao grupo selecionado
-                grupo = Group.objects.get(name=papeis_dict[papel])
-                print(grupo)
-                user.groups.add(grupo)
+@user_passes_test(is_superuser)
+def editar_papel_usuario(request, id):
+    usuario = get_object_or_404(User, id=id)
+    dadopessoal = None 
+    try:
+        dadopessoal = usuario.dadopessoal
+    except DadoPessoal.DoesNotExist:
+        messages.warning(request, f'Dados pessoais não encontrados para o usuário {usuario.username}.')
+    except AttributeError:
+        messages.warning(request, f'Modelo DadoPessoal não parece estar relacionado corretamente ao usuário {usuario.username}.')
 
-                messages.success(request, f'{user.username} foi adicionado ao grupo {grupo.name} com sucesso.')
+
+    
+    todos_os_grupos = Group.objects.all().order_by('name') 
+    papeis_options = [{'value': str(grupo.id), 'name': grupo.name} for grupo in todos_os_grupos]
+
+
+    current_group_value = None 
+    if usuario.groups.exists():
+        grupo_atual_do_usuario = usuario.groups.first()
+        if grupo_atual_do_usuario:
+            current_group_value = str(grupo_atual_do_usuario.id)
+
+    if request.method == 'POST':
+        novo_papel_id_str = request.POST.get('papel') 
+
+        if novo_papel_id_str:
+            if novo_papel_id_str == "": # Usuário selecionou a opção "Nenhum Papel" (se você adicionar uma)
+                usuario.groups.clear()
+                messages.info(request, f'O usuário {usuario.username} foi removido de todos os papéis.')
             else:
-                messages.error(request, 'Papel inválido.')
+                try:
+                    novo_grupo_id = int(novo_papel_id_str) 
+                    grupo_selecionado = Group.objects.get(id=novo_grupo_id)
+                
+                    usuario.groups.clear()
+                    usuario.groups.add(grupo_selecionado)
+                    
+                    messages.success(request, f'O papel do usuário {usuario.username} foi atualizado para {grupo_selecionado.name} com sucesso!')
+                except Group.DoesNotExist:
+                    messages.error(request, 'O grupo selecionado não foi encontrado. Pode ter sido excluído.')
+                except ValueError:
+                    messages.error(request, 'O valor do papel selecionado é inválido.')
+                except Exception as e:
+                    messages.error(request, f'Ocorreu um erro inesperado ao atualizar o papel: {e}')
+        else:
+            messages.error(request, 'Nenhum papel foi selecionado ou o campo não foi enviado corretamente.')
         
-        except User.DoesNotExist:
-            messages.error(request, 'Usuário não encontrado.')
+        return redirect('buscar_selecionar_usuario')
 
-        return redirect('usuarios')  # Redireciona após a operação
+    context = {
+        'usuario': usuario,
+        'dadopessoal': dadopessoal,
+        'papeis_options': papeis_options,       
+        'current_group_value': current_group_value,
+        'page_title': f'Editar Papel de {usuario.username}'
+    }
+    return render(request, 'ETicketApp/pages/manager/definir_papel_usuario.html', context)
 
 @user_passes_test(is_superuser)
-def editar_usuario(request, id):
-    usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
-    
-    if request.method == 'POST':
-        novo_grupo_id = request.POST.get('papel')  # Obtém o ID do novo grupo do form
-        grupo = get_object_or_404(Group, id=novo_grupo_id)  # Busca o grupo pelo ID
-        
-        # Remove o usuário de todos os grupos atuais
-        usuario.groups.clear()
-        
-        # Adiciona o usuário ao novo grupo
-        usuario.groups.add(grupo)
-        
-        messages.success(request, 'Grupo do usuário atualizado com sucesso!')
-        return redirect('usuarios')  # Redireciona para a página de lista de usuários
-    
-    grupos = Group.objects.all()  # Busca todos os grupos disponíveis
-    return render(request, 'ETicketApp/pages/manager/add_user.html', {'usuario': usuario, 'grupos': grupos})
-
-@user_passes_test(is_superuser)
-def excluir_usuario(request, id):
+def excluir_papel_usuario(request, id):
     usuario = get_object_or_404(User, id=id)  # Busca o usuário pelo ID
     
     # Remove o usuário de todos os grupos
@@ -884,3 +959,96 @@ def deletar_informacao(request, id):
         informacao.delete()
         messages.success(request, "informacao deletado com sucesso!")
         return redirect('informacao_manage')
+    
+def _preprocessar_permissoes_para_template(form_group):
+    """
+    Prepara as permissões do formulário para serem agrupadas corretamente no template.
+    """
+    permissions_para_template = []
+    if 'permissions' in form_group.fields and hasattr(form_group['permissions'], '__iter__'):
+        for bound_widget_choice in form_group['permissions']:
+            choice_label_original = bound_widget_choice.choice_label
+            chave_de_agrupamento = ""
+            partes = str(choice_label_original).split(' | ')
+
+            if len(partes) == 3:  # Formato: "app_label | model_name | permission_name"
+                chave_de_agrupamento = partes[1].strip()  # Pega "model_name"
+            elif len(partes) == 1: # Formato: "Can add User Profile"
+                label_apenas = partes[0].strip()
+                prefixos_acao = ["Can add ", "Can change ", "Can delete ", "Can view "]
+                nome_objeto = label_apenas
+                # Tenta remover prefixos (case-insensitive)
+                for prefixo in prefixos_acao:
+                    if nome_objeto.lower().startswith(prefixo.lower()):
+                        nome_objeto = nome_objeto[len(prefixo):]
+                        break
+                chave_de_agrupamento = nome_objeto.strip()
+            else: # Fallback
+                chave_de_agrupamento = partes[0].strip() if partes else choice_label_original
+            
+            permissions_para_template.append({
+                'widget': bound_widget_choice,
+                'label_original': choice_label_original,
+                'chave_agrupamento': chave_de_agrupamento.lower(), # Usar minúsculas para agrupar, |title no template
+            })
+    return permissions_para_template
+
+
+
+def permissoes(request):
+    groups = Group.objects.all()
+    context = {
+        'groups': groups,
+    }
+    return render(request, 'ETicketApp/pages/manager/permissoes.html', context)
+
+def adicionar_permissoes(request):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Grupo de Permissões Cadastrado com Sucesso!')
+            return redirect('permissoes') 
+        else:
+
+            messages.error(request, 'Não Foi Possível Cadastrar o Grupo de Permissões. Verifique os erros abaixo.')
+            permissions_processadas = _preprocessar_permissoes_para_template(form)
+    else:
+        form = GroupForm()
+        permissions_processadas = _preprocessar_permissoes_para_template(form)
+
+    context = {
+        'form': form,
+        'permissions_processadas': permissions_processadas, 
+    }
+    return render(request, 'ETicketApp/pages/manager/permissoes_form.html', context)
+
+def editar_permissoes(request, id):
+    grupo = get_object_or_404(Group, id=id)
+    if request.method == 'POST':
+        form = GroupForm(request.POST, instance=grupo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Grupo de Permissões Atualizado com Sucesso!')
+            return redirect('permissoes')
+        else:
+            # print(form.errors) # Para debug
+            messages.error(request, "Não foi possível Editar esse Grupo. Verifique os erros abaixo.")
+            # Se o formulário for inválido, precisamos reprocessar as permissões para exibição
+            permissions_processadas = _preprocessar_permissoes_para_template(form)
+    else:
+        form = GroupForm(instance=grupo)
+        permissions_processadas = _preprocessar_permissoes_para_template(form)
+        
+    context = {
+        'form': form,
+        'grupo': grupo, # Pode ser útil ter o objeto grupo no contexto também
+        'permissions_processadas': permissions_processadas, # Adicionado ao contexto
+    }
+    return render(request, 'ETicketApp/pages/manager/permissoes_form.html', context)
+
+def deletar_permissoes(request, id):
+    grupo_para_deletar = get_object_or_404(Group, id=id)
+    grupo_para_deletar.delete()
+    messages.success(request, 'Grupo Deletado com Sucesso!')
+    return redirect('permissoes')
