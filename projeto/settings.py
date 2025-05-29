@@ -152,3 +152,12 @@ if not UFAC_API_URL:
     raise ValueError("A variável UFAC_API_URL não foi encontrada no .env ou nas variáveis de ambiente.")
 if not BEARER_TOKEN:
     raise ValueError("A variável BEARER_TOKEN não foi encontrada no .env ou nas variáveis de ambiente.")
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'eticketufac@gmail.com'  
+EMAIL_HOST_PASSWORD = 'zuhw jzys dqnx dbro'
+DEFAULT_FROM_EMAIL = 'eticketufac@gmail.com'
