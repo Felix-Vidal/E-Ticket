@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seus Tickets RU</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; color: #333; line-height: 1.6; }
+        .container { border: 1px solid #ddd; padding: 20px; max-width: 600px; margin: auto; background-color: #f9f9f9; }
+        h2 { color: #004085; text-align: center; }
+        h3 { color: #0056b3; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin-bottom: 8px; }
+        strong { color: #495057; }
+        .ticket-item { background-color: #fff; border: 1px solid #eee; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .ticket-item:last-child { margin-bottom: 0; }
+        .qr-code { margin-top: 15px; text-align: center; }
+        .qr-code img { max-width: 180px; height: auto; border: 1px solid #ddd; padding: 5px; }
+        .footer { text-align: center; margin-top: 20px; font-size: 0.9em; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Seus Tickets para o Restaurante Universitário ({{ quantidade_total }} Unidades)</h2>
+        <p>Olá,</p>
+        <p>Obrigado pela sua compra! Seguem abaixo os detalhes dos seus tickets:</p>
+        
+        {% for ticket in lista_tickets %}
+        <div class="ticket-item">
+            <h3>Ticket: {{ ticket.tipo_refeicao }}</h3>
+            <ul>
+                <li><strong>Código:</strong> {{ ticket.codigo }}</li>
+                <li><strong>Valor:</strong> R$ {{ ticket.valor|stringformat:".2f" }}</li> 
+            </ul>
+            <div class="qr-code">
+                <p>QR Code para este ticket:</p>
+                <img src="cid:{{ ticket.qr_code_cid }}" alt="QR Code do Ticket {{ ticket.codigo }}">
+            </div>
+        </div>
+        {% endfor %}
+        
+        <p class="footer">Atenciosamente,<br>Sistema de Tickets RU</p>
+    </div>
+</body>
+</html>

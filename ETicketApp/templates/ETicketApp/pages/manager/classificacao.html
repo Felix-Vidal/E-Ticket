@@ -34,11 +34,15 @@
                     <td>{{ classificacao.prioridade }}</td>
                     <td>{{ classificacao.limite_credito }}</td>
                     <td class="d-flex justify-content-center">
+                        {% if perms.ETicketApp.change_classificacao %}
                         <a href="{% url 'classificacao_edit' classificacao.id %}" class="btn btn-sm btn-primary btn-sm mx-1"><i class="fa-solid fa-edit"></i></a>
+                        {% endif %}
+                        {% if perms.ETicketApp.delete_classificacao %}
                         <form action="{% url 'classificacao_delete' classificacao.id %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm mx-1" onclick="return confirm('Tem certeza que deseja excluir esta classificação?');"> <i class="fa-solid fa-trash"></i></button>
                         </form>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

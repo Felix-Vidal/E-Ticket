@@ -21,11 +21,11 @@
                     </div>
                 </a>
 
-                <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
+    
 
                 <form id="codigo-form" method="POST" action="{% url 'usuarioCompra' %}">
                     {% csrf_token %}
-                    <div  id="teste" class="col-12 col-md-12"  style=" margin-top: 15%;">
+                    <div class="col-12 col-md-12"  style=" margin-top: 15%;">
                         <label for="matricula" class="form-label">Pesquisar Usuario:</label>
                         <input id="matricula" name="matricula" style="border: 2px solid #007bff" type="number" class="form-control" placeholder="Digite o código">
                     </div> 

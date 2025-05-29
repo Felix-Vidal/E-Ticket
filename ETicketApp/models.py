@@ -53,7 +53,7 @@ class TicketUnico(models.Model):
     tipo_refeicao = models.CharField(max_length=15, choices=TipoRefeicaoEnum.choices())
     classificacao = models.ForeignKey(Classificacao, on_delete=models.CASCADE)
     valido = models.BooleanField(default=True)
-    codigo = models.CharField(max_length=8, unique=True, blank=True)
+    codigo = models.CharField(max_length=27, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
             if not self.codigo:
@@ -61,29 +61,27 @@ class TicketUnico(models.Model):
             super().save(*args, **kwargs)
 
     def gerar_codigo_unico(self):
-        # Gera um sufixo baseado na data e hora atual
-        datetime_suffix = 'Ticket:' + datetime.now().strftime('%y%m%d%H%M%S')
+        tamanho_codigo = 8  # Adere ao max_length=8
+        caracteres = string.ascii_uppercase + string.digits # Letras maiúsculas e números
 
-        # Tenta usar o sufixo de data e hora como código inicial
-        codigo = datetime_suffix
-        
-        # Verifica se o código já existe
-        if not TicketUnico.objects.filter(codigo=codigo).exists():
-            return codigo  # Retorna se único
-        
-        # Se existir, gera um código curto de 8 caracteres
-        caracteres = string.ascii_uppercase + string.digits
-        base_codigo = ''.join(random.choices(caracteres, k=8))
-        codigo_final = f"{codigo}{base_codigo}"
-
-        while TicketUnico.objects.filter(codigo=codigo_final).exists():
-            base_codigo = ''.join(random.choices(caracteres, k=8))
-            codigo_final = f"{codigo}{base_codigo}"
-
-        return codigo_final
+        while True:
+            codigo_gerado = ''.join(random.choices(caracteres, k=tamanho_codigo))
+            # Verifica se o código gerado já existe no banco de dados
+            # Se self.pk existe, estamos atualizando um objeto, então excluímos ele mesmo da verificação
+            query = TicketUnico.objects.filter(codigo=codigo_gerado)
+            if self.pk:
+                query = query.exclude(pk=self.pk)
+            
+            if not query.exists():
+                return codigo_gerado # Retorna o código de 8 caracteres se for único
 
     def __str__(self):
-        return f"Ticket: {self.valor} - {self.metodo_pagamento} - {self.tipo_refeicao} - Válido: {self.valido} - Código: {self.codigo}"
+        # Use get_tipo_refeicao_display() e get_metodo_pagamento_display() se os choices estiverem configurados corretamente
+        tipo_refeicao_display = self.get_tipo_refeicao_display() if hasattr(self, 'get_tipo_refeicao_display') else self.tipo_refeicao
+        metodo_pagamento_display = self.get_metodo_pagamento_display() if hasattr(self, 'get_metodo_pagamento_display') else self.metodo_pagamento
+        return f"Ticket: {self.valor} - {metodo_pagamento_display} - {tipo_refeicao_display} - Válido: {self.valido} - Código: {self.codigo}"
+
+
         
 class Cardapio(models.Model):
     
