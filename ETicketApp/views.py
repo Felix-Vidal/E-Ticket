@@ -23,7 +23,7 @@ import base64
 import qrcode
 from django.core.files.base import ContentFile
 
-
+from django.urls import reverse
 
 import requests
 from django.contrib.auth.hashers import check_password, make_password
@@ -712,62 +712,101 @@ def buscar_selecionar_usuario(request):
     # This template will display the search form and results
     return render(request, 'ETicketApp/pages/manager/buscar_selecionar_usuario.html', context)
 
+ADM_GROUP_NAME = "ADM"
+
 @user_passes_test(is_superuser)
-def editar_papel_usuario(request, id):
-    usuario = get_object_or_404(User, id=id)
-    dadopessoal = None 
+def editar_papel_usuario(request, usuario_id): # Renomeado de 'id' para 'usuario_id' para clareza
+    usuario_alvo = get_object_or_404(User, id=usuario_id)
+    dadopessoal_alvo = getattr(usuario_alvo, 'dadopessoal', None) # Assumindo relação OneToOne 'dadopessoal'
+
     try:
-        dadopessoal = usuario.dadopessoal
-    except DadoPessoal.DoesNotExist:
-        messages.warning(request, f'Dados pessoais não encontrados para o usuário {usuario.username}.')
-    except AttributeError:
-        messages.warning(request, f'Modelo DadoPessoal não parece estar relacionado corretamente ao usuário {usuario.username}.')
+        adm_group_obj = Group.objects.get(name=ADM_GROUP_NAME)
+    except Group.DoesNotExist:
+        messages.error(request, f"Erro crítico: O grupo de administradores '{ADM_GROUP_NAME}' não existe.")
+        return redirect('buscar_selecionar_usuario') # Ou uma página de erro apropriada
 
-
-    
-    todos_os_grupos = Group.objects.all().order_by('name') 
-    papeis_options = [{'value': str(grupo.id), 'name': grupo.name} for grupo in todos_os_grupos]
-
-
-    current_group_value = None 
-    if usuario.groups.exists():
-        grupo_atual_do_usuario = usuario.groups.first()
-        if grupo_atual_do_usuario:
-            current_group_value = str(grupo_atual_do_usuario.id)
+    # Verifica se o usuário logado (request.user) é ADM
+    request_user_is_adm = request.user.groups.filter(name=ADM_GROUP_NAME).exists() or request.user.is_superuser
 
     if request.method == 'POST':
-        novo_papel_id_str = request.POST.get('papel') 
-
-        if novo_papel_id_str:
-            if novo_papel_id_str == "": # Usuário selecionou a opção "Nenhum Papel" (se você adicionar uma)
-                usuario.groups.clear()
-                messages.info(request, f'O usuário {usuario.username} foi removido de todos os papéis.')
-            else:
-                try:
-                    novo_grupo_id = int(novo_papel_id_str) 
-                    grupo_selecionado = Group.objects.get(id=novo_grupo_id)
-                
-                    usuario.groups.clear()
-                    usuario.groups.add(grupo_selecionado)
-                    
-                    messages.success(request, f'O papel do usuário {usuario.username} foi atualizado para {grupo_selecionado.name} com sucesso!')
-                except Group.DoesNotExist:
-                    messages.error(request, 'O grupo selecionado não foi encontrado. Pode ter sido excluído.')
-                except ValueError:
-                    messages.error(request, 'O valor do papel selecionado é inválido.')
-                except Exception as e:
-                    messages.error(request, f'Ocorreu um erro inesperado ao atualizar o papel: {e}')
-        else:
-            messages.error(request, 'Nenhum papel foi selecionado ou o campo não foi enviado corretamente.')
+        novo_papel_id_str = request.POST.get('papel')
         
-        return redirect('buscar_selecionar_usuario')
+        # Usuário alvo era ADM antes desta alteração?
+        alvo_era_adm = usuario_alvo.groups.filter(id=adm_group_obj.id).exists()
+
+        # 1. Tentativa de atribuir o papel ADM
+        if novo_papel_id_str and int(novo_papel_id_str) == adm_group_obj.id:
+            if not request_user_is_adm:
+                messages.error(request, "Apenas administradores podem atribuir o papel de Administrador.")
+                # Re-renderiza o formulário sem alterar, idealmente com os dados e erros
+                # Para simplificar, redirecionando, mas é melhor re-renderizar o form:
+                return redirect('editar_papel_usuario', usuario_id=usuario_alvo.id)
+        
+        # 2. Tentativa de remover/alterar o papel de um ADM existente por um não-ADM
+        if alvo_era_adm and not request_user_is_adm:
+            # Se o alvo era ADM e o usuário logado não é ADM,
+            # a única operação permitida é manter o alvo como ADM.
+            # Se novo_papel_id_str for vazio (remover papel) ou diferente do ID do ADM, é uma tentativa inválida.
+            if not novo_papel_id_str or (novo_papel_id_str and int(novo_papel_id_str) != adm_group_obj.id):
+                messages.error(request, "Você não tem permissão para alterar o papel de um Administrador.")
+                return redirect('editar_papel_usuario', usuario_id=usuario_alvo.id)
+
+        # Processar a mudança de grupo
+        usuario_alvo.groups.clear() # Remove de todos os grupos atuais (assumindo um papel por vez)
+        if novo_papel_id_str:
+            try:
+                novo_papel = Group.objects.get(id=int(novo_papel_id_str))
+                usuario_alvo.groups.add(novo_papel)
+            except (ValueError, Group.DoesNotExist):
+                messages.error(request, "Papel selecionado é inválido.")
+                # Melhor re-renderizar o formulário com o erro.
+                return redirect('editar_papel_usuario', usuario_id=usuario_alvo.id)
+        
+        messages.success(request, f"Papel de {usuario_alvo.username} atualizado com sucesso.")
+        search_query = request.GET.get('search_query') # Mantém o filtro de busca ao voltar
+        redirect_url = reverse('buscar_selecionar_usuario')
+        if search_query:
+            return redirect(f"{redirect_url}?search_query={search_query}")
+        return redirect(redirect_url)
+
+    # Lógica para GET (exibir o formulário)
+    todos_os_papeis = Group.objects.all()
+    current_group_of_target = usuario_alvo.groups.first()
+    current_group_id_of_target = current_group_of_target.id if current_group_of_target else None
+
+    # O usuário alvo é atualmente um ADM?
+    target_user_is_currently_adm = (current_group_id_of_target == adm_group_obj.id)
+
+    # Desabilitar todo o formulário de mudança de papel?
+    # Sim, se o alvo é ADM e o usuário logado não é ADM.
+    disable_entire_form = (target_user_is_currently_adm and not request_user_is_adm)
+
+    papeis_options_for_template = []
+    for papel in todos_os_papeis:
+        option_is_adm_role = (papel.id == adm_group_obj.id)
+        # Por padrão, uma opção não está desabilitada individualmente no <option>
+        # A desabilitação geral do <select> é controlada por 'disable_entire_form'
+        option_disabled_individually = False
+
+        if not disable_entire_form: # Se o formulário não estiver totalmente desabilitado
+            if option_is_adm_role and not request_user_is_adm:
+                # Usuário logado não é ADM, e esta é a opção ADM.
+                # Desabilita a opção ADM se o alvo não for já ADM.
+                if not target_user_is_currently_adm:
+                    option_disabled_individually = True
+        
+        papeis_options_for_template.append({
+            'value': str(papel.id), # Valor para o <option value="">
+            'name': papel.name,
+            'is_disabled_individually': option_disabled_individually
+        })
 
     context = {
-        'usuario': usuario,
-        'dadopessoal': dadopessoal,
-        'papeis_options': papeis_options,       
-        'current_group_value': current_group_value,
-        'page_title': f'Editar Papel de {usuario.username}'
+        'usuario': usuario_alvo,
+        'dadopessoal': dadopessoal_alvo,
+        'papeis_options': papeis_options_for_template,
+        'current_group_value': str(current_group_id_of_target) if current_group_id_of_target else "",
+        'disable_form_controls': disable_entire_form, # Para desabilitar <select> e botão Salvar
     }
     return render(request, 'ETicketApp/pages/manager/definir_papel_usuario.html', context)
 

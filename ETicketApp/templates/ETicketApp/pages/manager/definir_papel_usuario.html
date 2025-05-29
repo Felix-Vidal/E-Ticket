@@ -6,15 +6,16 @@
 
 <div class="container" style="margin-left: 5%;">
     <div class="row justify-content-center" style="margin-top: 8%; margin-left: 5%;">
-        <div id="Conteudo-total" class="col-11 col-md-8"> <div class="row justify-content-center">
+        <div id="Conteudo-total" class="col-11 col-md-8"> 
+            <div class="row justify-content-center">
                 <div class="col-12 d-flex flex-column align-items-center">
                     <h1 id="usuarios-lista">{{"Definir Papel do Usuário" }}</h1>
                     
                     <div class="card mb-4 col-12">
                         <div class="card-body">
                             <h5 class="card-title">Detalhes do Usuário</h5>
-                            <p class="card-text"><strong>Nome:</strong> {{ dadopessoal.nome_completo}}</p>
-                            <p class="card-text"><strong>CPF:</strong> {{ dadopessoal.cpf }}</p>
+                            <p class="card-text"><strong>Nome:</strong> {{ dadopessoal.nome_completo|default:usuario.get_full_name|default:usuario.username }}</p>
+                            <p class="card-text"><strong>CPF:</strong> {{ dadopessoal.cpf|default:"N/A" }}</p>
                             {% if dadopessoal %}
                                 <p class="card-text"><strong>Unidade:</strong> {{ dadopessoal.unidade|default:"N/A" }}</p>
                                 <p class="card-text"><strong>Matrícula:</strong> {{ dadopessoal.matricula|default:"N/A" }}</p>
@@ -22,27 +23,40 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{% url 'editar_papel_usuario' usuario.id %}" class="col-12">
+                    <form method="POST" action="{% url 'editar_papel_usuario' usuario.id %}{% if request.GET.search_query %}?search_query={{ request.GET.search_query }}{% endif %}" class="col-12">
                         {% csrf_token %}
                         <div class="d-flex flex-column flex-md-row col-12 align-items-start mx-auto mb-3 justify-content-center" style="max-width: 500px;">
                             <div class="col-12 d-flex flex-column align-items-start">
                                 <label for="papel" class="form-label">Papel</label>
-                                <select id="selecao" name="papel" class="form-select" aria-label="Default select example" required>
-                                    <option value="" {% if not current_group_value %}selected{% endif %}>-- Nenhum Papel / Remover Papel --</option> {# Opção para remover de grupos #}
+                                <select id="selecao" name="papel" class="form-select" aria-label="Default select example" required
+                                        {% if disable_form_controls %}disabled{% endif %}>
+                                    <option value="" {% if not current_group_value %}selected{% endif %}
+                                            {% if disable_form_controls and current_group_value != "" %}disabled{% endif %}> 
+                                        {# Se o form estiver desabilitado e houver um papel atual, desabilita a opção "Nenhum Papel" #}
+                                        -- Nenhum Papel / Remover Papel --
+                                    </option>
                                     {% for papel_opt in papeis_options %}
-                                        <option value="{{ papel_opt.value }}" {% if papel_opt.value == current_group_value %}selected{% endif %}>
+                                        <option value="{{ papel_opt.value }}" 
+                                                {% if papel_opt.value == current_group_value %}selected{% endif %}
+                                                {% if not disable_form_controls and papel_opt.is_disabled_individually %}disabled title="Você não tem permissão para atribuir este papel."{% endif %}>
                                             {{ papel_opt.name }}
                                         </option>
                                     {% endfor %}
                                 </select>
+                                {% if disable_form_controls %}
+                                    <small class="form-text text-danger mt-1">Você não tem permissão para alterar o papel deste administrador.</small>
+                                {% endif %}
                             </div>
                         </div>
 
                         <div class="col-12 d-flex flex-column align-items-start mx-auto" style="max-width: 500px;">
                             <div class="d-flex flex-column flex-md-row justify-content-between w-100 mt-3">
-                                <a href="{% url 'buscar_selecionar_usuario' %}{% if request.GET.search_query %}?search_query={{ request.GET.search_query }}{% endif %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 18px; min-width: 120px;"> <i class="fa-solid fa-arrow-left"></i> Voltar 
+                                <a href="{% url 'buscar_selecionar_usuario' %}{% if request.GET.search_query %}?search_query={{ request.GET.search_query }}{% endif %}" class="btn btn-secondary mb-2 mb-md-0" style="font-size: 18px; min-width: 120px;"> 
+                                    <i class="fa-solid fa-arrow-left"></i> Voltar 
                                 </a>
-                                <button class="btn btn-success" style="font-size: 18px; background-color: #35A40E; min-width: 120px;" type="submit"> <i class="fa-solid fa-floppy-disk"></i> Salvar
+                                <button class="btn btn-success" style="font-size: 18px; background-color: #35A40E; min-width: 120px;" type="submit"
+                                        {% if disable_form_controls %}disabled{% endif %}> 
+                                    <i class="fa-solid fa-floppy-disk"></i> Salvar
                                 </button>
                             </div>
                         </div>

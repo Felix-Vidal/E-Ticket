@@ -44,7 +44,7 @@ urlpatterns = [
     path('manage/add_papel/', add_papel_usuario, name='add_papel_usuario') ,
     path('manage/usuarios/excluir_papel/<int:id>/', excluir_papel_usuario, name='excluir_papel_usuario'),
     path('manage/usuarios/buscar_gerenciar/', buscar_selecionar_usuario, name='buscar_selecionar_usuario'),
-    path('manage/usuarios/editar_papel/<int:id>/', editar_papel_usuario, name='editar_papel_usuario'),
+    path('manage/usuarios/editar_papel/<int:usuario_id>/', editar_papel_usuario, name='editar_papel_usuario'),
     
     path('manage/classificacoes/', classificacao, name='classificacao'),
     path('manage/classificacoes/add/', classificacao_add_edit, name='classificacao_add'),  # Nova URL para adicionar
