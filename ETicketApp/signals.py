@@ -10,12 +10,13 @@ def add_permissions(sender, **kwargs):
         all_permissions = Permission.objects.all()
         gerente_group.permissions.set(all_permissions)
         gerente_group.save()
+        for permission in all_permissions:
+            print(f"✅ Permissão '{permission.codename}' concedida ao grupo 'ADM'.")
 
     grant_all_permissions_to_manager()
     
     grupos_permissoes = {
         "Bolsista": [
-            ("auth", "user", ["view"]),
             ("eticketapp", "dadopessoal", ["view"]),
             ("eticketapp", "refeicao", ["add"]),
             ("eticketapp", "cardapio", ["add", "change", "delete", "view"]),
@@ -23,7 +24,7 @@ def add_permissions(sender, **kwargs):
             ("eticketapp", "classificação", ["view"]), 
         ],
         "Colaborador": [
-            ("auth", "user", ["view"]),
+            ("auth", "user", ["add", "change", "delete", "view"]),
             ("eticketapp", "dadopessoal", ["view"]),
             ("eticketapp", "refeicao", ["add"]),
             ("eticketapp", "cardapio", ["add", "change", "delete", "view"]),
