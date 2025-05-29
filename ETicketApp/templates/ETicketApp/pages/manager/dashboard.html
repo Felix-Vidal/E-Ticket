@@ -23,6 +23,7 @@
         
     
         <!-- Card 2 -->
+        {% if perms.ETicketApp.view_ticketunico %} 
         <a href="{% url 'vender' %}" style="text-decoration: none; margin: 10px;">
             <div id="card02" class="card mb-3" style="border-radius: 20px; background-color: #0C4CA4; border: 2px solid #0C4CA4; color: #ffffff; margin: 10px;">
                 <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
@@ -33,6 +34,7 @@
                 </div>
             </div>
         </a>
+        {% endif %} 
     
         <!-- Card 3 -->
         <a href="{% url 'cardapio' %}" style="text-decoration: none; margin: 10px;">

@@ -277,21 +277,13 @@ color: #ffffff;
 }
 #container-informes-listar{
     margin-top: 5em;
-    margin-left: 8em;
+    margin-left: 5em;
 
 }
 
 @media (max-width: 450px) {
-    .container-validacao{
-        margin-left: 2em;
-    }
-    #titulo-add-classificacao{
-        font-size: 2em;
-    }
-    #container-informes-listar{
-        margin-left: 5em;
-    
-    }
+
+
     .voltar-calssificacao-add{
         margin-left: -15em;
     }
@@ -360,67 +352,6 @@ color: #ffffff;
         font-size: 18px;
     }
 
-   
-   #card01{
-    width: 75%;
-    margin-left: 25%;
-    height:140px;
-    
-    }
-    #card01 i {
-        font-size: 50px;
-        margin-top: -15px;
-        
-    }
-    #valida-tex {
-        font-size: 20px;
-        margin-top: -10px;
-        
-    }
-
-    #card02{
-        width: 75%;
-        margin-left: 25%;
-        height:140px;
-
-        
-    }
-    #card02 i {
-        font-size: 50px;
-        margin-top: -20px;
-            
-    }
-    #vende-text{
-        font-size: 20px;
-        margin-top: -20px;
-        line-height: 1.2;
-
-            
-    }
-    #card03{
-        width: 75%;
-        margin-left: 15%;
-        height:140px;
-
-        
-    }
-    #card03 i {
-        font-size: 50px;
-        margin-top: -20px;
-            
-    }
-    #cardapio-text{
-        font-size: 20px;
-        margin-top: -20px;
-        line-height: 1.2;
-
-            
-    }
-    #cards-dash{
-        margin-left: 5%;
-    
-    }
- 
     #tabela-user{
         border: none
         
@@ -431,54 +362,6 @@ color: #ffffff;
 
 }
 
-/* Ajustes para desktop */
-@media (min-width: 1025px) {
-    #cards-dash {
-        display: flex;
-        justify-content: center;
-        margin-left: 0; /* Remove a margem lateral */
-        margin-top: 5%;
-    }
-    #card01, #card02, #card03 {
-        width: 300px;  /* Aumenta a largura dos cards */
-        height: 200px; /* Ajusta a altura dos cards */
-        margin: 20px;  /* Adiciona espaçamento entre os cards */
-    }
-    #card01 i, #card02 i, #card03 i {
-        font-size: 100px; /* Aumenta o tamanho dos ícones */
-        margin-top: -10px;
-    }
-    #valida-tex, #vende-text, #cardapio-text {
-        font-size: 24px; /* Aumenta o tamanho do texto nos cards */
-        margin-top: -5px;
-    }
-}
-
-/* Ajustes para telas menores */
-@media (max-width: 1024px) {
-    #cards-dash {
-        display: flex;
-        justify-content: center;
-        flex-direction: column; 
-        margin-left: 5%; 
-    }
-
-    #card01, #card02, #card03 {
-        width: 75%; 
-        height: 10em; 
-        margin-left: 20%; 
-    }
-
-    #card01 i, #card02 i, #card03 i {
-        font-size: 50px; 
-        margin-top: -20px;
-    }
-
-    #valida-tex, #vende-text, #cardapio-text {
-        font-size: 20px; 
-        margin-top: -20px;
-    }
-}
 
 
 
@@ -532,7 +415,7 @@ color: #ffffff;
 }
 
 .sidebar_cor {
-    width: 250px; 
+    width: 15em; 
     flex-shrink: 0; 
     background-color: #f0f4ff; 
     z-index: 100; 
@@ -604,19 +487,14 @@ color: #ffffff;
   }
 
   @media (max-width: 768px) {
-    .container-relatorio {
-        margin-left: -12em; 
-        width: calc(100% - 90px); 
-    }
+
 
     .form-group {
         display: block;
         margin-bottom: 1em;
     }
  
-    .sidebar_cor {
-        background-color: transparent;
-    }
+
     .section-validacao,.section-refeicoes, .section-compra {
         margin-left: 2em;
     }
@@ -854,10 +732,7 @@ div#classificacao-container {
 }
 
 @media (max-width: 768px) {
-    #classificacao-container {
-        margin-left: 2%;
-        margin-right: 2%;
-    }
+
 
     #classificacao-titulo {
         font-size: 1.5rem;
@@ -865,11 +740,6 @@ div#classificacao-container {
 
     #classificacao-add-button {
         font-size: 1rem;
-    }
-
-    #classificacao-tabela th, #classificacao-tabela td {
-        font-size: 0.9rem;
-        padding: 8px;
     }
 
     .classificacao-acao-button {

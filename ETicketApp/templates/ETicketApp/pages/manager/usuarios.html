@@ -65,12 +65,16 @@
                                         {% endfor %}
                                     </td>
                                     <td>
+                                        {% if perms.ETicketApp.change_user %}
                                         <a href="{% url 'editar_papel_usuario' usuario_item.id %}" class="btn btn-sm btn-primary me-1" title="Editar Papel">
                                             <i class="fa-solid fa-edit"></i>
                                         </a>
+                                        {% endif %}
+                                        {% if perms.ETicketApp.delete_user %}
                                         <a href="{% url 'excluir_papel_usuario' usuario_item.id %}" class="btn btn-sm btn-danger" title="Remover Papel/Usuário">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% empty %}
@@ -87,7 +91,9 @@
                             <a id="texto-volta" href="{% url 'relatorio' %}" class="btn btn-secondary mb-2 mb-md-0">
                                 <i class="fa-solid fa-arrow-left"></i> Voltar
                             </a>
+                            {% if perms.ETicketApp.add_user %}
                             <a id="texto-add" href="{% url 'buscar_selecionar_usuario' %}" class="btn btn-success">Adicionar</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
