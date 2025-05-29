@@ -24,7 +24,6 @@ def add_permissions(sender, **kwargs):
             ("eticketapp", "classificação", ["view"]), 
         ],
         "Colaborador": [
-            ("auth", "user", ["add", "change", "delete", "view"]),
             ("auth", "user", ["add", "change", "view"]),
             ("eticketapp", "dadopessoal", ["view"]),
             ("eticketapp", "refeicao", ["add"]),
