@@ -1096,3 +1096,11 @@ div#classificacao-container {
         overflow-x: auto; 
     }
 }
+
+
+/* listar-ticket */
+#container-gerar{
+    padding-left: 20%;
+    padding-right: 5%;
+    padding-top: 5%;
+}
