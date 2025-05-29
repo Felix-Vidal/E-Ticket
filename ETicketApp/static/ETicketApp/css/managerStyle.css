@@ -282,12 +282,7 @@ color: #ffffff;
 }
 
 @media (max-width: 450px) {
-    .container-validacao{
-        margin-left: 2em;
-    }
-    #titulo-add-classificacao{
-        font-size: 2em;
-    }
+
 
     .voltar-calssificacao-add{
         margin-left: -15em;
@@ -357,63 +352,6 @@ color: #ffffff;
         font-size: 18px;
     }
 
-   
-   #card01{
-    width: 75%;
-    margin-left: 25%;
-    height:140px;
-    
-    }
-    #card01 i {
-        font-size: 50px;
-        margin-top: -15px;
-        
-    }
-    #valida-tex {
-        font-size: 20px;
-        margin-top: -10px;
-        
-    }
-
-    #card02{
-        width: 75%;
-        margin-left: 25%;
-        height:140px;
-
-        
-    }
-    #card02 i {
-        font-size: 50px;
-        margin-top: -20px;
-            
-    }
-    #vende-text{
-        font-size: 20px;
-        margin-top: -20px;
-        line-height: 1.2;
-
-            
-    }
-    #card03{
-        width: 75%;
-        margin-left: 15%;
-        height:140px;
-
-        
-    }
-    #card03 i {
-        font-size: 50px;
-        margin-top: -20px;
-            
-    }
-    #cardapio-text{
-        font-size: 20px;
-        margin-top: -20px;
-        line-height: 1.2;
-
-            
-    }
-
     #tabela-user{
         border: none
         
@@ -424,28 +362,6 @@ color: #ffffff;
 
 }
 
-/* Ajustes para desktop */
-
-/* Ajustes para telas menores */
-@media (max-width: 1024px) {
-
-
-    #card01, #card02, #card03 {
-        width: 75%; 
-        height: 10em; 
-        margin-left: 20%; 
-    }
-
-    #card01 i, #card02 i, #card03 i {
-        font-size: 50px; 
-        margin-top: -20px;
-    }
-
-    #valida-tex, #vende-text, #cardapio-text {
-        font-size: 20px; 
-        margin-top: -20px;
-    }
-}
 
 
 
